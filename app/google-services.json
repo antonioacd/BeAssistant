@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1061115692110",
+    "project_id": "beassistant-216ce",
+    "storage_bucket": "beassistant-216ce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061115692110:android:1b712f9c4360de296c2f1f",
+        "android_client_info": {
+          "package_name": "com.example.beassistant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1061115692110-mk971jfj7vf1fngdf01prqvpiur4k0s3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALLD_Auvsju7MU-Ewf6hzukFR1kDrJEVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1061115692110-mk971jfj7vf1fngdf01prqvpiur4k0s3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
