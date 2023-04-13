@@ -39,6 +39,7 @@ public class DataBaseController {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
