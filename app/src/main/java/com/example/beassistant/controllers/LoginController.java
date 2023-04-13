@@ -1,7 +1,5 @@
 package com.example.beassistant.controllers;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,19 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.beassistant.R;
-import com.example.beassistant.models.User;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginController extends AppCompatActivity {
 
@@ -46,6 +34,8 @@ public class LoginController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        DBController.getLogins();
+
         /**
          * Inicialice the variables
          */
@@ -58,15 +48,29 @@ public class LoginController extends AppCompatActivity {
         /**
          * Add the listeners of the buttons
          */
-
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                User user = new User(et_user.getText().toString(), "Antonio", "fad", "fasd", et_password.getText().toString());
-
-                DBController.addUser(user);
-
+                // Don't exist = -1, exist and password is correct = 0, exist but incorrect password = 1
+                int response = -1;
+                for (String username : DBController.listLogUsers.keySet()) {
+                    String password = DBController.listLogUsers.get(username);
+                    if (username.equals(et_user.getText().toString().trim())){
+                        if (password.equals(et_password.getText().toString())){
+                            response = 0;
+                        }else{
+                            response = 1;
+                        }
+                    }
+                    Log.d("Datos:", "Clave: " + username + ", Valor: " + password);
+                }
+                if (response == 0){
+                    Toast.makeText(getApplicationContext(), "Correcto", Toast.LENGTH_LONG).show();
+                }else if (response == 1){
+                    Toast.makeText(getApplicationContext(), "Contraseña incorrecta", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Usuario no registrado", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -74,11 +78,17 @@ public class LoginController extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                DBController.getLogins();
+
                 Intent i = new Intent(getApplicationContext(), RegisterController.class);
-
                 startActivity(i);
-
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DBController.getLogins();
     }
 }

@@ -8,18 +8,31 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.beassistant.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DataBaseController {
 
-    public void addUser(User user_get){
+    private FirebaseFirestore db;
+    public HashMap<String, String> listLogUsers;
+    public HashMap<String, String> listUsernames;
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public DataBaseController() {
+         this.db = FirebaseFirestore.getInstance();
+         listLogUsers = new HashMap<>();
+         listUsernames = new HashMap<>();
+    }
+
+    protected void addUser(User user_get){
 
         /**
          * Create a new user with username, gmail, password and phone number
@@ -35,25 +48,41 @@ public class DataBaseController {
          * Add a new document with a generated ID
          */
         db.collection("users").document(user_get.getUsername())
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-
-
+                .set(user);
     }
 
+    protected void getLogins(){
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                listLogUsers.put(doc.getString("username"), doc.getString("password"));
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
 
-
-
+    protected void getUsernames(){
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                listUsernames.put(doc.getString("username"), doc.getString("email"));
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
 
 }
