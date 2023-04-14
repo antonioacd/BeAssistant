@@ -13,7 +13,12 @@
         android:theme="@style/Theme.BeAssistant"
         tools:targetApi="31">
         <activity
-            android:name=".CameraActivity"
+            android:name=".ScreenActivity"
+            android:exported="false"
+            android:label="@string/title_activity_screen"
+            android:theme="@style/Theme.BeAssistant.NoActionBar" />
+        <activity
+            android:name=".controllers.CameraActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
