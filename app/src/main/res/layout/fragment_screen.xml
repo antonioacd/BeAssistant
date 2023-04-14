@@ -5,5 +5,5 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF0000"
+    android:background="#FFEB3B"
     tools:context=".controllers.ui.main.PlaceholderFragment" />
