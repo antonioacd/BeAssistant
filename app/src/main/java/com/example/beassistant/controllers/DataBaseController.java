@@ -51,7 +51,7 @@ public class DataBaseController {
                 .set(user);
     }
 
-    protected void getLogins(){
+    public void getLogins(){
         db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
