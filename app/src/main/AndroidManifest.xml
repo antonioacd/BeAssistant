@@ -32,6 +32,9 @@
             android:name=".controllers.RegisterController"
             android:exported="false" />
         <activity
+            android:name=".controllers.MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".controllers.LoginController"
             android:exported="true">
             <intent-filter>

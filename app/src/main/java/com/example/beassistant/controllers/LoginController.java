@@ -66,7 +66,7 @@ public class LoginController extends AppCompatActivity {
                 }
                 if (response == 0){
                     Toast.makeText(getApplicationContext(), "Correcto", Toast.LENGTH_LONG).show();
-                    Intent i = new Intent(getApplicationContext(), ScreenActivity.class);
+                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);
                 }else if (response == 1){
                     Toast.makeText(getApplicationContext(), "Contraseña incorrecta", Toast.LENGTH_LONG).show();

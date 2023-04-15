@@ -9,12 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.beassistant.MainActivity;
 import com.example.beassistant.R;
 import com.example.beassistant.controllers.fragments.CaraFragment;
 import com.example.beassistant.controllers.fragments.CejasFragment;
-import com.example.beassistant.controllers.fragments.LabiosFragment;
-import com.example.beassistant.controllers.fragments.MainFragment;
 import com.example.beassistant.controllers.fragments.OjosFragment;
 import com.example.beassistant.databinding.FragmentScreenBinding;
 
@@ -36,8 +33,8 @@ public class PlaceholderFragment extends Fragment {
 
             case 1: fragment = new CaraFragment();
                 break;
-            case 2: fragment = new MainFragment();
-                break;
+            //case 2: fragment = new MainFragment();
+                //break;
             case 3: fragment = new OjosFragment();
                 break;
             case 4: fragment = new CejasFragment();
