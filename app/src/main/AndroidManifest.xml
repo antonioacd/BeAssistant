@@ -29,13 +29,13 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".controllers.RegisterController"
+            android:name=".controllers.logins.RegisterController"
             android:exported="false" />
         <activity
             android:name=".controllers.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".controllers.LoginController"
+            android:name=".controllers.logins.LoginController"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

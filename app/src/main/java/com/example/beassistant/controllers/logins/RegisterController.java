@@ -1,4 +1,4 @@
-package com.example.beassistant.controllers;
+package com.example.beassistant.controllers.logins;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.beassistant.R;
+import com.example.beassistant.controllers.DataBaseController;
 import com.example.beassistant.models.User;
 
 public class RegisterController extends AppCompatActivity {

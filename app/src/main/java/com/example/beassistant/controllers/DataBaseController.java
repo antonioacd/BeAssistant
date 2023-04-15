@@ -32,7 +32,7 @@ public class DataBaseController {
          listUsernames = new HashMap<>();
     }
 
-    protected void addUser(User user_get){
+    public void addUser(User user_get){
 
         /**
          * Create a new user with username, gmail, password and phone number
@@ -68,7 +68,7 @@ public class DataBaseController {
                 });
     }
 
-    protected void getUsernames(){
+    public void getUsernames(){
         db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

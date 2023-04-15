@@ -1,20 +1,17 @@
 package com.example.beassistant.controllers;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.beassistant.R;
-import com.example.beassistant.controllers.fragments.HomeFragment;
-import com.example.beassistant.controllers.fragments.ProfileFragment;
-import com.example.beassistant.controllers.fragments.SearchFragment;
+import com.example.beassistant.fragments.mainpages.HomeFragment;
+import com.example.beassistant.fragments.mainpages.ProfileFragment;
+import com.example.beassistant.fragments.mainpages.SearchFragment;
 import com.example.beassistant.databinding.ActivityMainBinding;
-import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
 

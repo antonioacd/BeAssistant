@@ -1,4 +1,4 @@
-package com.example.beassistant.controllers.fragments;
+package com.example.beassistant.fragments.mainpages;
 
 import android.os.Bundle;
 

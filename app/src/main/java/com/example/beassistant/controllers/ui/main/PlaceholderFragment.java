@@ -10,9 +10,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.beassistant.R;
-import com.example.beassistant.controllers.fragments.CaraFragment;
-import com.example.beassistant.controllers.fragments.CejasFragment;
-import com.example.beassistant.controllers.fragments.OjosFragment;
+import com.example.beassistant.fragments.startpage.CaraFragment;
+import com.example.beassistant.fragments.startpage.CejasFragment;
+import com.example.beassistant.fragments.startpage.OjosFragment;
 import com.example.beassistant.databinding.FragmentScreenBinding;
 
 /**

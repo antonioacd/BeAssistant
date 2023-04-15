@@ -1,4 +1,4 @@
-package com.example.beassistant.controllers.fragments;
+package com.example.beassistant.fragments.startpage;
 
 import android.os.Bundle;
 
@@ -12,10 +12,10 @@ import com.example.beassistant.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CaraFragment#newInstance} factory method to
+ * Use the {@link LabiosFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CaraFragment extends Fragment {
+public class LabiosFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class CaraFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public CaraFragment() {
+    public LabiosFragment() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class CaraFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentCara.
+     * @return A new instance of fragment FragmentLabios.
      */
     // TODO: Rename and change types and number of parameters
-    public static CaraFragment newInstance(String param1, String param2) {
-        CaraFragment fragment = new CaraFragment();
+    public static LabiosFragment newInstance(String param1, String param2) {
+        LabiosFragment fragment = new LabiosFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class CaraFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cara, container, false);
+        return inflater.inflate(R.layout.fragment_labios, container, false);
     }
 }
