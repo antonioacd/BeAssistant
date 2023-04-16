@@ -3,14 +3,21 @@ package com.example.beassistant.fragments.mainpages;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 
 import com.example.beassistant.R;
+import com.example.beassistant.adapters.HomeRecyclerAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
@@ -22,6 +29,24 @@ public class HomeFragment extends Fragment {
 
     View view;
     FloatingActionButton btn_filter;
+
+    String[] categories =  {"Todos","Cara","Labios","Ojos","Cejas"};
+    AutoCompleteTextView select_category;
+    ArrayAdapter<String> adapterItems;
+
+    String[] brands =  {"Todas","Maybeline","Sephora","Technic","Wow","KIKO"};
+    AutoCompleteTextView select_brand;
+    ArrayAdapter<String> adapterItems02;
+
+    String selected_category = "Todos";
+    String selected_brand = "Todos";
+
+    AlertDialog dialog;
+
+    //Creamos las variables necesarias para implementar el recyclerView
+    ConstraintLayout constraintLayout;
+    RecyclerView rV;
+    HomeRecyclerAdapter recAdapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,6 +86,8 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        //Creamos un objeto del recicler adapter
+        recAdapter = new HomeRecyclerAdapter(getContext());
     }
 
     @Override
@@ -77,16 +104,21 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        //Asignamos a la variable rV el recyclerView
+        rV = (RecyclerView) view.findViewById(R.id.recView);
+
+        //Creamos un LinearLayout para establecer el Layout del recyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        rV.setLayoutManager(layoutManager);
+
+        //Implementamos el recyclerAdapter en el recyclerView
+        rV.setAdapter(recAdapter);
 
         // Inflate the layout for this fragment
         return view;
-
-
     }
 
     private void filter(){
-
-        AlertDialog dialog;
 
         AlertDialog.Builder ventana = new AlertDialog.Builder(getContext());
 
@@ -94,46 +126,43 @@ public class HomeFragment extends Fragment {
 
         View v = getLayoutInflater().inflate(R.layout.filter_layout, null);
 
-        /**EditText eNombre = v.findViewById(R.id.etNombre);
-         EditText eIp = v.findViewById(R.id.etIp);
-         Button aceptar = v.findViewById(R.id.btnConfirmar);
-         Button cancelar = v.findViewById(R.id.btnCancelar);
+        //Select Category
+        select_category = v.findViewById(R.id.select_category);
 
-         aceptar.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+        adapterItems = new ArrayAdapter<String>(getContext(),R.layout.list_item,categories);
+        select_category.setAdapter(adapterItems);
 
-        if (eIp.getText().toString().isEmpty() || eNombre.getText().toString().isEmpty()){
-        Toast.makeText(getApplicationContext(), "Debe rellenar todos los campos", Toast.LENGTH_LONG).show();
-        }else{
-        Contacto c = new Contacto(eIp.getText().toString(), eNombre.getText().toString(), "Hola", "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png");
-
-        //Llamamos al metodo insert para añadir el usuario a la base de datos
-        if(dbController.insert(c.getNombre(), c.getUltimoMensaje(), c.getIp(), c.getImg()) != -1){
-
-        recAdapterChat.listaChats.add(c);
-
-        recAdapterChat.notifyDataSetChanged();
-
-        dbController.insert(c.getNombre(), c.getUltimoMensaje(), c.getIp(), c.getImg());
-
-        }else{
-
-        Toast.makeText(getApplicationContext(), "Esa id ya esta registrada", Toast.LENGTH_SHORT).show();
-
-        }
-
-        dialog.dismiss();
-        }
-        }
+        select_category.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selected_category = parent.getItemAtPosition(position).toString();
+            }
         });
 
-         cancelar.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-        dialog.dismiss();
-        }
-        });*/
+        //Select Brand
+        select_brand = v.findViewById(R.id.select_brand);
+
+        adapterItems02 = new ArrayAdapter<String>(getContext(),R.layout.list_item02,brands);
+        select_brand.setAdapter(adapterItems02);
+
+        select_brand.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selected_brand = parent.getItemAtPosition(position).toString();
+            }
+        });
+
+        //Floating Button
+        FloatingActionButton btn_check = (FloatingActionButton) v.findViewById(R.id.btn_check);
+
+        btn_check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(),"Category: " + selected_category +
+                        "Brand: " + selected_brand,Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
 
         ventana.setView(v);
 
