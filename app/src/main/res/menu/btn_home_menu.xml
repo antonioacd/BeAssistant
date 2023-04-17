@@ -4,10 +4,15 @@
     <item android:title="Home"
         android:icon="@drawable/ic_baseline_home_24"
         android:id="@+id/home"/>
-    <item android:title="Explorar"
+    <item android:title="Buscar"
         android:icon="@drawable/ic_baseline_search_24"
         android:id="@+id/explore"/>
+    <item android:title=""
+        android:id="@+id/empty"/>
     <item android:title="Perfil"
         android:icon="@drawable/ic_baseline_person_24"
         android:id="@+id/profile"/>
+    <item android:title="Ajustes"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:id="@+id/settings"/>
 </menu>
