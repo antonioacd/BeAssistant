@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.beassistant.R;
+import com.example.beassistant.controllers.Camera;
 import com.example.beassistant.controllers.DataBaseController;
 import com.example.beassistant.controllers.MainActivity;
 
@@ -68,7 +69,7 @@ public class LoginController extends AppCompatActivity {
                 }
                 if (response == 0){
                     Toast.makeText(getApplicationContext(), "Correcto", Toast.LENGTH_LONG).show();
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent i = new Intent(getApplicationContext(), Camera.class);
                     startActivity(i);
                 }else if (response == 1){
                     Toast.makeText(getApplicationContext(), "Contraseña incorrecta", Toast.LENGTH_LONG).show();
