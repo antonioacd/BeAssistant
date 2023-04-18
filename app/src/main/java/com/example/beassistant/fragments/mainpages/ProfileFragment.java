@@ -1,7 +1,10 @@
 package com.example.beassistant.fragments.mainpages;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +19,10 @@ import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.HomeRecyclerAdapter;
 import com.example.beassistant.adapters.ProfileRecyclerAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import io.grpc.SynchronizationContext;
 
@@ -36,6 +43,9 @@ public class ProfileFragment extends Fragment {
     ImageView img_profile;
     TextView txt_username;
     TextView txt_name;
+
+    FirebaseStorage storage;
+    StorageReference storageRef;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -78,6 +88,9 @@ public class ProfileFragment extends Fragment {
         }
         //Creamos un objeto del recicler adapter
         recAdapter = new ProfileRecyclerAdapter(getContext());
+        storage = FirebaseStorage.getInstance();
+        // Create a storage reference from our app
+        storageRef = storage.getReference();
     }
 
     @Override
@@ -85,6 +98,8 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        cargarFoto();
 
         img_profile = view.findViewById(R.id.img_profile);
         txt_username = view.findViewById(R.id.txt_username);
@@ -106,4 +121,22 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         return view;
     }
+
+    private void cargarFoto(){
+
+        storageRef.child(Shared.myUser.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                img_profile.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+    }
+
+
 }

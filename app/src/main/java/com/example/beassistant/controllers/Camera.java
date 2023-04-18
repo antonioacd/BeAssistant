@@ -34,6 +34,10 @@ public class Camera extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageRef;
 
+
+    //Declare the instance of data base controller
+    DataBaseController DBController = new DataBaseController();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

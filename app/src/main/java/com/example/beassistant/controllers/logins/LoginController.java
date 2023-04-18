@@ -38,13 +38,6 @@ public class LoginController extends AppCompatActivity {
     Button btn_login;
     Button btn_register;
 
-
-    /**
-     * Declare the instance of data base controller
-     */
-
-    DataBaseController DBController = new DataBaseController();
-
     //Declare the data base object
     private FirebaseFirestore db;
 
@@ -54,8 +47,6 @@ public class LoginController extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         db = FirebaseFirestore.getInstance();
-
-        DBController.getLogins();
 
         /**
          * Inicialice the variables
@@ -91,10 +82,9 @@ public class LoginController extends AppCompatActivity {
                                         if (doc.getString("username").equals(et_user.getText().toString().trim())) {
                                             if (password.equals(et_password.getText().toString())) {
                                                 response = 0;
-
                                                     user.setUsername(doc.getString("username"));
                                                     user.setName(doc.getString("name"));
-                                                    user.setImg_reference(doc.getString("img"));
+                                                    user.setImg_reference(doc.getString("imgRef"));
                                                     user.setEmail(doc.getString("email"));
                                                     user.setNumber(doc.getString("phoneNumber"));
                                                     user.setPassword(doc.getString("password"));
@@ -128,9 +118,6 @@ public class LoginController extends AppCompatActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                DBController.getLogins();
-
                 Intent i = new Intent(getApplicationContext(), RegisterController.class);
                 startActivity(i);
             }
