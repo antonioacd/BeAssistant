@@ -3,12 +3,21 @@ package com.example.beassistant.fragments.mainpages;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.beassistant.R;
+import com.example.beassistant.Shared;
+import com.example.beassistant.adapters.HomeRecyclerAdapter;
+import com.example.beassistant.adapters.ProfileRecyclerAdapter;
+
+import io.grpc.SynchronizationContext;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +25,18 @@ import com.example.beassistant.R;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
+
+
+    //Recycler view variables
+    View view;
+    RecyclerView rvCategories;
+    ProfileRecyclerAdapter recAdapter;
+
+    //Profile parameters
+    ImageView img_profile;
+    TextView txt_username;
+    TextView txt_name;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,12 +76,34 @@ public class ProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        //Creamos un objeto del recicler adapter
+        recAdapter = new ProfileRecyclerAdapter(getContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        img_profile = view.findViewById(R.id.img_profile);
+        txt_username = view.findViewById(R.id.txt_username);
+        txt_name = view.findViewById(R.id.txt_name);
+
+        txt_username.setText(Shared.myUser.getUsername());
+        txt_name.setText(Shared.myUser.getName());
+
+        //Asignamos a la variable rV el recyclerView
+        rvCategories = (RecyclerView) view.findViewById(R.id.rv_clasification);
+
+        //Creamos un LinearLayout para establecer el Layout del recyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        rvCategories.setLayoutManager(layoutManager);
+
+        //Implementamos el recyclerAdapter en el recyclerView
+        rvCategories.setAdapter(recAdapter);
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        return view;
     }
 }

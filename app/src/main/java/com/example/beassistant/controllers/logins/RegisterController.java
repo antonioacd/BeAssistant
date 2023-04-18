@@ -2,6 +2,7 @@ package com.example.beassistant.controllers.logins;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -58,35 +59,13 @@ public class RegisterController extends AppCompatActivity {
                 if (et_user_reg.getText().toString().isEmpty() || et_name_reg.getText().toString().isEmpty() || et_email_reg.getText().toString().isEmpty() || et_number_reg.getText().toString().isEmpty() || et_password_reg.getText().toString().isEmpty()){
                     Toast.makeText(getApplicationContext(), "Debe rellenar todos los campos", Toast.LENGTH_LONG).show();
                 }else{
-                    int response = 0;
-
-                    for (String username : DBController.listUsernames.keySet()) {
-                        String email = DBController.listUsernames.get(username);
-                        if (username.equals(et_user_reg.getText().toString().trim()) || email.equals(et_email_reg.getText().toString().trim())) {
-                            if (username.equals(et_user_reg.getText().toString().trim())) {
-                                response = -1;
-                            } else {
-                                response = 1;
-                            }
-                        }
-                    }
-
-                    if (response == -1){
-                        Toast.makeText(getApplicationContext(), "Ese usuario ya existe", Toast.LENGTH_LONG).show();
-                    }else if (response == 1){
-                        Toast.makeText(getApplicationContext(), "Ese email ya existe", Toast.LENGTH_LONG).show();
-                    }else{
-                        User user = new User(
-                                et_user_reg.getText().toString().trim(),
-                                et_name_reg.getText().toString().trim(),
-                                et_email_reg.getText().toString().trim(),
-                                et_number_reg.getText().toString().trim(),
-                                et_password_reg.getText().toString().trim());
-
-                        DBController.addUser(user);
-
-                        Toast.makeText(getApplicationContext(), "Usuario registrado", Toast.LENGTH_LONG).show();
-                    }
+                    Intent i = new Intent(getApplicationContext(), RegisterImageProfileController.class);
+                    i.putExtra("username", et_user_reg.getText().toString().trim());
+                    i.putExtra("name", et_name_reg.getText().toString().trim());
+                    i.putExtra("email", et_email_reg.getText().toString().trim());
+                    i.putExtra("number", et_number_reg.getText().toString().trim());
+                    i.putExtra("password", et_password_reg.getText().toString().trim());
+                    startActivity(i);
                 }
             }
         });
@@ -97,6 +76,41 @@ public class RegisterController extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DBController.getUsernames();
+    }
+
+
+    private void usarAhora(){
+
+        int response = 0;
+
+        for (String username : DBController.listUsernames.keySet()) {
+            String email = DBController.listUsernames.get(username);
+            if (username.equals(et_user_reg.getText().toString().trim()) || email.equals(et_email_reg.getText().toString().trim())) {
+                if (username.equals(et_user_reg.getText().toString().trim())) {
+                    response = -1;
+                } else {
+                    response = 1;
+                }
+            }
+        }
+
+        if (response == -1){
+            Toast.makeText(getApplicationContext(), "Ese usuario ya existe", Toast.LENGTH_LONG).show();
+        }else if (response == 1){
+            Toast.makeText(getApplicationContext(), "Ese email ya existe", Toast.LENGTH_LONG).show();
+        }else{
+            User user = new User(
+                    et_user_reg.getText().toString().trim(),
+                    et_name_reg.getText().toString().trim(),
+                    "",
+                    et_email_reg.getText().toString().trim(),
+                    et_number_reg.getText().toString().trim(),
+                    et_password_reg.getText().toString().trim());
+
+            DBController.addUser(user);
+
+            Toast.makeText(getApplicationContext(), "Usuario registrado", Toast.LENGTH_LONG).show();
+        }
     }
 
 }

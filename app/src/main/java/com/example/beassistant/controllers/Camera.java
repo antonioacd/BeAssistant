@@ -12,8 +12,10 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.beassistant.R;
+import com.example.beassistant.Shared;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -49,6 +51,7 @@ public class Camera extends AppCompatActivity {
         btn_foto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),Shared.myUser.getUsername().toString() ,Toast.LENGTH_LONG).show();
                 abrirCamara();
             }
         });
