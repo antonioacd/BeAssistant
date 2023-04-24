@@ -11,6 +11,7 @@ public class Producto {
     private double price;
     private String toneOrColor;
     private String opinion;
+    private String rating;
 
     public Producto(String personal_id, String id, String img_reference, String category, String type, String shopBuy, double price, String toneOrColor, String opinion) {
         this.personal_id = personal_id;
