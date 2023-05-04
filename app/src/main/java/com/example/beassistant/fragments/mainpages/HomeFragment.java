@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
     AutoCompleteTextView select_category;
     ArrayAdapter<String> adapterItems;
 
-    String[] brands =  {"Todas","Maybeline","Sephora","Technic","Wow","KIKO"};
+    ArrayList<String> brands = new ArrayList<String>();
     AutoCompleteTextView select_brand;
     ArrayAdapter<String> adapterItems02;
 
@@ -119,24 +119,9 @@ public class HomeFragment extends Fragment {
         btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                db.collection("categorias")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        categories.add(document.getId());
-                                        filter();
-                                        Log.d("TAG", document.getId() + " => " + document.getData());
-                                    }
-                                } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
-
+                categories = getCategories();
+                // getBrands();
+                // filter();
             }
         });
 
@@ -152,6 +137,29 @@ public class HomeFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private ArrayList getCategories(){
+
+        ArrayList<String> auxArray = new ArrayList<String>();
+
+        db.collection("categorias")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                auxArray.add(document.getId());
+                            }
+                            filter();
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+        return auxArray;
     }
 
     private void filter(){
@@ -172,10 +180,26 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selected_category = parent.getItemAtPosition(position).toString();
+                brands.clear();
+                db.collection("/categorias/" + selected_category + "/marcas")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d("Result", document.getId());
+                                        brands.add(document.getId());
+                                    }
+                                } else {
+                                    Log.d("Result", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
             }
         });
 
-        //Select Brand
+        // Select Brand
         select_brand = v.findViewById(R.id.select_brand);
 
         adapterItems02 = new ArrayAdapter<String>(getContext(),R.layout.list_item02,brands);
@@ -188,14 +212,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        //Floating Button
+        // Floating Button
         FloatingActionButton btn_check = (FloatingActionButton) v.findViewById(R.id.btn_check);
 
         btn_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(),"Category: " + selected_category +
-                        "Brand: " + selected_brand,Toast.LENGTH_SHORT).show();
+                        " Brand: " + selected_brand,Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
