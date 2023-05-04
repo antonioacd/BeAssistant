@@ -1,13 +1,17 @@
 package com.example.beassistant.fragments.mainpages;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +22,16 @@ import android.widget.Toast;
 
 import com.example.beassistant.R;
 import com.example.beassistant.adapters.HomeRecyclerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.checkerframework.checker.units.qual.A;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,7 +43,7 @@ public class HomeFragment extends Fragment {
     View view;
     FloatingActionButton btn_filter;
 
-    String[] categories =  {"Todos","Cara","Labios","Ojos","Cejas"};
+    ArrayList<String> categories = new ArrayList<String>();
     AutoCompleteTextView select_category;
     ArrayAdapter<String> adapterItems;
 
@@ -43,10 +56,13 @@ public class HomeFragment extends Fragment {
 
     AlertDialog dialog;
 
-    //Creamos las variables necesarias para implementar el recyclerView
+    // Creamos las variables necesarias para implementar el recyclerView
     ConstraintLayout constraintLayout;
     RecyclerView rV;
     HomeRecyclerAdapter recAdapter;
+
+    // Declare the data base object
+    private FirebaseFirestore db;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,8 +102,11 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        //Creamos un objeto del recicler adapter
+        // Creamos un objeto del recicler adapter
         recAdapter = new HomeRecyclerAdapter(getContext());
+
+        // Generate the instance
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -100,7 +119,24 @@ public class HomeFragment extends Fragment {
         btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filter();
+
+                db.collection("categorias")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        categories.add(document.getId());
+                                        filter();
+                                        Log.d("TAG", document.getId() + " => " + document.getData());
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+
             }
         });
 
