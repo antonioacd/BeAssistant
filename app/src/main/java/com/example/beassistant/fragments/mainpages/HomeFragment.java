@@ -120,8 +120,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 categories = getCategories();
-                // getBrands();
-                // filter();
             }
         });
 
@@ -141,7 +139,7 @@ public class HomeFragment extends Fragment {
 
     private ArrayList getCategories(){
 
-        ArrayList<String> auxArray = new ArrayList<String>();
+        ArrayList<String> auxArray = new ArrayList<>();
 
         db.collection("categorias")
                 .get()

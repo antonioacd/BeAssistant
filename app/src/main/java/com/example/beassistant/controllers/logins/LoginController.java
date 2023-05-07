@@ -88,7 +88,6 @@ public class LoginController extends AppCompatActivity {
                                                     user.setEmail(doc.getString("email"));
                                                     user.setNumber(doc.getString("phoneNumber"));
                                                     user.setPassword(doc.getString("password"));
-
                                             } else {
                                                 response = 1;
                                             }

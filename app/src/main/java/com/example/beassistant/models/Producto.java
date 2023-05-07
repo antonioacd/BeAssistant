@@ -1,47 +1,53 @@
 package com.example.beassistant.models;
 
+import android.graphics.Path;
+
 public class Producto {
 
-    private String personal_id;
-    private String id;
+    private String uuID;
+    private String name;
     private String img_reference;
+    private String brand;
     private String category;
     private String type;
-    private String shopBuy;
-    private double price;
-    private String toneOrColor;
-    private String opinion;
-    private String rating;
+    private double mediaRating;
+    private Opinion opinion;
 
-    public Producto(String personal_id, String id, String img_reference, String category, String type, String shopBuy, double price, String toneOrColor, String opinion) {
-        this.personal_id = personal_id;
-        this.id = id;
+    public Producto(String uuID, String name, String img_reference, String brand, String category, String type, double mediaRating) {
+        this.uuID = uuID;
+        this.name = name;
         this.img_reference = img_reference;
+        this.brand = brand;
         this.category = category;
         this.type = type;
-        this.shopBuy = shopBuy;
-        this.price = price;
-        this.toneOrColor = toneOrColor;
+        this.mediaRating = mediaRating;
+    }
+
+    public Producto(String uuID, String name, String img_reference, String brand, String category, String type, double mediaRating, Opinion opinion) {
+        this.uuID = uuID;
+        this.name = name;
+        this.img_reference = img_reference;
+        this.brand = brand;
+        this.category = category;
+        this.type = type;
+        this.mediaRating = mediaRating;
         this.opinion = opinion;
     }
 
-    public Producto(String personal_id ,String id, String category, String type, String shopBuy, double price, String toneOrColor, String opinion) {
-        this.personal_id = personal_id;
-        this.id = id;
-        this.category = category;
-        this.type = type;
-        this.shopBuy = shopBuy;
-        this.price = price;
-        this.toneOrColor = toneOrColor;
-        this.opinion = opinion;
+    public String getUuID() {
+        return uuID;
     }
 
-    public String getId() {
-        return id;
+    public void setUuID(String uuID) {
+        this.uuID = uuID;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getImg_reference() {
@@ -50,6 +56,14 @@ public class Producto {
 
     public void setImg_reference(String img_reference) {
         this.img_reference = img_reference;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public String getCategory() {
@@ -68,58 +82,33 @@ public class Producto {
         this.type = type;
     }
 
-    public String getShopBuy() {
-        return shopBuy;
+    public double getMediaRating() {
+        return mediaRating;
     }
 
-    public void setShopBuy(String shopBuy) {
-        this.shopBuy = shopBuy;
+    public void setMediaRating(double mediaRating) {
+        this.mediaRating = mediaRating;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public String getToneOrColor() {
-        return toneOrColor;
-    }
-
-    public void setToneOrColor(String toneOrColor) {
-        this.toneOrColor = toneOrColor;
-    }
-
-    public String getOpinion() {
+    public Opinion getOpinion() {
         return opinion;
     }
 
-    public void setOpinion(String opinion) {
+    public void setOpinion(Opinion opinion) {
         this.opinion = opinion;
-    }
-
-    public String getPersonal_id() {
-        return personal_id;
-    }
-
-    public void setPersonal_id(String personal_id) {
-        this.personal_id = personal_id;
     }
 
     @Override
     public String toString() {
         return "Producto{" +
-                "personal_id='" + personal_id + '\'' +
-                ", id='" + id + '\'' +
+                "uuID='" + uuID + '\'' +
+                ", name='" + name + '\'' +
                 ", img_reference='" + img_reference + '\'' +
+                ", brand='" + brand + '\'' +
                 ", category='" + category + '\'' +
                 ", type='" + type + '\'' +
-                ", shopBuy='" + shopBuy + '\'' +
-                ", price=" + price +
-                ", toneOrColor='" + toneOrColor + '\'' +
-                ", opinion='" + opinion + '\'' +
+                ", mediaRating='" + mediaRating + '\'' +
+                ", opinion=" + opinion +
                 '}';
     }
 }

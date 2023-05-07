@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.beassistant.R;
+import com.example.beassistant.fragments.mainpages.AddProductFragment;
 import com.example.beassistant.fragments.mainpages.HomeFragment;
 import com.example.beassistant.fragments.mainpages.ProfileFragment;
 import com.example.beassistant.fragments.mainpages.SearchFragment;
@@ -23,12 +24,22 @@ import com.google.android.material.tabs.TabLayout;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
+    FloatingActionButton btn_add;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        btn_add = (FloatingActionButton) findViewById(R.id.btn_add);
+
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new AddProductFragment());
+            }
+        });
 
         replaceFragment(new HomeFragment());
 
