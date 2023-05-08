@@ -2,6 +2,7 @@ package com.example.beassistant.fragments.mainpages;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,27 +19,34 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.beassistant.R;
-import com.example.beassistant.adapters.HomeRecyclerAdapter;
 import com.example.beassistant.adapters.ProductsRecyclerAdapter;
-import com.example.beassistant.models.Producto;
+import com.example.beassistant.controllers.AddOpinionActivity;
+import com.example.beassistant.controllers.logins.LoginController;
+import com.example.beassistant.models.Product;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AddProductFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddProductFragment extends Fragment {
+public class AddProductFragment extends Fragment{
 
     private SearchView searchView;
+
 
     ArrayList<String> categories = new ArrayList<String>();
     AutoCompleteTextView select_category;
@@ -103,6 +111,7 @@ public class AddProductFragment extends Fragment {
         categories = getCategories();
 
         recAdapter = new ProductsRecyclerAdapter(getContext());
+
     }
 
     @Override
@@ -134,6 +143,8 @@ public class AddProductFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selected_category = parent.getItemAtPosition(position).toString();
+                recAdapter.productsList.clear();
+                recAdapter.notifyDataSetChanged();
                 brands.clear();
                 db.collection("/categorias/" + selected_category + "/marcas")
                         .get()
@@ -163,43 +174,74 @@ public class AddProductFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selected_brand = parent.getItemAtPosition(position).toString();
+                recAdapter.productsList.clear();
+                recAdapter.notifyDataSetChanged();
 
-                db.collection("categorias/" + selected_category + "/marcas/" + selected_brand + "/productos")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        Producto p = new Producto(
-                                                document.getString("id"),
-                                                document.getString("name"),
-                                                document.getString("imgRef"),
-                                                document.getString("brand"),
-                                                document.getString("category"),
-                                                document.getString("type"),
-                                                0
-                                        );
+                try {
+                    db.collection("categorias/" + selected_category + "/marcas/" + selected_brand + "/productos")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Product p = new Product(
+                                                    document.getString("id"),
+                                                    document.getString("name"),
+                                                    document.getString("imgRef"),
+                                                    document.getString("brand"),
+                                                    document.getString("category"),
+                                                    document.getString("type"),
+                                                    0
+                                            );
 
-                                        recAdapter.productsList.add(p);
-                                        recAdapter.notifyDataSetChanged();
+                                            recAdapter.productsList.add(p);
+                                            recAdapter.notifyDataSetChanged();
 
-                                        Log.d("Productos: ", recAdapter.productsList.toString());
+                                            Log.d("Productos: ", recAdapter.productsList.toString());
 
-                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                            Log.d(TAG, document.getId() + " => " + document.getData());
+                                        }
+                                    } else {
+                                        Log.d(TAG, "Error getting documents: ", task.getException());
                                     }
-                                } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
                                 }
-                            }
-                        });
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("Fallo: ", e.getMessage());
+                                }
+                            }).addOnCanceledListener(new OnCanceledListener() {
+                                @Override
+                                public void onCanceled() {
+                                    Log.d("Fallo: ", "Cancelado");
+                                }
+                            });
+                }catch (Exception e){
+                    Log.d("Fallo: ", e.getMessage());
+                }
+
+
             }
         });
 
-        return view;
-    }
+        recAdapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int indice = 0;
+                //Capturamos el indice del elemento seleccionado
+                indice = rV.getChildAdapterPosition(view);
 
-    private void search_view(){
+                Intent i = new Intent(getContext(), AddOpinionActivity.class);
+                i.putExtra("id", recAdapter.productsList.get(indice).getUuID());
+                i.putExtra("category", recAdapter.productsList.get(indice).getCategory());
+                i.putExtra("brand", recAdapter.productsList.get(indice).getBrand());
+                startActivity(i);
+
+                //Indicamos que se ha seleccionado un elemento de la vista
+                view.setSelected(true);
+            }
+        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -209,11 +251,33 @@ public class AddProductFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                return false;
+                filterList(s);
+                return true;
             }
         });
 
+        return view;
     }
+
+    private void filterList(String newText){
+
+        ArrayList<Product> filteredList = new ArrayList<>();
+
+        for (Product p : recAdapter.productsList) {
+            if (p.getName().toLowerCase().contains(newText.toLowerCase())){
+                Log.d("Entra:","si");
+                filteredList.add(p);
+            }
+        }
+
+        if (filteredList.isEmpty()){
+            Toast.makeText(getContext(), "No se han encontrado resultados", Toast.LENGTH_LONG).show();
+        }else {
+            recAdapter.setFilteredList(filteredList);
+        }
+
+    }
+
 
     private ArrayList getCategories(){
 

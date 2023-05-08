@@ -1,8 +1,6 @@
 package com.example.beassistant.models;
 
-import android.graphics.Path;
-
-public class Producto {
+public class Product {
 
     private String uuID;
     private String name;
@@ -13,7 +11,7 @@ public class Producto {
     private double mediaRating;
     private Opinion opinion;
 
-    public Producto(String uuID, String name, String img_reference, String brand, String category, String type, double mediaRating) {
+    public Product(String uuID, String name, String img_reference, String brand, String category, String type, double mediaRating) {
         this.uuID = uuID;
         this.name = name;
         this.img_reference = img_reference;
@@ -23,7 +21,7 @@ public class Producto {
         this.mediaRating = mediaRating;
     }
 
-    public Producto(String uuID, String name, String img_reference, String brand, String category, String type, double mediaRating, Opinion opinion) {
+    public Product(String uuID, String name, String img_reference, String brand, String category, String type, double mediaRating, Opinion opinion) {
         this.uuID = uuID;
         this.name = name;
         this.img_reference = img_reference;

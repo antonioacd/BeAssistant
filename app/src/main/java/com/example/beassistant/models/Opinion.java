@@ -6,14 +6,24 @@ public class Opinion {
     private double price;
     private String toneOrColor;
     private String opinion;
-    private String rating;
+    private int rating;
+    private Boolean visible;
+    private String userId;
+    private String productId;
+    private String productCategory;
+    private String productBrand;
 
-    public Opinion(String shopBuy, double price, String toneOrColor, String opinion, String rating) {
+    public Opinion(String shopBuy, double price, String toneOrColor, String opinion, int rating, Boolean visible, String userId, String productId, String productCategory, String productBrand) {
         this.shopBuy = shopBuy;
         this.price = price;
         this.toneOrColor = toneOrColor;
         this.opinion = opinion;
         this.rating = rating;
+        this.visible = visible;
+        this.userId = userId;
+        this.productId = productId;
+        this.productCategory = productCategory;
+        this.productBrand = productBrand;
     }
 
     public String getShopBuy() {
@@ -48,12 +58,52 @@ public class Opinion {
         this.opinion = opinion;
     }
 
-    public String getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public String getProductCategory() {
+        return productCategory;
+    }
+
+    public void setProductCategory(String productCategory) {
+        this.productCategory = productCategory;
+    }
+
+    public String getProductBrand() {
+        return productBrand;
+    }
+
+    public void setProductBrand(String productBrand) {
+        this.productBrand = productBrand;
     }
 
     @Override
@@ -63,7 +113,12 @@ public class Opinion {
                 ", price=" + price +
                 ", toneOrColor='" + toneOrColor + '\'' +
                 ", opinion='" + opinion + '\'' +
-                ", rating='" + rating + '\'' +
+                ", rating=" + rating +
+                ", visible=" + visible +
+                ", userId='" + userId + '\'' +
+                ", productId='" + productId + '\'' +
+                ", productCategory='" + productCategory + '\'' +
+                ", productBrand='" + productBrand + '\'' +
                 '}';
     }
 }

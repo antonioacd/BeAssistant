@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.beassistant.R;
-import com.example.beassistant.models.Producto;
+import com.example.beassistant.models.Product;
 
 import java.util.ArrayList;
 
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapter.RecyclerHolder>{
 
-    public ArrayList<Producto> productList;
+    public ArrayList<Product> productList;
     //private CircularProgressDrawable progressDrawable;
 
     //Declaramos los listener de nuestro RecyclerAdapter
@@ -34,7 +34,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
     //Constructor de RecyclerAdapter
     public HomeRecyclerAdapter(Context contexto) {
         this.contexto = contexto;
-        productList = new ArrayList<Producto>();
+        productList = new ArrayList<Product>();
     }
 
     /*//Metodo para borrar un item del recyclerAdapter, borrandolo de la lista

@@ -1,11 +1,8 @@
 package com.example.beassistant.adapters;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,20 +13,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.beassistant.R;
-import com.example.beassistant.models.Producto;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 /**
@@ -38,7 +28,9 @@ import java.util.Arrays;
 
 public class ProductsRecyclerAdapter extends RecyclerView.Adapter<ProductsRecyclerAdapter.RecyclerHolder>{
 
-    public ArrayList<Producto> productsList;
+
+    public ArrayList<Product> productsList;
+    public ArrayList<Product> originalList;
 
     //Declaramos los listener de nuestro RecyclerAdapter
     View.OnClickListener onClickListener;
@@ -63,7 +55,7 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<ProductsRecycl
     }
 
     //Metodo para añadir un Item a la lista y al recyclerAdapter
-    public void insertarItem(Producto o){
+    public void insertarItem(Product o){
         productsList.add(o);
         this.notifyDataSetChanged();
     }
@@ -71,6 +63,11 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<ProductsRecycl
     //Metodo para modificar un Item del RecyclerAdapter
     public void modItem(int seleccionado,String id,String name, String desc){
         this.notifyDataSetChanged();
+    }
+
+    public void setFilteredList(ArrayList<Product> filteredList){
+        productsList = filteredList;
+        notifyDataSetChanged();
     }
 
     //Creamos la vista de nuestro RecyclerAdapter
@@ -97,17 +94,17 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<ProductsRecycl
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
 
-        Producto o = productsList.get(position);
+        Product p = productsList.get(position);
 
-        storageRef.child(o.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        storageRef.child(p.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 holder.imgProduct.setImageBitmap(bitmap);
             }
         });
-
-        holder.txtName.setText(o.getName());
+        
+        holder.txtName.setText(p.getName());
     }
 
     @Override
