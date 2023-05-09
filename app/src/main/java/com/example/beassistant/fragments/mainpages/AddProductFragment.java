@@ -47,7 +47,7 @@ public class AddProductFragment extends Fragment{
 
     private SearchView searchView;
 
-
+    ArrayList<Product> fullList;
     ArrayList<String> categories = new ArrayList<String>();
     AutoCompleteTextView select_category;
     ArrayAdapter<String> adapterItems;
@@ -202,6 +202,7 @@ public class AddProductFragment extends Fragment{
 
                                             Log.d(TAG, document.getId() + " => " + document.getData());
                                         }
+                                        fullList = recAdapter.productsList;
                                     } else {
                                         Log.d(TAG, "Error getting documents: ", task.getException());
                                     }
@@ -270,11 +271,18 @@ public class AddProductFragment extends Fragment{
             }
         }
 
-        if (filteredList.isEmpty()){
-            Toast.makeText(getContext(), "No se han encontrado resultados", Toast.LENGTH_LONG).show();
+        if (!newText.equals("")){
+            if (filteredList.isEmpty()){
+                Toast.makeText(getContext(), "No se han encontrado resultados", Toast.LENGTH_LONG).show();
+            }else {
+                recAdapter.setFilteredList(filteredList);
+            }
         }else {
-            recAdapter.setFilteredList(filteredList);
+            Log.d("Entra:","vacio" + fullList);
+            recAdapter.setFilteredList(fullList);
         }
+
+
 
     }
 
