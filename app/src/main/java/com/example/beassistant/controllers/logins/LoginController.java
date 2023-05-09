@@ -17,6 +17,7 @@ import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.controllers.Camera;
 import com.example.beassistant.controllers.DataBaseController;
+import com.example.beassistant.controllers.LoadingActivity;
 import com.example.beassistant.controllers.MainActivity;
 import com.example.beassistant.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -76,7 +77,6 @@ public class LoginController extends AppCompatActivity {
                                 User user = new User();
 
                                 if (task.isSuccessful()) {
-
                                     for (QueryDocumentSnapshot doc : task.getResult()) {
                                         String password = doc.getString("password");
                                         if (doc.getString("username").equals(et_user.getText().toString().trim())) {
@@ -98,7 +98,7 @@ public class LoginController extends AppCompatActivity {
                                     if (response == 0) {
                                         Toast.makeText(getApplicationContext(), "Correcto: " + user.toString(), Toast.LENGTH_LONG).show();
                                         Shared.myUser = user;
-                                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                                        Intent i = new Intent(getApplicationContext(), LoadingActivity.class);
                                         startActivity(i);
                                     } else if (response == 1) {
                                         Toast.makeText(getApplicationContext(), "Contraseña incorrecta", Toast.LENGTH_LONG).show();

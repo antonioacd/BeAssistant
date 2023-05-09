@@ -1,6 +1,11 @@
 package com.example.beassistant.adapters;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +16,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.beassistant.R;
+import com.example.beassistant.Shared;
+import com.example.beassistant.models.Opinion;
 import com.example.beassistant.models.Product;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -31,6 +48,11 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
 
     Context contexto;
 
+    FirebaseFirestore db;
+
+    FirebaseStorage storage;
+    StorageReference storageRef;
+
     //Constructor de RecyclerAdapter
     public HomeRecyclerAdapter(Context contexto) {
         this.contexto = contexto;
@@ -42,15 +64,15 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
         productList.remove(seleccionado);
         this.notifyDataSetChanged();
         
-    }
+    }*/
 
     //Metodo para añadir un Item a la lista y al recyclerAdapter
-    public void insertarItem(Objeto o){
-        productList.add(o);
+    public void insertarItem(Product p){
+        productList.add(p);
         this.notifyDataSetChanged();
     }
 
-    //Metodo para modificar un Item del RecyclerAdapter
+    /*//Metodo para modificar un Item del RecyclerAdapter
     public void modItem(int seleccionado,String id,String name, String desc){
 
         productList.get(seleccionado).setTitulo(name);
@@ -72,6 +94,13 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
         view.setOnClickListener(onClickListener);
         view.setOnLongClickListener(onLongClickListener);
 
+        db = FirebaseFirestore.getInstance();
+
+        storage = FirebaseStorage.getInstance();
+
+        // Create a storage reference from our app
+        storageRef = storage.getReference();
+
         return recyclerHolder;
     }
 
@@ -85,7 +114,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
         progressDrawable.setCenterRadius(30f);
         progressDrawable.start();
 
-        Objeto objeto = productList.get(position);
+
         holder.txtViewDesc.setText(objeto.getDescripcion());
         holder.txtViewTitle.setText(objeto.getTitulo());
         Glide.with(contexto)
@@ -93,13 +122,29 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
                 .placeholder(progressDrawable)
                 .error(R.mipmap.ic_launcher)
                 .into(holder.img);*/
-        holder.setIsRecyclable(false);
 
+        Product objeto = productList.get(position);
+        //Log.d("Lista", "pasa");
+
+        storageRef.child(objeto.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                holder.img_product.setImageBitmap(bitmap);
+            }
+        });
+
+        holder.txt_name.setText(objeto.getName());
+        holder.txt_brand.setText(objeto.getBrand());
+        holder.txt_type.setText(objeto.getType());
+        holder.txt_media_rating.setText(String.valueOf(objeto.getMediaRating()));
+
+        holder.setIsRecyclable(false);
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return productList.size();
     }
 
     //Asignamos los elementos de nustro recycled holder a variables creadas
@@ -108,10 +153,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
         ImageView img_product;
         TextView txt_brand;
         TextView txt_type;
-        TextView txt_price;
-        TextView txt_toneColor;
-        TextView txt_shopbuy;
-        TextView txt_opinion;
+        TextView txt_name;
+        TextView txt_media_rating;
 
         public RecyclerHolder(@NonNull View itemView) {
             super(itemView);
@@ -119,9 +162,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
             img_product  = (ImageView) itemView.findViewById(R.id.img_product);
             txt_brand = (TextView)  itemView.findViewById(R.id.txt_brand);
             txt_type = (TextView)  itemView.findViewById(R.id.txt_type);
-            txt_price = (TextView)  itemView.findViewById(R.id.txt_price);
-            txt_toneColor = (TextView)  itemView.findViewById(R.id.txt_toneColor);
-            txt_opinion = (TextView)  itemView.findViewById(R.id.txt_opinion);
+            txt_media_rating = (TextView)  itemView.findViewById(R.id.txt_media_rating);
+            txt_name = (TextView) itemView.findViewById(R.id.txt_name_list);
 
         }
     }

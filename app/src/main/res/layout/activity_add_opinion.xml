@@ -163,7 +163,7 @@
         android:id="@+id/textInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="87dp"
-        android:layout_height="44dp"
+        android:layout_height="51dp"
         android:layout_margin="16dp"
         android:hint="⭐"
         app:layout_constraintBottom_toBottomOf="parent"
