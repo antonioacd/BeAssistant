@@ -22,9 +22,11 @@ import android.widget.Toast;
 
 import com.example.beassistant.R;
 import com.example.beassistant.adapters.HomeRecyclerAdapter;
+import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -216,9 +218,35 @@ public class HomeFragment extends Fragment {
         btn_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(),"Category: " + selected_category +
-                        " Brand: " + selected_brand,Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+
+                recAdapter.productList.clear();
+
+                db.collection("categorias/"+selected_category+"/marcas/"+selected_brand+"/productos")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot doc: task.getResult()) {
+                                Product product = new Product(
+                                        doc.getString("id"),
+                                        doc.getString("name"),
+                                        doc.getString("imgRef"),
+                                        doc.getString("brand"),
+                                        doc.getString("category"),
+                                        doc.getString("type"),
+                                        5
+                                );
+                                recAdapter.productList.add(product);
+                                recAdapter.notifyDataSetChanged();
+                            }
+
+                            dialog.dismiss();
+                        } else {
+                            Log.d("Result", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
             }
         });
 

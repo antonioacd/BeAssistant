@@ -15,9 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
-import com.example.beassistant.controllers.Camera;
-import com.example.beassistant.controllers.DataBaseController;
-import com.example.beassistant.controllers.LoadingActivity;
 import com.example.beassistant.controllers.MainActivity;
 import com.example.beassistant.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,8 +22,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import io.grpc.SynchronizationContext;
 
 public class LoginController extends AppCompatActivity {
 
@@ -98,7 +93,7 @@ public class LoginController extends AppCompatActivity {
                                     if (response == 0) {
                                         Toast.makeText(getApplicationContext(), "Correcto: " + user.toString(), Toast.LENGTH_LONG).show();
                                         Shared.myUser = user;
-                                        Intent i = new Intent(getApplicationContext(), LoadingActivity.class);
+                                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
                                         startActivity(i);
                                     } else if (response == 1) {
                                         Toast.makeText(getApplicationContext(), "Contraseña incorrecta", Toast.LENGTH_LONG).show();

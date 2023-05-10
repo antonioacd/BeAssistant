@@ -28,9 +28,7 @@ import java.util.ArrayList;
 
 public class ProductsRecyclerAdapter extends RecyclerView.Adapter<ProductsRecyclerAdapter.RecyclerHolder>{
 
-
     public ArrayList<Product> productsList;
-    public ArrayList<Product> originalList;
 
     //Declaramos los listener de nuestro RecyclerAdapter
     View.OnClickListener onClickListener;

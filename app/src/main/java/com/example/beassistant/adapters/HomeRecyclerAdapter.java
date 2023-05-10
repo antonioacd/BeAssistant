@@ -1,7 +1,5 @@
 package com.example.beassistant.adapters;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,21 +14,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.beassistant.R;
-import com.example.beassistant.Shared;
-import com.example.beassistant.models.Opinion;
 import com.example.beassistant.models.Product;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -56,15 +48,46 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
     //Constructor de RecyclerAdapter
     public HomeRecyclerAdapter(Context contexto) {
         this.contexto = contexto;
-        productList = new ArrayList<Product>();
+        this.productList = new ArrayList<>();
+
+        db = FirebaseFirestore.getInstance();
+
+        storage = FirebaseStorage.getInstance();
+
+        // Create a storage reference from our app
+        storageRef = storage.getReference();
+
+        // Obtains all the products
+        getAllProducts();
     }
 
-    /*//Metodo para borrar un item del recyclerAdapter, borrandolo de la lista
-    public void deleteItem(int seleccionado){
-        productList.remove(seleccionado);
-        this.notifyDataSetChanged();
-        
-    }*/
+    public void getAllProducts(){
+        db.collectionGroup("productos").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        Log.d("Query:", "Entra");
+                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
+                            Log.d("Query:", doc.getString("name"));
+
+                            Product product = new Product(
+                                    doc.getString("id"),
+                                    doc.getString("name"),
+                                    doc.getString("imgRef"),
+                                    doc.getString("brand"),
+                                    doc.getString("category"),
+                                    doc.getString("type"),
+                                    5
+                            );
+                            productList.add(product);
+                            notifyDataSetChanged();
+                        }
+
+                    }
+                });
+        Log.d("Query:", "Lista:" + productList.toString());
+    }
+
 
     //Metodo para añadir un Item a la lista y al recyclerAdapter
     public void insertarItem(Product p){
@@ -94,13 +117,6 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
         view.setOnClickListener(onClickListener);
         view.setOnLongClickListener(onLongClickListener);
 
-        db = FirebaseFirestore.getInstance();
-
-        storage = FirebaseStorage.getInstance();
-
-        // Create a storage reference from our app
-        storageRef = storage.getReference();
-
         return recyclerHolder;
     }
 
@@ -108,23 +124,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
 
-        /*progressDrawable = new CircularProgressDrawable(contexto);
-        progressDrawable.setStrokeWidth(10f);
-        progressDrawable.setStyle(CircularProgressDrawable.LARGE);
-        progressDrawable.setCenterRadius(30f);
-        progressDrawable.start();
-
-
-        holder.txtViewDesc.setText(objeto.getDescripcion());
-        holder.txtViewTitle.setText(objeto.getTitulo());
-        Glide.with(contexto)
-                .load(objeto.getFotoId())
-                .placeholder(progressDrawable)
-                .error(R.mipmap.ic_launcher)
-                .into(holder.img);*/
-
         Product objeto = productList.get(position);
-        //Log.d("Lista", "pasa");
+        Log.d("Query:", "Objeto: " + objeto.getName());
 
         storageRef.child(objeto.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -139,11 +140,11 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
         holder.txt_type.setText(objeto.getType());
         holder.txt_media_rating.setText(String.valueOf(objeto.getMediaRating()));
 
-        holder.setIsRecyclable(false);
     }
 
     @Override
     public int getItemCount() {
+        Log.d("Query: ", "Tamaño: " + productList.size());
         return productList.size();
     }
 
@@ -163,7 +164,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
             txt_brand = (TextView)  itemView.findViewById(R.id.txt_brand);
             txt_type = (TextView)  itemView.findViewById(R.id.txt_type);
             txt_media_rating = (TextView)  itemView.findViewById(R.id.txt_media_rating);
-            txt_name = (TextView) itemView.findViewById(R.id.txt_name_list);
+            txt_name = (TextView) itemView.findViewById(R.id.txt_list_name);
 
         }
     }
