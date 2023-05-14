@@ -77,7 +77,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
                                     doc.getString("brand"),
                                     doc.getString("category"),
                                     doc.getString("type"),
-                                    5
+                                    doc.getDouble("rating")
                             );
                             productList.add(product);
                             notifyDataSetChanged();

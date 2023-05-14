@@ -2,6 +2,7 @@ package com.example.beassistant.models;
 
 public class Opinion {
 
+    private String opinionId;
     private String shopBuy;
     private double price;
     private String toneOrColor;
@@ -13,7 +14,8 @@ public class Opinion {
     private String productCategory;
     private String productBrand;
 
-    public Opinion(String shopBuy, double price, String toneOrColor, String opinion, int rating, Boolean visible, String userId, String productId, String productCategory, String productBrand) {
+    public Opinion(String opinionId, String shopBuy, double price, String toneOrColor, String opinion, int rating, Boolean visible, String userId, String productId, String productCategory, String productBrand) {
+        this.opinionId = opinionId;
         this.shopBuy = shopBuy;
         this.price = price;
         this.toneOrColor = toneOrColor;
@@ -24,6 +26,14 @@ public class Opinion {
         this.productId = productId;
         this.productCategory = productCategory;
         this.productBrand = productBrand;
+    }
+
+    public String getOpinionId() {
+        return opinionId;
+    }
+
+    public void setOpinionId(String opinionId) {
+        this.opinionId = opinionId;
     }
 
     public String getShopBuy() {
@@ -109,7 +119,8 @@ public class Opinion {
     @Override
     public String toString() {
         return "Opinion{" +
-                "shopBuy='" + shopBuy + '\'' +
+                "opinionId='" + opinionId + '\'' +
+                ", shopBuy='" + shopBuy + '\'' +
                 ", price=" + price +
                 ", toneOrColor='" + toneOrColor + '\'' +
                 ", opinion='" + opinion + '\'' +

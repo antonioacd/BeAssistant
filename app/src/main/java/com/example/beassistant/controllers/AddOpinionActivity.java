@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -52,7 +53,7 @@ public class AddOpinionActivity extends AppCompatActivity {
     TextView txt_product_media_rating;
 
     int selected_rating = -1;
-    ArrayList<Integer> number_ratings = new ArrayList<>(Arrays.asList(0,1,2,3,4,5,6,7,8,9,10));
+    ArrayList<Integer> number_ratings = new ArrayList<>(Arrays.asList(0,1,2,3,4,5));
     AutoCompleteTextView select_rating;
     ArrayAdapter<Integer> adapterItems;
 
@@ -149,6 +150,7 @@ public class AddOpinionActivity extends AppCompatActivity {
                 }
 
                 Opinion op = new Opinion(
+                        java.util.UUID.randomUUID().toString().trim(),
                         et_shopBuy.getText().toString().trim(),
                         Double.parseDouble(et_price.getText().toString().trim()),
                         et_toneOrColor.getText().toString().trim(),
@@ -162,6 +164,7 @@ public class AddOpinionActivity extends AppCompatActivity {
                 );
 
                 Map<String, Object> newOpinion = new HashMap<>();
+                newOpinion.put("opinionId", op.getOpinionId());
                 newOpinion.put("productId", op.getProductId());
                 newOpinion.put("productCategory", op.getProductCategory());
                 newOpinion.put("productBrand", op.getProductBrand());
@@ -176,14 +179,76 @@ public class AddOpinionActivity extends AppCompatActivity {
                 /**
                  * Add a new document with a generated ID
                  */
-                db.collection("opiniones").document(op.getProductId())
+                db.collection("opiniones").document(op.getOpinionId())
                         .set(newOpinion).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 Toast.makeText(getApplicationContext(), "Opinion Añadida", Toast.LENGTH_LONG).show();
                             }
                         });
+
+                getRatingMedia();
+
+                db.collection("categorias/"+category+"/marcas/"+brand+"/productos")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                            }
+                        });
             }
+
+            public void getRatingMedia(){
+
+                db.collection("opiniones")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                int cont = 0;
+                                double sumatory = 0;
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if (document.getString("productId").equals(uuId)){
+                                        cont++;
+                                        Log.d("Sumatorio: ", ""+document.getDouble("rating"));
+                                        sumatory += document.getDouble("rating");
+                                    }
+                                }
+                                double finalSumatory = sumatory;
+                                int finalCont = cont;
+                                db.collection("categorias/"+category+"/marcas/"+brand+"/productos/")
+                                                .get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        double media = finalSumatory / finalCont;
+                                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                                            if (document.getString("id").equals(uuId)) {
+
+                                                                Map<String, Object> newProduct = new HashMap<>();
+                                                                newProduct.put("id", document.getString("id"));
+                                                                newProduct.put("name", document.getString("name"));
+                                                                newProduct.put("imgRef", document.getString("imgRef"));
+                                                                newProduct.put("brand", document.getString("brand"));
+                                                                newProduct.put("category", document.getString("category"));
+                                                                newProduct.put("type", document.getString("type"));
+                                                                newProduct.put("rating", media);
+
+                                                                db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getString("name")).set(newProduct);
+
+                                                                Log.d("Sumatorio: ", ""+media);
+
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                Log.d("Sumatorio: ", ""+sumatory);
+                            }
+                        });
+            }
+
+
         });
 
     }
