@@ -17,10 +17,17 @@ import com.example.beassistant.R;
 import com.example.beassistant.controllers.DataBaseController;
 import com.example.beassistant.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterController extends AppCompatActivity {
 
@@ -30,6 +37,8 @@ public class RegisterController extends AppCompatActivity {
     EditText et_number_reg;
     EditText et_password_reg;
     Button btn_register_reg;
+
+    private FirebaseAuth mAuth;
 
     //Declare the data base object
     private FirebaseFirestore db;
@@ -46,6 +55,8 @@ public class RegisterController extends AppCompatActivity {
         setContentView(R.layout.activity_register_controller);
 
         db = FirebaseFirestore.getInstance();
+
+        mAuth = FirebaseAuth.getInstance();
 
         /**
          * Inicialice the variables
@@ -71,46 +82,50 @@ public class RegisterController extends AppCompatActivity {
                 if (et_user_reg.getText().toString().isEmpty() || et_name_reg.getText().toString().isEmpty() || et_email_reg.getText().toString().isEmpty() || et_number_reg.getText().toString().isEmpty() || et_password_reg.getText().toString().isEmpty()){
                     Toast.makeText(getApplicationContext(), "Debe rellenar todos los campos", Toast.LENGTH_LONG).show();
                 }else{
-
-                    db.collection("users")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    int response = 0;
-                                    if (task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                                            String email = doc.getString("email");
-                                            if (doc.getString("username").equals(et_user_reg.getText().toString().trim()) || email.equals(et_email_reg.getText().toString().trim())) {
-                                                if (doc.get("username").equals(et_user_reg.getText().toString().trim())) {
-                                                    response = -1;
-                                                } else {
-                                                    response = 1;
-                                                }
-                                            }
-                                        }
-                                        if (response == -1){
-                                            Toast.makeText(getApplicationContext(), "Ese usuario ya existe", Toast.LENGTH_LONG).show();
-                                        }else if (response == 1){
-                                            Toast.makeText(getApplicationContext(), "Ese email ya existe", Toast.LENGTH_LONG).show();
-                                        }else{
-                                            Intent i = new Intent(getApplicationContext(), RegisterImageProfileController.class);
-                                            i.putExtra("username", et_user_reg.getText().toString().trim());
-                                            i.putExtra("name", et_name_reg.getText().toString().trim());
-                                            i.putExtra("email", et_email_reg.getText().toString().trim());
-                                            i.putExtra("number", et_number_reg.getText().toString().trim());
-                                            i.putExtra("password", et_password_reg.getText().toString().trim());
-                                            startActivity(i);
-                                        }
-                                    } else {
-                                        Log.d(TAG, "Error getting documents: ", task.getException());
-                                    }
-                                }
-                            });
+                    generateUser();
                 }
             }
         });
 
+    }
+
+    private void generateUser(){
+        mAuth.createUserWithEmailAndPassword(et_email_reg.getText().toString().trim(), et_password_reg.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    String id = mAuth.getCurrentUser().getUid();
+
+                    Map<String, Object> user = new HashMap<>();
+                    user.put("id", id);
+
+                    /**
+                     * Add a new document with a generated ID
+                     */
+                    db.collection("users").document(id)
+                            .set(user)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    finish();
+                                    Toast.makeText(getApplicationContext(), "Usuario creado", Toast.LENGTH_LONG).show();
+                                    Intent i = new Intent(getApplicationContext(), RegisterImageProfileController.class);
+                                    i.putExtra("username", et_user_reg.getText().toString().trim());
+                                    i.putExtra("name", et_name_reg.getText().toString().trim());
+                                    i.putExtra("email", et_email_reg.getText().toString().trim());
+                                    i.putExtra("number", et_number_reg.getText().toString().trim());
+                                    i.putExtra("password", et_password_reg.getText().toString().trim());
+                                    startActivity(i);
+                                }
+                            });
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), e.getMessage() , Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 }

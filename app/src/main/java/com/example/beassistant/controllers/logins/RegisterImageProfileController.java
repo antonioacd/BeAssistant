@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,8 +17,12 @@ import android.widget.Toast;
 
 import com.example.beassistant.R;
 import com.example.beassistant.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -43,6 +48,8 @@ public class RegisterImageProfileController extends AppCompatActivity {
     //Declare the data base object
     private FirebaseFirestore db;
 
+    private FirebaseAuth mAuth;
+
     FirebaseStorage storage;
     StorageReference storageRef;
 
@@ -56,6 +63,9 @@ public class RegisterImageProfileController extends AppCompatActivity {
         img_profile_register = (ImageView) findViewById(R.id.img_profile_register);
 
         db = FirebaseFirestore.getInstance();
+
+        mAuth = FirebaseAuth.getInstance();
+
         storage = FirebaseStorage.getInstance();
         // Create a storage reference from our app
         storageRef = storage.getReference();
@@ -69,8 +79,6 @@ public class RegisterImageProfileController extends AppCompatActivity {
         number = i.getStringExtra("number");
         password = i.getStringExtra("password");
 
-
-
         btn_take.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,22 +89,11 @@ public class RegisterImageProfileController extends AppCompatActivity {
         btn_register_last.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Map<String, Object> user = new HashMap<>();
-                user.put("username", username);
-                user.put("name", name);
-                user.put("imgRef", img);
-                user.put("email", email);
-                user.put("phoneNumber", number);
-                user.put("password", password);
-
-                /**
-                 * Add a new document with a generated ID
-                 */
-                db.collection("users").document(username)
-                        .set(user);
-
-                Intent i = new Intent(getApplicationContext(), LoginController.class);
-                startActivity(i);
+                if (username.isEmpty() || name.isEmpty() || img.isEmpty() || email.isEmpty() || number.isEmpty() || password.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Debe rellenar todos los campos", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                generateUser();
             }
         });
 
@@ -141,6 +138,35 @@ public class RegisterImageProfileController extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void generateUser(){
+
+        String id = mAuth.getCurrentUser().getUid();
+
+        Map<String, Object> user = new HashMap<>();
+        user.put("id", id);
+        user.put("username", username);
+        user.put("name", name);
+        user.put("imgRef", img);
+        user.put("email", email);
+        user.put("phoneNumber", number);
+        user.put("password", password);
+
+        /**
+         * Add a new document with a generated ID
+         */
+        db.collection("users").document(id)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        finish();
+                        Intent i = new Intent(getApplicationContext(), LoginController.class);
+                        startActivity(i);
+                        Toast.makeText(getApplicationContext(), "Foto de perfil establecida ", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
 
