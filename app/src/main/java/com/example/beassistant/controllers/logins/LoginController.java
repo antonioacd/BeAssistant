@@ -20,7 +20,6 @@ import com.example.beassistant.controllers.MainActivity;
 import com.example.beassistant.models.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
@@ -66,8 +65,6 @@ public class LoginController extends AppCompatActivity {
             }
         });
 
-
-
         db = FirebaseFirestore.getInstance();
 
         /**
@@ -85,6 +82,8 @@ public class LoginController extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Log.d("Texto","Text: " + et_user.getText().toString().trim());
 
                 db.collection("users")
                         .get()
