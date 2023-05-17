@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="8dp" /> <!-- El radio define el grado de redondez, puedes ajustarlo a tu gusto -->
+    <solid android:color="#FF4081" /> <!-- El color rosa en formato hexadecimal, debe ser el mismo que el fondo del botón -->
+</shape>
