@@ -73,7 +73,7 @@ public class LoginController extends AppCompatActivity {
 
         et_user = (EditText) findViewById(R.id.et_user);
         et_password = (EditText) findViewById(R.id.et_password);
-        btn_login = (Button) findViewById(R.id.btn_login);
+        btn_login = (Button) findViewById(R.id.btn_login_02);
         btn_register = (Button) findViewById(R.id.btn_register);
 
         /**
@@ -102,12 +102,16 @@ public class LoginController extends AppCompatActivity {
                                         if (doc.getString("username").equals(et_user.getText().toString().trim())) {
                                             if (password.equals(et_password.getText().toString())) {
                                                 response = 0;
+                                                    user.setId(doc.getId());
                                                     user.setUsername(doc.getString("username"));
                                                     user.setName(doc.getString("name"));
                                                     user.setImg_reference(doc.getString("imgRef"));
                                                     user.setEmail(doc.getString("email"));
                                                     user.setNumber(doc.getString("phoneNumber"));
                                                     user.setPassword(doc.getString("password"));
+                                                    user.setNumOpiniones(0);
+                                                    user.setNumSeguidores(0);
+                                                    user.setNumSeguidos(0);
                                             } else {
                                                 response = 1;
                                             }

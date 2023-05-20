@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,14 +19,11 @@ import android.widget.TextView;
 
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
-import com.example.beassistant.adapters.HomeRecyclerAdapter;
 import com.example.beassistant.adapters.ProfileRecyclerAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import io.grpc.SynchronizationContext;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,10 +42,12 @@ public class ProfileFragment extends Fragment {
     ImageView img_profile;
     TextView txt_username;
     TextView txt_name;
+    TextView txt_numOpinions;
+    TextView txt_numFollowers;
+    TextView txt_numFollowing;
 
     FirebaseStorage storage;
     StorageReference storageRef;
-
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -104,9 +105,15 @@ public class ProfileFragment extends Fragment {
         img_profile = view.findViewById(R.id.img_profile);
         txt_username = view.findViewById(R.id.txt_username);
         txt_name = view.findViewById(R.id.txt_name);
+        txt_numOpinions = view.findViewById(R.id.txt_num_opinions);
+        txt_numFollowers = view.findViewById(R.id.txt_num_followers);
+        txt_numFollowing = view.findViewById(R.id.txt_num_following);
 
         txt_username.setText(Shared.myUser.getUsername());
         txt_name.setText(Shared.myUser.getName());
+        txt_numOpinions.setText("" + Shared.myUser.getNumOpiniones());
+        txt_numFollowers.setText("" + Shared.myUser.getNumSeguidores());
+        txt_numFollowing.setText("" + Shared.myUser.getNumSeguidos());
 
         //Asignamos a la variable rV el recyclerView
         rvCategories = (RecyclerView) view.findViewById(R.id.rv_clasification);
@@ -117,6 +124,20 @@ public class ProfileFragment extends Fragment {
 
         //Implementamos el recyclerAdapter en el recyclerView
         rvCategories.setAdapter(recAdapter);
+
+        this.txt_numFollowers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new FollowersFragment();
+                Bundle args = new Bundle();
+                args.putString("id", Shared.myUser.getId());
+
+                FragmentManager fragmentManager = getParentFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.commit();
+            }
+        });
 
         // Inflate the layout for this fragment
         return view;

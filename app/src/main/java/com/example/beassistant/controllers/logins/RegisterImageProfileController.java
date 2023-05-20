@@ -128,13 +128,12 @@ public class RegisterImageProfileController extends AppCompatActivity {
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-
+                    Log.d("Foto: ", "No: " + exception.getMessage());
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                    // ...
+                    Log.d("Foto: ", "Si");
                 }
             });
         }
@@ -152,6 +151,9 @@ public class RegisterImageProfileController extends AppCompatActivity {
         user.put("email", email);
         user.put("phoneNumber", number);
         user.put("password", password);
+        user.put("numOpiniones", 0);
+        user.put("numSeguidores", 0);
+        user.put("numSeguidos", 0);
 
         /**
          * Add a new document with a generated ID
