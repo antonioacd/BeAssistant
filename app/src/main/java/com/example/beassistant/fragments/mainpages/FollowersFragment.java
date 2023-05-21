@@ -1,6 +1,5 @@
 package com.example.beassistant.fragments.mainpages;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,13 +15,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.FollowersRecyclerAdapter;
-import com.example.beassistant.controllers.AddOpinionActivity;
 import com.example.beassistant.models.UserInAList;
-import com.google.android.gms.dynamic.IFragmentWrapper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,8 +33,14 @@ public class FollowersFragment extends Fragment {
     // Declare the data base object
     private FirebaseFirestore db;
 
+    // Declare de recyler adapter
     FollowersRecyclerAdapter recyclerAdapter;
+
+    // Declare the recicler view
     RecyclerView reciclerView;
+
+    // Declare the title text view
+    TextView txt_title;
 
     public FollowersFragment() {
         // Required empty public constructor
@@ -58,7 +62,7 @@ public class FollowersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_followers, container, false);
+        return inflater.inflate(R.layout.fragment_list_follows, container, false);
     }
 
     @Override
@@ -67,6 +71,12 @@ public class FollowersFragment extends Fragment {
 
         // Generate the instance
         db = FirebaseFirestore.getInstance();
+
+        // Init the title
+        txt_title = view.findViewById(R.id.txt_title);
+
+        // Set the title
+        txt_title.setText("Seguidores");
 
         // Init the recicler adapter
         recyclerAdapter = new FollowersRecyclerAdapter(getContext());

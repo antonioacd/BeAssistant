@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,8 +32,14 @@ public class FollowingFragment extends Fragment {
     // Declare the data base object
     private FirebaseFirestore db;
 
+    // Declare de recyler adapter
     FollowersRecyclerAdapter recyclerAdapter;
+
+    // Declare the recicler view
     RecyclerView reciclerView;
+
+    // Declare the title text view
+    TextView txt_title;
 
     public FollowingFragment() {
         // Required empty public constructor
@@ -54,7 +61,7 @@ public class FollowingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_followers, container, false);
+        return inflater.inflate(R.layout.fragment_list_follows, container, false);
     }
 
     @Override
@@ -63,6 +70,12 @@ public class FollowingFragment extends Fragment {
 
         // Generate the instance
         db = FirebaseFirestore.getInstance();
+
+        // Init the title
+        txt_title = view.findViewById(R.id.txt_title);
+
+        // Set the title
+        txt_title.setText("Siguiendo");
 
         // Init the recicler adapter
         recyclerAdapter = new FollowersRecyclerAdapter(getContext());
@@ -88,19 +101,26 @@ public class FollowingFragment extends Fragment {
                 // Get the index
                 index = reciclerView.getChildAdapterPosition(view);
 
+                // Get the selected user id
                 String selectedUserId = recyclerAdapter.followersList.get(index).getId();
 
+                // Create the fragment
                 Fragment fragment;
 
+                // Check if is the same id
                 if(selectedUserId.equals(Shared.myUser.getId())){
                     fragment = new ProfileFragment();
                 }else{
                     fragment = new ProfileOthersFragment();
                 }
 
+                // Create the args
                 Bundle args = new Bundle();
+
+                // Put the args
                 args.putString("id", selectedUserId);
 
+                // Create the fragment manager
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.setFragmentResult("follower", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -119,7 +139,10 @@ public class FollowingFragment extends Fragment {
      */
     private void getFollowingId(Bundle result){
 
+        // Clear the recycler adapter
         recyclerAdapter.followersList.clear();
+
+        // Notify data set changed
         recyclerAdapter.notifyDataSetChanged();
 
         // Get the own user id
