@@ -1,7 +1,10 @@
 package com.example.beassistant.fragments.mainpages;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,15 +15,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.beassistant.R;
-import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.FollowersRecyclerAdapter;
-import com.example.beassistant.controllers.AddOpinionActivity;
 import com.example.beassistant.models.UserInAList;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,7 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class FollowersFragment extends Fragment {
+public class FollowingFragment extends Fragment {
 
     // Declare the data base object
     private FirebaseFirestore db;
@@ -37,7 +33,7 @@ public class FollowersFragment extends Fragment {
     FollowersRecyclerAdapter recyclerAdapter;
     RecyclerView reciclerView;
 
-    public FollowersFragment() {
+    public FollowingFragment() {
         // Required empty public constructor
     }
 
@@ -49,7 +45,7 @@ public class FollowersFragment extends Fragment {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 // Obtains the followers id
-                getFollowersId(result);
+                getFollowingId(result);
             }
         });
     }
@@ -111,12 +107,16 @@ public class FollowersFragment extends Fragment {
      * Function to get the followers id
      * @param result
      */
-    private void getFollowersId(Bundle result){
+    private void getFollowingId(Bundle result){
+
+        recyclerAdapter.followersList.clear();
+        recyclerAdapter.notifyDataSetChanged();
+
         // Get the own user id
         String userId = result.getString("id");
 
         // Create the path to the query
-        String path = "/users/"+userId+"/seguidores";
+        String path = "/users/"+userId+"/seguidos";
 
         // Query about the followers
         db.collection(path)

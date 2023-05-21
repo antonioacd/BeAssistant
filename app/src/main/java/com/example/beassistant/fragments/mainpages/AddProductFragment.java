@@ -63,7 +63,6 @@ public class AddProductFragment extends Fragment{
     private FirebaseFirestore db;
 
     ProductsRecyclerAdapter recAdapter;
-    ConstraintLayout constraintLayout;
     RecyclerView rV;
 
     // TODO: Rename parameter arguments, choose names that match

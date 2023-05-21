@@ -13,7 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.beassistant.R;
-import com.example.beassistant.models.Product;
+import com.example.beassistant.models.UserInAList;
+import com.example.beassistant.models.UserInAList;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 
 public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecyclerAdapter.RecyclerHolder>{
 
-    public ArrayList<Product> followersList;
+    public ArrayList<UserInAList> followersList;
 
     //Declaramos los listener de nuestro RecyclerAdapter
     View.OnClickListener onClickListener;
@@ -52,7 +53,7 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
     }
 
     //Metodo para añadir un Item a la lista y al recyclerAdapter
-    public void insertarItem(Product o){
+    public void insertarItem(UserInAList o){
         followersList.add(o);
         this.notifyDataSetChanged();
     }
@@ -62,7 +63,7 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
         this.notifyDataSetChanged();
     }
 
-    public void setFilteredList(ArrayList<Product> filteredList){
+    public void setFilteredList(ArrayList<UserInAList> filteredList){
         followersList = filteredList;
         notifyDataSetChanged();
     }
@@ -91,9 +92,9 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
 
-        Product p = followersList.get(position);
+        UserInAList user = followersList.get(position);
 
-        storageRef.child(p.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        storageRef.child(user.getImgRef()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -101,7 +102,7 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
             }
         });
         
-        holder.txt_username.setText(p.getName());
+        holder.txt_username.setText(user.getUsername());
     }
 
     @Override
@@ -118,8 +119,8 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
         public RecyclerHolder(@NonNull View itemView) {
             super(itemView);
 
-            txt_username = (TextView) itemView.findViewById(R.id.txt_name_list);
-            imgProfile = (ImageView) itemView.findViewById(R.id.imgProductList);
+            txt_username = (TextView) itemView.findViewById(R.id.txt_follower_name);
+            imgProfile = (ImageView) itemView.findViewById(R.id.img_profile);
 
         }
     }
