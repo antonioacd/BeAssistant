@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.beassistant.R;
+import com.example.beassistant.models.Product;
 import com.example.beassistant.models.UserInAList;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -25,9 +26,9 @@ import java.util.ArrayList;
  *
  */
 
-public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecyclerAdapter.RecyclerHolder>{
+public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdapter.RecyclerHolder>{
 
-    public ArrayList<UserInAList> followersList;
+    public ArrayList<UserInAList> usersList;
 
     //Declaramos los listener de nuestro RecyclerAdapter
     View.OnClickListener onClickListener;
@@ -39,21 +40,21 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
     StorageReference storageRef;
 
     //Constructor de RecyclerAdapter
-    public FollowersRecyclerAdapter(Context contexto) {
+    public UsersRecyclerAdapter(Context contexto) {
         this.contexto = contexto;
-        followersList = new ArrayList<>();
+        usersList = new ArrayList<>();
     }
 
     //Metodo para borrar un item del recyclerAdapter, borrandolo de la lista
     public void deleteItem(int seleccionado){
-        followersList.remove(seleccionado);
+        usersList.remove(seleccionado);
         this.notifyDataSetChanged();
         
     }
 
     //Metodo para añadir un Item a la lista y al recyclerAdapter
     public void insertarItem(UserInAList o){
-        followersList.add(o);
+        usersList.add(o);
         this.notifyDataSetChanged();
     }
 
@@ -63,7 +64,7 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
     }
 
     public void setFilteredList(ArrayList<UserInAList> filteredList){
-        followersList = filteredList;
+        usersList = filteredList;
         notifyDataSetChanged();
     }
 
@@ -91,36 +92,35 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
 
-        UserInAList user = followersList.get(position);
+        UserInAList p = usersList.get(position);
 
-        storageRef.child(user.getImgRef()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        storageRef.child(p.getImgRef()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                holder.imgProfile.setImageBitmap(bitmap);
+                holder.imgUser.setImageBitmap(bitmap);
             }
         });
         
-        holder.txt_username.setText(user.getUsername());
+        holder.txt_username.setText(p.getUsername());
     }
 
     @Override
     public int getItemCount() {
-        return followersList.size();
+        return usersList.size();
     }
 
     //Asignamos los elementos de nustro recycled holder a variables creadas
     public class RecyclerHolder extends RecyclerView.ViewHolder {
 
         TextView txt_username;
-        ImageView imgProfile;
+        ImageView imgUser;
 
         public RecyclerHolder(@NonNull View itemView) {
             super(itemView);
 
             txt_username = (TextView) itemView.findViewById(R.id.txt_follower_name);
-            imgProfile = (ImageView) itemView.findViewById(R.id.img_profile_user);
-
+            imgUser = (ImageView) itemView.findViewById(R.id.img_profile_user);
         }
     }
 

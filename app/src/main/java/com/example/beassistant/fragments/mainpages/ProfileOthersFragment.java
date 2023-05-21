@@ -26,6 +26,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -55,6 +57,8 @@ public class ProfileOthersFragment extends Fragment {
 
     private String id;
 
+    private boolean following;
+
     public ProfileOthersFragment() {
         // Required empty public constructor
     }
@@ -72,45 +76,16 @@ public class ProfileOthersFragment extends Fragment {
         // Set the storage ref
         storageRef = storage.getReference();
 
+        checkFollow();
+
         getParentFragmentManager().setFragmentResultListener("follower", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 // Obtain the follower id
                 String userId = result.getString("id");
 
-                // Search the user in the database
-                db.collection("users")
-                        .document(userId)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                                // Chek if the task is successful
-                                if (!task.isSuccessful()) {
-                                    return;
-                                }
-
-                                // Get the document
-                                DocumentSnapshot document = task.getResult();
-
-                                // Check if the document exists
-                                if (!document.exists()) {
-                                    return;
-                                }
-
-                                id = document.getId();
-                                txt_username.setText(document.getString("username"));
-                                txt_name.setText(document.getString("name"));
-                                txt_numOpinions.setText(String.valueOf(document.getDouble("numOpiniones").intValue()));
-                                txt_numFollowers.setText(String.valueOf(document.getDouble("numSeguidores").intValue()));
-                                txt_numFollowing.setText(String.valueOf(document.getDouble("numSeguidos").intValue()));
-                                cargarFoto(document.getString("imgRef"));
-
-                                checkFollow();
-
-                            }
-                        });
+                // Get the user
+                getUser(userId);
             }
         });
 
@@ -165,30 +140,17 @@ public class ProfileOthersFragment extends Fragment {
         });
 
         btn_follow.setOnClickListener(new View.OnClickListener() {
+            // Set their user in mi following
             @Override
             public void onClick(View view) {
-                Map<String, Object> object = new HashMap<>();
-                object.put("id", id);
-                db.collection("users/"+Shared.myUser.getId()+"/seguidos/")
-                        .document(id)
-                        .set(object)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        btn_follow.setText("Siguendo");
-                        Map<String, Object> objecto02 = new HashMap<>();
-                        objecto02.put("id", id);
-                        db.collection("users/"+id+"/seguidores/")
-                                .document(Shared.myUser.getId())
-                                .set(objecto02)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
+                if(!following){
+                    // Follow the user
+                    followUser();
+                    return;
+                }
 
-                                    }
-                                });
-                    }
-                });
+                // Unfollow the user
+                unfollowUser();
             }
         });
     }
@@ -217,22 +179,158 @@ public class ProfileOthersFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                        boolean following = false;
-
                         // Check if the task is successful
                         if (!task.isSuccessful()){
                             return;
                         }
                         // Loop all the docs of the result
                         for (QueryDocumentSnapshot doc: task.getResult()) {
-                            Log.d("Seguido:", doc.getId() + " - " + id);
+
+                            // Check if is the same id
                             if (doc.getId().equals(id)){
-                                Log.d("Seguido:", "si");
-                                btn_follow.setText("Siguiendo");
+                                following = true;
                             }
-                            Log.d("Seguido:", "si");
                         }
+                        // Check if you follow this user
+                        if(following){
+                            btn_follow.setText("Siguiendo");
+                            return;
+                        }
+
+                        // Set the btn text
+                        btn_follow.setText("Seguir");
                     }
                 });
     }
+
+    private void getUser(String userId){
+        // Search the user in the database
+        db.collection("users")
+                .document(userId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                        // Chek if the task is successful
+                        if (!task.isSuccessful()) {
+                            return;
+                        }
+
+                        // Get the document
+                        DocumentSnapshot document = task.getResult();
+
+                        // Check if the document exists
+                        if (!document.exists()) {
+                            return;
+                        }
+
+                        id = document.getId();
+                        txt_username.setText(document.getString("username"));
+                        txt_name.setText(document.getString("name"));
+                        txt_numOpinions.setText(String.valueOf(document.getDouble("numOpiniones").intValue()));
+                        txt_numFollowers.setText(String.valueOf(document.getDouble("numSeguidores").intValue()));
+                        txt_numFollowing.setText(String.valueOf(document.getDouble("numSeguidos").intValue()));
+                        cargarFoto(document.getString("imgRef"));
+
+                        checkFollow();
+                    }
+                });
+    }
+
+    private void followUser(){
+        Map<String, Object> object = new HashMap<>();
+        object.put("id", id);
+        db.collection("users/"+Shared.myUser.getId()+"/seguidos/")
+                .document(id)
+                .set(object)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        btn_follow.setText("Siguendo");
+                        Map<String, Object> objecto02 = new HashMap<>();
+                        objecto02.put("id", id);
+
+                        // Set my user in thir followers
+                        db.collection("users/"+id+"/seguidores/")
+                                .document(Shared.myUser.getId())
+                                .set(objecto02)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+
+                                        // Add 1 to their number of followers
+                                        db.collection("users")
+                                                .document(id)
+                                                .update("numSeguidores", FieldValue.increment(1))
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                                        // Add 1 to mi number of following
+                                                        db.collection("users")
+                                                                .document(Shared.myUser.getId())
+                                                                .update("numSeguidos", FieldValue.increment(1))
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        getUser(id);
+                                                                    }
+                                                                });
+                                                    }
+                                                });
+                                    }
+                                });
+                    }
+                });
+    }
+
+    private void unfollowUser(){
+        Map<String, Object> object = new HashMap<>();
+        object.put("id", id);
+        // Delete the user from mi following
+        db.collection("users/"+Shared.myUser.getId()+"/seguidos/")
+                .document(id)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        btn_follow.setText("Seguir");
+                        Map<String, Object> objecto02 = new HashMap<>();
+                        objecto02.put("id", id);
+
+                        // Delete my user from their followers
+                        db.collection("users/"+id+"/seguidores/")
+                                .document(Shared.myUser.getId())
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+
+                                        // Rest 1 to their number of followers
+                                        db.collection("users")
+                                                .document(id)
+                                                .update("numSeguidores", FieldValue.increment(-1))
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                                        // Rest 1 to mi number of following
+                                                        db.collection("users")
+                                                                .document(Shared.myUser.getId())
+                                                                .update("numSeguidos", FieldValue.increment(-1))
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        getUser(id);
+                                                                    }
+                                                                });
+                                                    }
+                                                });
+                                    }
+                                });
+                    }
+                });
+    }
+
 }

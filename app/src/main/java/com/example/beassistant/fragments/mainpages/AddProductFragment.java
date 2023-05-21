@@ -38,11 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AddProductFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AddProductFragment extends Fragment{
 
     private SearchView searchView;
@@ -78,31 +73,9 @@ public class AddProductFragment extends Fragment{
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AddProductFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AddProductFragment newInstance(String param1, String param2) {
-        AddProductFragment fragment = new AddProductFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
 
         // Generate the instance
         db = FirebaseFirestore.getInstance();
@@ -120,19 +93,19 @@ public class AddProductFragment extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_product, container, false);
 
-        //Asignamos a la variable rV el recyclerView
+        // Asignamos a la variable rV el recyclerView
         rV = (RecyclerView) view.findViewById(R.id.recyclerView);
 
-        //Creamos un LinearLayout para establecer el Layout del recyclerView
+        // Creamos un LinearLayout para establecer el Layout del recyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         rV.setLayoutManager(layoutManager);
 
-        //Implementamos el recyclerAdapter en el recyclerView
+        // Implementamos el recyclerAdapter en el recyclerView
         rV.setAdapter(recAdapter);
 
         searchView = (SearchView) view.findViewById(R.id.searchView);
 
-        //Select Category
+        // Select Category
         select_category = view.findViewById(R.id.select_category);
 
         adapterItems = new ArrayAdapter<String>(getContext(),R.layout.list_item,categories);
@@ -220,8 +193,6 @@ public class AddProductFragment extends Fragment{
                 }catch (Exception e){
                     Log.d("Fallo: ", e.getMessage());
                 }
-
-
             }
         });
 
@@ -280,9 +251,6 @@ public class AddProductFragment extends Fragment{
             Log.d("Entra:","vacio" + fullList);
             recAdapter.setFilteredList(fullList);
         }
-
-
-
     }
 
 

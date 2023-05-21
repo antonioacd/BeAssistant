@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.beassistant.R;
+import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.FollowersRecyclerAdapter;
 import com.example.beassistant.models.UserInAList;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -87,9 +88,18 @@ public class FollowingFragment extends Fragment {
                 // Get the index
                 index = reciclerView.getChildAdapterPosition(view);
 
-                Fragment fragment = new ProfileOthersFragment();
+                String selectedUserId = recyclerAdapter.followersList.get(index).getId();
+
+                Fragment fragment;
+
+                if(selectedUserId.equals(Shared.myUser.getId())){
+                    fragment = new ProfileFragment();
+                }else{
+                    fragment = new ProfileOthersFragment();
+                }
+
                 Bundle args = new Bundle();
-                args.putString("id", recyclerAdapter.followersList.get(index).getId());
+                args.putString("id", selectedUserId);
 
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.setFragmentResult("follower", args);

@@ -20,8 +20,13 @@ import android.widget.TextView;
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.ProfileRecyclerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -31,6 +36,8 @@ import com.google.firebase.storage.StorageReference;
  */
 public class ProfileFragment extends Fragment {
 
+    // Declare the database controller
+    FirebaseFirestore db;
 
     //Recycler view variables
     View view;
@@ -57,6 +64,9 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Init the database controller
+        db = FirebaseFirestore.getInstance();
+
         // Init the recicler adapter
         recAdapter = new ProfileRecyclerAdapter(getContext());
 
@@ -73,7 +83,8 @@ public class ProfileFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        cargarFoto();
+        // Get my user
+        getMyUser();
 
         img_profile = view.findViewById(R.id.img_profile);
         txt_username = view.findViewById(R.id.txt_username);
@@ -81,12 +92,6 @@ public class ProfileFragment extends Fragment {
         txt_numOpinions = view.findViewById(R.id.txt_num_opinions);
         txt_numFollowers = view.findViewById(R.id.txt_num_followers);
         txt_numFollowing = view.findViewById(R.id.txt_num_following);
-
-        txt_username.setText(Shared.myUser.getUsername());
-        txt_name.setText(Shared.myUser.getName());
-        txt_numOpinions.setText("" + Shared.myUser.getNumOpiniones());
-        txt_numFollowers.setText("" + Shared.myUser.getNumSeguidores());
-        txt_numFollowing.setText("" + Shared.myUser.getNumSeguidos());
 
         //Asignamos a la variable rV el recyclerView
         rvCategories = (RecyclerView) view.findViewById(R.id.rv_clasification);
@@ -98,7 +103,7 @@ public class ProfileFragment extends Fragment {
         //Implementamos el recyclerAdapter en el recyclerView
         rvCategories.setAdapter(recAdapter);
 
-        this.txt_numFollowers.setOnClickListener(new View.OnClickListener() {
+        txt_numFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new FollowersFragment();
@@ -132,9 +137,9 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private void cargarFoto(){
+    private void cargarFoto(String imgRef){
 
-        storageRef.child(Shared.myUser.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        storageRef.child(imgRef).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -146,6 +151,38 @@ public class ProfileFragment extends Fragment {
                 // Handle any errors
             }
         });
+    }
+
+    private void getMyUser(){
+        // Search the user in the database
+        db.collection("users")
+                .document(Shared.myUser.getId())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                        // Chek if the task is successful
+                        if (!task.isSuccessful()) {
+                            return;
+                        }
+
+                        // Get the document
+                        DocumentSnapshot document = task.getResult();
+
+                        // Check if the document exists
+                        if (!document.exists()) {
+                            return;
+                        }
+
+                        txt_username.setText(document.getString("username"));
+                        txt_name.setText(document.getString("name"));
+                        txt_numOpinions.setText(String.valueOf(document.getDouble("numOpiniones").intValue()));
+                        txt_numFollowers.setText(String.valueOf(document.getDouble("numSeguidores").intValue()));
+                        txt_numFollowing.setText(String.valueOf(document.getDouble("numSeguidos").intValue()));
+                        cargarFoto(document.getString("imgRef"));
+                    }
+                });
     }
 
 
