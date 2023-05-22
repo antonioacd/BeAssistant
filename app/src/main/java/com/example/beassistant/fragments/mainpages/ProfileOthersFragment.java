@@ -43,20 +43,14 @@ public class ProfileOthersFragment extends Fragment {
     private FirebaseFirestore db;
 
     // Declarer the storage objects
-    FirebaseStorage storage;
-    StorageReference storageRef;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
 
     // Profile parameters
-    Button btn_follow;
-    ImageView img_profile;
-    TextView txt_username;
-    TextView txt_name;
-    TextView txt_numOpinions;
-    TextView txt_numFollowers;
-    TextView txt_numFollowing;
-
+    private Button btn_follow;
+    private ImageView img_profile;
+    private TextView txt_username, txt_name, txt_numOpinions, txt_numFollowers, txt_numFollowing;
     private String id;
-
     private boolean following = false;
 
     public ProfileOthersFragment() {

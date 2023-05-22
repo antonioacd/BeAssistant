@@ -32,11 +32,10 @@ import java.util.ArrayList;
 public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapter.RecyclerHolder>{
 
     public ArrayList<Product> productList;
-    //private CircularProgressDrawable progressDrawable;
 
     //Declaramos los listener de nuestro RecyclerAdapter
-    View.OnClickListener onClickListener;
-    View.OnLongClickListener onLongClickListener;
+    private View.OnClickListener onClickListener;
+    private View.OnLongClickListener onLongClickListener;
 
     Context contexto;
 
