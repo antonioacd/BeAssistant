@@ -2,6 +2,7 @@ package com.example.beassistant.fragments.mainpages;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -137,16 +138,15 @@ public class ProfileOthersFragment extends Fragment {
             // Set their user in mi following
             @Override
             public void onClick(View view) {
+                btn_follow.setEnabled(false);
                 if(!following){
                     // Follow the user
                     followUser();
-                    checkFollow();
                     return;
                 }
 
                 // Unfollow the user
                 unfollowUser();
-                checkFollow();
             }
         });
     }
@@ -167,6 +167,9 @@ public class ProfileOthersFragment extends Fragment {
 
     }
 
+    /**
+     * Check if you follow the user
+     */
     private void checkFollow(){
 
         following = false;
@@ -191,15 +194,8 @@ public class ProfileOthersFragment extends Fragment {
                         }
 
                         btn_follow.setText((following) ? "Siguiendo" : "Seguir");
-
-                        // Check if you follow this user
-                        /*if(following){
-                            btn_follow.setText("Siguiendo");
-                            return;
-                        }
-
-                        // Set the btn text
-                        btn_follow.setText("Seguir");*/
+                        btn_follow.setBackgroundColor((following) ? 1 : 20000);
+                        btn_follow.setEnabled(true);
                     }
                 });
     }
