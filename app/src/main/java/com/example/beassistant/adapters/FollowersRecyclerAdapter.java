@@ -30,13 +30,13 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
     public ArrayList<UserInAList> followersList;
 
     //Declaramos los listener de nuestro RecyclerAdapter
-    View.OnClickListener onClickListener;
-    View.OnLongClickListener onLongClickListener;
+    private View.OnClickListener onClickListener;
+    private View.OnLongClickListener onLongClickListener;
 
-    Context contexto;
+    private Context contexto;
 
-    FirebaseStorage storage;
-    StorageReference storageRef;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
 
     //Constructor de RecyclerAdapter
     public FollowersRecyclerAdapter(Context contexto) {

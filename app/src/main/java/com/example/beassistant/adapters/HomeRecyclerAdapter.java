@@ -37,12 +37,12 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
     private View.OnClickListener onClickListener;
     private View.OnLongClickListener onLongClickListener;
 
-    Context contexto;
+    private Context contexto;
 
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
 
-    FirebaseStorage storage;
-    StorageReference storageRef;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
 
     //Constructor de RecyclerAdapter
     public HomeRecyclerAdapter(Context contexto) {
