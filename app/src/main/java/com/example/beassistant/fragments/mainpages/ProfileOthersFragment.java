@@ -57,7 +57,7 @@ public class ProfileOthersFragment extends Fragment {
 
     private String id;
 
-    private boolean following;
+    private boolean following = false;
 
     public ProfileOthersFragment() {
         // Required empty public constructor
@@ -146,11 +146,13 @@ public class ProfileOthersFragment extends Fragment {
                 if(!following){
                     // Follow the user
                     followUser();
+                    checkFollow();
                     return;
                 }
 
                 // Unfollow the user
                 unfollowUser();
+                checkFollow();
             }
         });
     }
@@ -173,6 +175,8 @@ public class ProfileOthersFragment extends Fragment {
 
     private void checkFollow(){
 
+        following = false;
+
         db.collection("users/"+Shared.myUser.getId()+"/seguidos")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -191,14 +195,18 @@ public class ProfileOthersFragment extends Fragment {
                                 following = true;
                             }
                         }
+
+                        btn_follow.setText((following) ? "Siguiendo" : "Seguir");
+
                         // Check if you follow this user
-                        if(following){
+                        /*if(following){
                             btn_follow.setText("Siguiendo");
                             return;
                         }
 
                         // Set the btn text
-                        btn_follow.setText("Seguir");
+                        btn_follow.setText("Seguir");*/
+
                     }
                 });
     }
@@ -275,6 +283,7 @@ public class ProfileOthersFragment extends Fragment {
                                                                     @Override
                                                                     public void onComplete(@NonNull Task<Void> task) {
                                                                         getUser(id);
+                                                                        checkFollow();
                                                                     }
                                                                 });
                                                     }
@@ -323,6 +332,7 @@ public class ProfileOthersFragment extends Fragment {
                                                                     @Override
                                                                     public void onComplete(@NonNull Task<Void> task) {
                                                                         getUser(id);
+                                                                        checkFollow();
                                                                     }
                                                                 });
                                                     }
