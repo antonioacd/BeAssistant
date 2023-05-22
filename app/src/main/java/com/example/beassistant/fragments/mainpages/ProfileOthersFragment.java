@@ -206,7 +206,6 @@ public class ProfileOthersFragment extends Fragment {
 
                         // Set the btn text
                         btn_follow.setText("Seguir");*/
-
                     }
                 });
     }
