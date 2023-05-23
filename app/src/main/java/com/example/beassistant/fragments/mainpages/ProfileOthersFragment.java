@@ -1,5 +1,6 @@
 package com.example.beassistant.fragments.mainpages;
 
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -193,9 +194,14 @@ public class ProfileOthersFragment extends Fragment {
                             }
                         }
 
+                        ColorStateList followColor = ColorStateList.valueOf(getResources().getColor(R.color.follow));
+                        ColorStateList unfollowColor = ColorStateList.valueOf(getResources().getColor(R.color.unfollow));
+
+                        btn_follow.setBackgroundTintList((following) ?  unfollowColor : followColor);
                         btn_follow.setText((following) ? "Siguiendo" : "Seguir");
-                        btn_follow.setBackgroundColor((following) ? 1 : 20000);
+
                         btn_follow.setEnabled(true);
+
                     }
                 });
     }
