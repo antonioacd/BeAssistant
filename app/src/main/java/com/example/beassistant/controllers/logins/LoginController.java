@@ -73,7 +73,7 @@ public class LoginController extends AppCompatActivity {
 
         et_user = (EditText) findViewById(R.id.et_user);
         et_password = (EditText) findViewById(R.id.et_password);
-        btn_login = (Button) findViewById(R.id.btn_login_02);
+        btn_login = (Button) findViewById(R.id.btn_login);
         btn_register = (Button) findViewById(R.id.btn_register);
 
         /**
