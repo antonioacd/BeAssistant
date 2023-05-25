@@ -43,6 +43,7 @@ public class RegisterImageProfileController extends AppCompatActivity {
 
     private Button btn_take;
     private Button btn_register_last;
+    private Button btn_getGalleryImg;
     private ImageView img_profile_register;
 
     //Declare the data base object
@@ -60,6 +61,7 @@ public class RegisterImageProfileController extends AppCompatActivity {
 
         btn_take = (Button) findViewById(R.id.btn_take);
         btn_register_last = (Button) findViewById(R.id.btn_register_last);
+        btn_getGalleryImg = (Button) findViewById(R.id.btn_getGalleryImg);
         img_profile_register = (ImageView) findViewById(R.id.img_profile_register);
 
         db = FirebaseFirestore.getInstance();
@@ -83,6 +85,37 @@ public class RegisterImageProfileController extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 abrirCamara();
+            }
+        });
+
+        btn_getGalleryImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Create a reference to "mountains.jpg"
+                StorageReference imgRef = storageRef.child(img);
+
+                // Get the data from an ImageView as bytes
+                img_profile_register.setDrawingCacheEnabled(true);
+                img_profile_register.buildDrawingCache();
+
+                Bitmap bitmap = ((BitmapDrawable) img_profile_register.getDrawable()).getBitmap();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] data0 = baos.toByteArray();
+
+                UploadTask uploadTask = imgRef.putBytes(data0);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getApplicationContext(), "No se ha podido subir la imagen", Toast.LENGTH_LONG);
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(getApplicationContext(), "Imagen subida", Toast.LENGTH_LONG);
+                    }
+                });
             }
         });
 

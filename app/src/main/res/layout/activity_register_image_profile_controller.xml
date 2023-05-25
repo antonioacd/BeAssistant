@@ -14,6 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.785"
         tools:srcCompat="@tools:sample/avatars" />
 
     <Button
@@ -23,7 +24,19 @@
         android:text="Hacer Foto"
         app:layout_constraintBottom_toTopOf="@+id/btn_register_last"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.169"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.841" />
+
+    <Button
+        android:id="@+id/btn_getGalleryImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar Foto"
+        app:layout_constraintBottom_toTopOf="@+id/btn_register_last"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.877"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.841" />
@@ -32,11 +45,11 @@
         android:id="@+id/btn_register_last"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Registrar"
+        android:text="Guardar Imagen de Perfil"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.699" />
+        app:layout_constraintVertical_bias="0.818" />
 </androidx.constraintlayout.widget.ConstraintLayout>
