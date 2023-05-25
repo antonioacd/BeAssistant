@@ -33,24 +33,19 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-firestore-ktx:24.6.0'
-    implementation 'com.google.firebase:firebase-storage-ktx:20.2.0'
-    implementation 'com.google.firebase:firebase-auth-ktx:22.0.0'
-    implementation 'com.google.firebase:firebase-auth:22.0.0'
 
     // Firebase
-    //implementation 'com.google.firebase:firebase-firestore:24.0.2'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.6.0'
 
     // Firebase Google
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
 
     // Firebase Auth
-    //implementation 'com.google.firebase:firebase-auth-ktx:22.0.0'
+    implementation 'com.google.firebase:firebase-auth-ktx:22.0.0'
+    implementation 'com.google.firebase:firebase-auth:22.0.0'
 
     // Firebase storage
-    //implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
-
-
+    implementation 'com.google.firebase:firebase-storage-ktx:20.2.0'
 
     // Others
     testImplementation 'junit:junit:4.13.2'

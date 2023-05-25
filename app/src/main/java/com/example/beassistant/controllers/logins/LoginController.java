@@ -1,7 +1,5 @@
 package com.example.beassistant.controllers.logins;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,28 +23,29 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 public class LoginController extends AppCompatActivity {
 
-    /**
-     * Declare the variables
-     */
 
-    EditText et_user;
-    EditText et_password;
-    Button btn_login;
-    Button btn_register;
+    // Declare the variables
+    private EditText et_email;
+    private EditText et_password;
+    private Button btn_login;
+    private Button btn_register;
+    private ImageView btn_google;
 
-    //Declare the data base object
+    // Declare the firebase variables
     private FirebaseFirestore db;
+    private FirebaseAuth firebaseAuth;
 
-    GoogleSignInOptions gso;
-    GoogleSignInClient gsc;
-    ImageView btn_google;
-
+    // Declare the google sing in variables
+    private GoogleSignInOptions gso;
+    private GoogleSignInClient gsc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +66,19 @@ public class LoginController extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        if (user != null){
+            fillSharedUser();
+        }
+
         /**
          * Inicialice the variables
          */
 
-        et_user = (EditText) findViewById(R.id.et_user);
+        et_email = (EditText) findViewById(R.id.et_email);
         et_password = (EditText) findViewById(R.id.et_password);
         btn_login = (Button) findViewById(R.id.btn_login);
         btn_register = (Button) findViewById(R.id.btn_register);
@@ -83,58 +90,19 @@ public class LoginController extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Log.d("Texto","Text: " + et_user.getText().toString().trim());
+                String user = et_email.getText().toString().trim();
+                String password = et_password.getText().toString().trim();
 
-                db.collection("users")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                firebaseAuth.signInWithEmailAndPassword(user, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            return;
+                        }
+                        fillSharedUser();
+                    }
+                });
 
-                                // Don't exist = -1, exist and password is correct = 0, exist but incorrect password = 1
-                                int response = -1;
-
-                                User user = new User();
-
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                                        String password = doc.getString("password");
-                                        if (doc.getString("username").equals(et_user.getText().toString().trim())) {
-                                            if (password.equals(et_password.getText().toString())) {
-                                                response = 0;
-                                                    user.setId(doc.getId());
-                                                    user.setUsername(doc.getString("username"));
-                                                    user.setName(doc.getString("name"));
-                                                    user.setImg_reference(doc.getString("imgRef"));
-                                                    user.setEmail(doc.getString("email"));
-                                                    user.setNumber(doc.getString("phoneNumber"));
-                                                    user.setPassword(doc.getString("password"));
-                                                    user.setNumOpiniones(0);
-                                                    user.setNumSeguidores(0);
-                                                    user.setNumSeguidos(0);
-                                            } else {
-                                                response = 1;
-                                            }
-                                        }
-                                        Log.d("Datos:", "Clave: " + doc.getString("username") + ", Valor: " + password);
-                                    }
-
-                                    if (response == 0) {
-                                        Toast.makeText(getApplicationContext(), "Correcto: " + user.toString(), Toast.LENGTH_LONG).show();
-                                        Shared.myUser = user;
-                                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                                        startActivity(i);
-                                    } else if (response == 1) {
-                                        Toast.makeText(getApplicationContext(), "Contraseña incorrecta", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), "Usuario no registrado", Toast.LENGTH_LONG).show();
-                                    }
-
-                                } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
             }
         });
 
@@ -145,6 +113,40 @@ public class LoginController extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+
+    private void fillSharedUser(){
+
+        db.collection("users")
+                .document(firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (!task.isSuccessful()){
+                            return;
+                        }
+
+                        DocumentSnapshot doc = task.getResult();
+
+                        User user = new User();
+
+                        user.setId(doc.getId());
+                        user.setUsername(doc.getString("username"));
+                        user.setName(doc.getString("name"));
+                        user.setImg_reference(doc.getString("imgRef"));
+                        user.setEmail(doc.getString("email"));
+                        user.setNumber(doc.getString("phoneNumber"));
+                        user.setPassword(doc.getString("password"));
+                        user.setNumOpiniones(0);
+                        user.setNumSeguidores(0);
+                        user.setNumSeguidos(0);
+
+                        Shared.myUser = user;
+
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+                });
     }
 
     private void signIn(){
