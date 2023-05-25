@@ -26,7 +26,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -36,10 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-
-import io.grpc.SynchronizationContext;
 
 public class AddOpinionActivity extends AppCompatActivity {
 
@@ -129,9 +125,9 @@ public class AddOpinionActivity extends AppCompatActivity {
 
 
         //Select Category
-        select_rating = findViewById(R.id.select_category);
+        select_rating = findViewById(R.id.select_rating);
 
-        adapterItems = new ArrayAdapter<>(this,R.layout.list_item, number_ratings);
+        adapterItems = new ArrayAdapter<>(this,R.layout.list_item02, number_ratings);
         select_rating.setAdapter(adapterItems);
 
         select_rating.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -1,4 +1,4 @@
-package com.example.beassistant.fragments.mainpages;
+package com.example.beassistant.fragments;
 
 import static android.content.ContentValues.TAG;
 
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,7 +23,6 @@ import android.widget.Toast;
 import com.example.beassistant.R;
 import com.example.beassistant.adapters.ProductsRecyclerAdapter;
 import com.example.beassistant.controllers.AddOpinionActivity;
-import com.example.beassistant.controllers.logins.LoginController;
 import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,8 +33,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 public class AddProductFragment extends Fragment{
 
@@ -108,7 +104,7 @@ public class AddProductFragment extends Fragment{
         // Select Category
         select_category = view.findViewById(R.id.select_category);
 
-        adapterItems = new ArrayAdapter<String>(getContext(),R.layout.list_item,categories);
+        adapterItems = new ArrayAdapter<String>(getContext(),R.layout.list_item02,categories);
         select_category.setAdapter(adapterItems);
 
         select_category.setOnItemClickListener(new AdapterView.OnItemClickListener() {

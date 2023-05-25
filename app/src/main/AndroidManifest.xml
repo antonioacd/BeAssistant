@@ -41,9 +41,6 @@
             android:name=".controllers.logins.RegisterController"
             android:exported="false" />
         <activity
-            android:name=".controllers.Camera"
-            android:exported="false" />
-        <activity
             android:name=".controllers.MainActivity"
             android:exported="false" />
         <activity

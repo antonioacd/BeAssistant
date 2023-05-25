@@ -1,4 +1,4 @@
-package com.example.beassistant.fragments.mainpages;
+package com.example.beassistant.fragments;
 
 import android.os.Bundle;
 import android.util.Log;

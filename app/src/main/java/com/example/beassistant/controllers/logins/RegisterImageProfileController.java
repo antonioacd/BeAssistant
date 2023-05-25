@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -93,30 +94,10 @@ public class RegisterImageProfileController extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                // Create a reference to "mountains.jpg"
-                StorageReference imgRef = storageRef.child(img);
-
-                // Get the data from an ImageView as bytes
-                img_profile_register.setDrawingCacheEnabled(true);
-                img_profile_register.buildDrawingCache();
-
-                Bitmap bitmap = ((BitmapDrawable) img_profile_register.getDrawable()).getBitmap();
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                byte[] data0 = baos.toByteArray();
-
-                UploadTask uploadTask = imgRef.putBytes(data0);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(getApplicationContext(), "No se ha podido subir la imagen", Toast.LENGTH_LONG);
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getApplicationContext(), "Imagen subida", Toast.LENGTH_LONG);
-                    }
-                });
+                // Start new gallery intent
+                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                i.setType("image/");
+                startActivityForResult(i.createChooser(i, "Seleccione la Aplicacion"), 10);
             }
         });
 
@@ -142,7 +123,12 @@ public class RegisterImageProfileController extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK) {
+
+        if (resultCode != RESULT_OK){
+            return;
+        }
+
+        if (requestCode == 1) {
             Bundle extras = data.getExtras();
             Bitmap imgBitmap = (Bitmap) extras.get("data");
             img_profile_register.setImageBitmap(imgBitmap);
@@ -168,6 +154,38 @@ public class RegisterImageProfileController extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Log.d("Foto: ", "Si");
+                }
+            });
+        }
+
+        if (requestCode == 10) {
+            Log.d("Imagen","Entra");
+
+            Uri path = data.getData();
+            img_profile_register.setImageURI(path);
+
+            // Create a reference to "mountains.jpg"
+            StorageReference imgRef = storageRef.child(img);
+
+            // Get the data from an ImageView as bytes
+            img_profile_register.setDrawingCacheEnabled(true);
+            img_profile_register.buildDrawingCache();
+            Bitmap bitmap = ((BitmapDrawable) img_profile_register.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data0 = baos.toByteArray();
+
+            UploadTask uploadTask = imgRef.putBytes(data0);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    // ...
                 }
             });
         }

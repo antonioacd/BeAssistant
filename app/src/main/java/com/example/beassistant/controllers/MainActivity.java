@@ -2,24 +2,19 @@ package com.example.beassistant.controllers;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
 
 import com.example.beassistant.R;
-import com.example.beassistant.fragments.mainpages.AddProductFragment;
-import com.example.beassistant.fragments.mainpages.HomeFragment;
-import com.example.beassistant.fragments.mainpages.ProfileFragment;
-import com.example.beassistant.fragments.mainpages.SearchFragment;
 import com.example.beassistant.databinding.ActivityMainBinding;
+import com.example.beassistant.fragments.AddProductFragment;
+import com.example.beassistant.fragments.HomeFragment;
+import com.example.beassistant.fragments.ProfileFragment;
+import com.example.beassistant.fragments.SearchFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
 
