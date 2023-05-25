@@ -99,6 +99,7 @@ public class LoginController extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             return;
                         }
+                        // Fill the shared user
                         fillSharedUser();
                     }
                 });
