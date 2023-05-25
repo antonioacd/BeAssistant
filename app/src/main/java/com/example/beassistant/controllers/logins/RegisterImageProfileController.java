@@ -88,6 +88,7 @@ public class RegisterImageProfileController extends AppCompatActivity {
             }
         });
 
+        // Get the image from gallery
         btn_getGalleryImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
