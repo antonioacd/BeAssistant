@@ -125,6 +125,7 @@ public class SearchFragment extends Fragment {
                 fragmentManager.setFragmentResult("follower", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
                 // Set the view selected as true

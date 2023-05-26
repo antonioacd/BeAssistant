@@ -113,6 +113,7 @@ public class ProfileFragment extends Fragment {
                 fragmentManager.setFragmentResult("key", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
@@ -128,6 +129,7 @@ public class ProfileFragment extends Fragment {
                 fragmentManager.setFragmentResult("key", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });

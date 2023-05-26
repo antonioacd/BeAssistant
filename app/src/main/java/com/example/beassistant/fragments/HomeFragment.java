@@ -4,10 +4,12 @@ import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +23,7 @@ import android.widget.AutoCompleteTextView;
 
 import com.example.beassistant.R;
 import com.example.beassistant.adapters.HomeRecyclerAdapter;
+import com.example.beassistant.controllers.MainActivity;
 import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

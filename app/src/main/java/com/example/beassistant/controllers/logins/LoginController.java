@@ -146,6 +146,7 @@ public class LoginController extends AppCompatActivity {
                         Shared.myUser = user;
 
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        finish();
                     }
                 });
     }
