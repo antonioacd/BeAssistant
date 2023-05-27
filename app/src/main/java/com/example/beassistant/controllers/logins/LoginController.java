@@ -22,12 +22,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginController extends AppCompatActivity {
 
@@ -137,7 +141,6 @@ public class LoginController extends AppCompatActivity {
                         user.setName(doc.getString("name"));
                         user.setImg_reference(doc.getString("imgRef"));
                         user.setEmail(doc.getString("email"));
-                        user.setNumber(doc.getString("phoneNumber"));
                         user.setPassword(doc.getString("password"));
                         user.setNumOpiniones(0);
                         user.setNumSeguidores(0);
@@ -171,8 +174,50 @@ public class LoginController extends AppCompatActivity {
     }
 
     void navigateToSecondActivity() {
-        finish();
-        Intent intent = new Intent(LoginController.this, SecondActivity.class);
-        startActivity(intent);
+
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+
+        if (acct!=null){
+            String personalName = acct.getDisplayName();
+            String personalEmail = acct.getEmail();
+            String name  = acct.getGivenName();
+
+
+            Log.d("Usuario: ","Nombre: " + personalName +
+                                    "\n Email: " + personalEmail +
+                                    "\n 1Id: " + acct.getId() +
+                                    "\n 2Photo: " + acct.getPhotoUrl() +
+                                    "\n 3FamilyName: " + acct.getFamilyName() +
+                                    "\n 4Account: " + acct.getAccount().toString()
+                                    );
+        }
     }
+
+    /*private void generateUser(){
+
+        String id = mAuth.getCurrentUser().getUid();
+
+        Map<String, Object> user = new HashMap<>();
+        user.put("id", id);
+        user.put("username", username);
+        user.put("name", name);
+        user.put("imgRef", img);
+        user.put("email", email);
+        user.put("password", password);
+        user.put("numOpiniones", 0);
+        user.put("numSeguidores", 0);
+        user.put("numSeguidos", 0);
+
+        db.collection("users").document(id)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        finish();
+                        Intent i = new Intent(getApplicationContext(), LoginController.class);
+                        startActivity(i);
+                        Toast.makeText(getApplicationContext(), "Foto de perfil establecida", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }*/
 }

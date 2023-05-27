@@ -41,7 +41,6 @@ public class DataBaseController {
         user.put("username", user_get.getUsername());
         user.put("name", user_get.getName());
         user.put("email", user_get.getEmail());
-        user.put("phoneNumber", user_get.getNumber());
         user.put("password", user_get.getPassword());
 
         /**

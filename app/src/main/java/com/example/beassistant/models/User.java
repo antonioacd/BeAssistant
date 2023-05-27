@@ -7,19 +7,17 @@ public class User {
     private String name;
     private String img_reference;
     private String email;
-    private String number;
     private String password;
     private int numOpiniones;
     private int numSeguidores;
     private int numSeguidos;
 
-    public User(String id, String username, String name, String img_reference, String email, String number, String password, int numOpiniones, int numSeguidores, int numSeguidos) {
+    public User(String id, String username, String name, String img_reference, String email, String password, int numOpiniones, int numSeguidores, int numSeguidos) {
         this.id = id;
         this.username = username;
         this.name = name;
         this.img_reference = img_reference;
         this.email = email;
-        this.number = number;
         this.password = password;
         this.numOpiniones = numOpiniones;
         this.numSeguidores = numSeguidores;
@@ -67,14 +65,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
     }
 
     public String getPassword() {

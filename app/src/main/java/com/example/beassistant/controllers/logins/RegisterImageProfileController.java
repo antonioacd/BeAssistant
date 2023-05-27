@@ -39,7 +39,6 @@ public class RegisterImageProfileController extends AppCompatActivity {
     private String name;
     private String img;
     private String email;
-    private String number;
     private String password;
 
     private Button btn_take;
@@ -79,7 +78,6 @@ public class RegisterImageProfileController extends AppCompatActivity {
         name = i.getStringExtra("name");
         img = "profileImages/" + username + "_img_profile.jpg";
         email = i.getStringExtra("email");
-        number = i.getStringExtra("number");
         password = i.getStringExtra("password");
 
         btn_take.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +102,7 @@ public class RegisterImageProfileController extends AppCompatActivity {
         btn_register_last.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (username.isEmpty() || name.isEmpty() || img.isEmpty() || email.isEmpty() || number.isEmpty() || password.isEmpty()){
+                if (username.isEmpty() || name.isEmpty() || img.isEmpty() || email.isEmpty() || password.isEmpty()){
                     Toast.makeText(getApplicationContext(), "Debe rellenar todos los campos", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -201,7 +199,6 @@ public class RegisterImageProfileController extends AppCompatActivity {
         user.put("name", name);
         user.put("imgRef", img);
         user.put("email", email);
-        user.put("phoneNumber", number);
         user.put("password", password);
         user.put("numOpiniones", 0);
         user.put("numSeguidores", 0);

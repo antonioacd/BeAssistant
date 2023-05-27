@@ -34,7 +34,6 @@ public class RegisterController extends AppCompatActivity {
     EditText et_user_reg;
     EditText et_name_reg;
     EditText et_email_reg;
-    EditText et_number_reg;
     EditText et_password_reg;
     Button btn_register_reg;
 
@@ -65,7 +64,6 @@ public class RegisterController extends AppCompatActivity {
         et_user_reg = (EditText) findViewById(R.id.et_user_reg);
         et_name_reg = (EditText) findViewById(R.id.et_name_reg);
         et_email_reg = (EditText) findViewById(R.id.et_email_reg);
-        et_number_reg = (EditText) findViewById(R.id.et_number_reg);
         et_password_reg = (EditText) findViewById(R.id.et_password_reg);
         btn_register_reg = (Button) findViewById(R.id.btn_register_reg);
 
@@ -79,7 +77,7 @@ public class RegisterController extends AppCompatActivity {
 
                 // bad user = -1 || bad email = 1 || correct = 0
 
-                if (et_user_reg.getText().toString().isEmpty() || et_name_reg.getText().toString().isEmpty() || et_email_reg.getText().toString().isEmpty() || et_number_reg.getText().toString().isEmpty() || et_password_reg.getText().toString().isEmpty()){
+                if (et_user_reg.getText().toString().isEmpty() || et_name_reg.getText().toString().isEmpty() || et_email_reg.getText().toString().isEmpty() || et_password_reg.getText().toString().isEmpty()){
                     Toast.makeText(getApplicationContext(), "Debe rellenar todos los campos", Toast.LENGTH_LONG).show();
                 }else{
                     generateUser();
@@ -113,7 +111,6 @@ public class RegisterController extends AppCompatActivity {
                                     i.putExtra("username", et_user_reg.getText().toString().trim());
                                     i.putExtra("name", et_name_reg.getText().toString().trim());
                                     i.putExtra("email", et_email_reg.getText().toString().trim());
-                                    i.putExtra("number", et_number_reg.getText().toString().trim());
                                     i.putExtra("password", et_password_reg.getText().toString().trim());
                                     startActivity(i);
                                 }
