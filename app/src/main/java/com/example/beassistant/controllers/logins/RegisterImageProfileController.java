@@ -199,7 +199,6 @@ public class RegisterImageProfileController extends AppCompatActivity {
         user.put("name", name);
         user.put("imgRef", img);
         user.put("email", email);
-        user.put("password", password);
         user.put("numOpiniones", 0);
         user.put("numSeguidores", 0);
         user.put("numSeguidos", 0);

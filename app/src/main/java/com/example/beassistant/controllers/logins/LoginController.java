@@ -74,8 +74,16 @@ public class LoginController extends AppCompatActivity {
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+
         if (user != null){
             fillSharedUser();
+            return;
+        }
+
+        if (acct != null){
+            fillGoogleUser(acct);
+            return;
         }
 
         /**
@@ -122,12 +130,16 @@ public class LoginController extends AppCompatActivity {
 
     private void fillSharedUser(){
 
+        // Get the current user
+        String currentUserId = firebaseAuth.getCurrentUser().getUid();
+
         db.collection("users")
-                .document(firebaseAuth.getCurrentUser().getUid())
+                .document(currentUserId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        // Check if task is successful
                         if (!task.isSuccessful()){
                             return;
                         }
@@ -141,7 +153,6 @@ public class LoginController extends AppCompatActivity {
                         user.setName(doc.getString("name"));
                         user.setImg_reference(doc.getString("imgRef"));
                         user.setEmail(doc.getString("email"));
-                        user.setPassword(doc.getString("password"));
                         user.setNumOpiniones(0);
                         user.setNumSeguidores(0);
                         user.setNumSeguidos(0);
@@ -166,7 +177,7 @@ public class LoginController extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 task.getResult(ApiException.class);
-                navigateToSecondActivity();
+                onSignInGoogle();
             } catch (ApiException e) {
                 Log.d("Error: ", "Error: " + e.getMessage());
                 Toast.makeText(getApplicationContext(), "Algo fue mal", Toast.LENGTH_LONG).show();
@@ -174,51 +185,59 @@ public class LoginController extends AppCompatActivity {
         }
     }
 
-    void navigateToSecondActivity() {
+    void onSignInGoogle() {
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
 
-        if (acct!=null){
-            String personalName = acct.getDisplayName();
-            String personalEmail = acct.getEmail();
-            String name  = acct.getGivenName();
-
-
-            Log.d("Usuario: ","Nombre: " + personalName +
-                                    "\n Email: " + personalEmail +
-                                    "\n 1Id: " + acct.getId() +
-                                    "\n 2Photo: " + acct.getPhotoUrl() +
-                                    "\n 3FamilyName: " + acct.getFamilyName() +
-                                    "\n 4Account: " + acct.getAccount().toString()
-                                    );
+        if (acct == null) {
+            return;
         }
-    }
-
-    /*private void generateUser(){
-
-        String id = mAuth.getCurrentUser().getUid();
 
         Map<String, Object> user = new HashMap<>();
-        user.put("id", id);
-        user.put("username", username);
-        user.put("name", name);
-        user.put("imgRef", img);
-        user.put("email", email);
-        user.put("password", password);
+        user.put("id", acct.getId());
+        user.put("username", acct.getDisplayName() + acct.getId());
+        user.put("name", acct.getDisplayName());
+        user.put("imgRef", "/profileImages/default-profile.png");
+        user.put("email", acct.getEmail());
         user.put("numOpiniones", 0);
         user.put("numSeguidores", 0);
         user.put("numSeguidos", 0);
 
-        db.collection("users").document(id)
+        /**
+         * Add a new document with a generated ID
+         */
+        db.collection("users").document(acct.getId())
                 .set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        finish();
-                        Intent i = new Intent(getApplicationContext(), LoginController.class);
-                        startActivity(i);
-                        Toast.makeText(getApplicationContext(), "Foto de perfil establecida", Toast.LENGTH_LONG).show();
+
+                        fillGoogleUser(acct);
+
+                        Toast.makeText(getApplicationContext(), "Sesion iniciada", Toast.LENGTH_LONG).show();
                     }
                 });
-    }*/
+    }
+
+    /**
+     * Function to fill the google user
+     */
+    private void fillGoogleUser(GoogleSignInAccount acct){
+        User user = new User();
+
+        user.setId(acct.getId());
+        user.setUsername(acct.getDisplayName() + acct.getId());
+        user.setName(acct.getDisplayName());
+        user.setImg_reference("/profileImages/default-profile.png");
+        user.setEmail(acct.getEmail());
+        user.setNumOpiniones(0);
+        user.setNumSeguidores(0);
+        user.setNumSeguidos(0);
+
+        Shared.myUser = user;
+
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(i);
+    }
+
 }

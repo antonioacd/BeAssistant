@@ -153,7 +153,7 @@ public class AddOpinionActivity extends AppCompatActivity {
                         et_opinion.getText().toString().trim(),
                         selected_rating,
                         true,
-                        Shared.myUser.getEmail(),
+                        Shared.myUser.getId(),
                         uuId,
                         category,
                         brand

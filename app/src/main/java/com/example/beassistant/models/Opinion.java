@@ -28,6 +28,10 @@ public class Opinion {
         this.productBrand = productBrand;
     }
 
+    public Opinion(String opinionId) {
+        this.opinionId = opinionId;
+    }
+
     public String getOpinionId() {
         return opinionId;
     }

@@ -3,7 +3,6 @@ package com.example.beassistant.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +72,7 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<ProductsRecycl
     @Override
     public RecyclerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_product,parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item,parent, false);
         RecyclerHolder recyclerHolder = new RecyclerHolder(view);
 
         storage = FirebaseStorage.getInstance();

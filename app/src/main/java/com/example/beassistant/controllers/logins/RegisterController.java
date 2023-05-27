@@ -111,7 +111,6 @@ public class RegisterController extends AppCompatActivity {
                                     i.putExtra("username", et_user_reg.getText().toString().trim());
                                     i.putExtra("name", et_name_reg.getText().toString().trim());
                                     i.putExtra("email", et_email_reg.getText().toString().trim());
-                                    i.putExtra("password", et_password_reg.getText().toString().trim());
                                     startActivity(i);
                                 }
                             });

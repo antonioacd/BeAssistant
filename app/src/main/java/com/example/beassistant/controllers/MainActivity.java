@@ -15,6 +15,7 @@ import com.example.beassistant.fragments.AddProductFragment;
 import com.example.beassistant.fragments.HomeFragment;
 import com.example.beassistant.fragments.ProfileFragment;
 import com.example.beassistant.fragments.SearchFragment;
+import com.example.beassistant.fragments.SettingsFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.profile:
                     replaceFragment(new ProfileFragment());
+                    break;
+                case R.id.settings:
+                    replaceFragment(new SettingsFragment());
                     break;
             }
             return true;

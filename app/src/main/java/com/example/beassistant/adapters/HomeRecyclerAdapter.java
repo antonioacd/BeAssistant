@@ -137,7 +137,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
         holder.txt_name.setText(objeto.getName());
         holder.txt_brand.setText(objeto.getBrand());
         holder.txt_type.setText(objeto.getType());
-        holder.txt_media_rating.setText(String.valueOf(objeto.getMediaRating()));
+        double ratingRounded = Math.round((objeto.getMediaRating()) * 10.0) / 10.0;
+        holder.txt_media_rating.setText(String.valueOf(ratingRounded));
 
     }
 

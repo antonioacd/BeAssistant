@@ -6,10 +6,12 @@ import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.example.beassistant.R;
+import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.HomeRecyclerAdapter;
 import com.example.beassistant.controllers.MainActivity;
 import com.example.beassistant.models.Product;
@@ -79,7 +82,13 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_home, container, false);
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         btn_filter = (FloatingActionButton) view.findViewById(R.id.btn_filter);
 
@@ -100,8 +109,45 @@ public class HomeFragment extends Fragment {
         //Implementamos el recyclerAdapter en el recyclerView
         rV.setAdapter(recAdapter);
 
-        // Inflate the layout for this fragment
-        return view;
+        // Set a listener to the recycler adapter items
+        recAdapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int index = 0;
+
+                // Get the index
+                index = rV.getChildAdapterPosition(view);
+
+                Fragment fragment = new OpinionsFragment();
+                Bundle args = new Bundle();
+                args.putString("id", recAdapter.productList.get(index).getUuID());
+                args.putString("name", recAdapter.productList.get(index).getName());
+                args.putString("brand", recAdapter.productList.get(index).getBrand());
+                args.putString("type", recAdapter.productList.get(index).getType());
+                args.putDouble("mediaRating", recAdapter.productList.get(index).getMediaRating());
+                args.putString("imgRef", recAdapter.productList.get(index).getImg_reference());
+
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.setFragmentResult("keyProduct", args);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+                // Set the view selected as true
+                view.setSelected(true);
+            }
+        });
+    }
+
+    private void replaceFragment(Fragment fragment){
+
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
     }
 
     private ArrayList getCategories(){
