@@ -1,6 +1,7 @@
 package com.example.beassistant.controllers;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,9 +61,21 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
     }
 
+
+    @Override
+    public void onBackPressed() {
+        Log.d("Atras:", "Pulsado");
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+            Log.d("Atras:", "Anterior Fragment");
+        } else {
+            Log.d("Atras:", "Cantidad: " + getSupportFragmentManager().getBackStackEntryCount());
+        }
+    }
 
 }
