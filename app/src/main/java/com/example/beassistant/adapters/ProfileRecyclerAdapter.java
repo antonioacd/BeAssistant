@@ -14,11 +14,6 @@ import com.example.beassistant.R;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
-/**
- *
- */
-
 public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecyclerAdapter.RecyclerHolder>{
 
     public ArrayList<String> categoryList;
