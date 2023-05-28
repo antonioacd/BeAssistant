@@ -65,6 +65,7 @@ public class MyOpinionsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Init the variables
         initViewVariables(view);
 
         setReciclerAdapter();
