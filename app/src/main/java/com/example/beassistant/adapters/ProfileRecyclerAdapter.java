@@ -1,6 +1,9 @@
 package com.example.beassistant.adapters;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.beassistant.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecyclerAdapter.RecyclerHolder>{
 
@@ -25,10 +34,39 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
 
     Context contexto;
 
+    // Declare the data base object
+    private FirebaseFirestore db;
+
     //Constructor de RecyclerAdapter
     public ProfileRecyclerAdapter(Context contexto) {
         this.contexto = contexto;
-        categoryList = new ArrayList<String>(Arrays.asList("Cara", "Labios", "Ojos", "Cejas"));
+        //Init the category list
+        categoryList = new ArrayList<>();
+        // Get the database instance
+        db = FirebaseFirestore.getInstance();
+
+    }
+
+    private ArrayList getCategories(){
+
+        ArrayList<String> auxArray = new ArrayList<>();
+
+        db.collection("categorias")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                auxArray.add(document.getId());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+        return auxArray;
     }
 
     /*//Metodo para borrar un item del recyclerAdapter, borrandolo de la lista
