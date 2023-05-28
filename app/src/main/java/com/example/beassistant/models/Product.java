@@ -21,6 +21,10 @@ public class Product {
         this.mediaRating = mediaRating;
     }
 
+    public Product (String uuID){
+        this.uuID = uuID;
+    }
+
     public Product(String uuID, String name, String img_reference, String brand, String category, String type, double mediaRating, Opinion opinion) {
         this.uuID = uuID;
         this.name = name;

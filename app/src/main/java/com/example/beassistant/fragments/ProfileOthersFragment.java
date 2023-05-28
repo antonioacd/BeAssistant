@@ -1,5 +1,7 @@
 package com.example.beassistant.fragments;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,7 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +26,7 @@ import android.widget.TextView;
 
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
+import com.example.beassistant.adapters.ProfileRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -52,6 +58,10 @@ public class ProfileOthersFragment extends Fragment {
     private String id;
     private boolean following = false;
 
+    // Recycler view variables
+    RecyclerView rvCategories;
+    ProfileRecyclerAdapter recAdapter;
+
     public ProfileOthersFragment() {
         // Required empty public constructor
     }
@@ -60,27 +70,11 @@ public class ProfileOthersFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Generate the instance
-        db = FirebaseFirestore.getInstance();
-
-        // Init the storage
-        storage = FirebaseStorage.getInstance();
-
-        // Set the storage ref
-        storageRef = storage.getReference();
+        initVariables();
 
         checkFollow();
 
-        getParentFragmentManager().setFragmentResultListener("follower", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                // Obtain the follower id
-                String userId = result.getString("id");
-
-                // Get the user
-                getUser(userId);
-            }
-        });
+        getDataFromLastFragment();
 
     }
 
@@ -94,6 +88,71 @@ public class ProfileOthersFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Init the variables
+        initViewVariables(view);
+
+        // Get the categories
+        getCategories();
+
+        // Set the listeners
+        listeners();
+
+        // Set the recycler adapter
+        setRecyclerAdapter();
+    }
+
+    /**
+     * Init the variables
+     */
+    private void initVariables(){
+        // Generate the instance
+        db = FirebaseFirestore.getInstance();
+
+        // Init the recicler adapter
+        recAdapter = new ProfileRecyclerAdapter(getContext());
+
+        // Init the storage
+        storage = FirebaseStorage.getInstance();
+
+        // Set the storage ref
+        storageRef = storage.getReference();
+    }
+
+    /**
+     * Get the data from last fragment
+     */
+    private void getDataFromLastFragment(){
+        getParentFragmentManager().setFragmentResultListener("follower", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                // Obtain the follower id
+                String userId = result.getString("id");
+
+                // Get the user
+                getUser(userId);
+            }
+        });
+    }
+
+    /**
+     * Set the recycler adapter
+     */
+    private void setRecyclerAdapter(){
+        //Creamos un LinearLayout para establecer el Layout del recyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        rvCategories.setLayoutManager(layoutManager);
+
+        //Implementamos el recyclerAdapter en el recyclerView
+        rvCategories.setAdapter(recAdapter);
+    }
+
+    /**
+     * Init the view variables
+     * @param view
+     */
+    private void initViewVariables(View view){
+
+        rvCategories = (RecyclerView) view.findViewById(R.id.rv_clasification_02);
         btn_follow = view.findViewById(R.id.btn_follow);
         img_profile = view.findViewById(R.id.img_profile_02);
         txt_username = view.findViewById(R.id.txt_username_02);
@@ -101,7 +160,12 @@ public class ProfileOthersFragment extends Fragment {
         txt_numOpinions = view.findViewById(R.id.txt_num_opinions_02);
         txt_numFollowers = view.findViewById(R.id.txt_num_followers_02);
         txt_numFollowing = view.findViewById(R.id.txt_num_following_02);
+    }
 
+    /**
+     * Set the listeners
+     */
+    private void listeners(){
         txt_numFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,8 +212,27 @@ public class ProfileOthersFragment extends Fragment {
                 unfollowUser();
             }
         });
+
+        recAdapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int index = 0;
+
+                // Get the index
+                index = rvCategories.getChildAdapterPosition(v);
+
+
+
+
+
+            }
+        });
     }
 
+    /**
+     * Get the photo
+     * @param imgRef
+     */
     private void cargarFoto(String imgRef){
         storageRef.child(imgRef).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -164,6 +247,28 @@ public class ProfileOthersFragment extends Fragment {
             }
         });
 
+    }
+
+    /**
+     * Get categories
+     */
+    private void getCategories(){
+        // Get the categories
+        db.collection("categorias")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                recAdapter.categoryList.add(document.getId().toUpperCase());
+                                recAdapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
     /**
@@ -183,6 +288,7 @@ public class ProfileOthersFragment extends Fragment {
                         if (!task.isSuccessful()){
                             return;
                         }
+
                         // Loop all the docs of the result
                         for (QueryDocumentSnapshot doc: task.getResult()) {
 
@@ -204,6 +310,10 @@ public class ProfileOthersFragment extends Fragment {
                 });
     }
 
+    /**
+     * Get User with id
+     * @param userId
+     */
     private void getUser(String userId){
         // Search the user in the database
         db.collection("users")
@@ -239,6 +349,9 @@ public class ProfileOthersFragment extends Fragment {
                 });
     }
 
+    /**
+     * Follow an user
+     */
     private void followUser(){
         Map<String, Object> object = new HashMap<>();
         object.put("id", id);
@@ -287,6 +400,9 @@ public class ProfileOthersFragment extends Fragment {
                 });
     }
 
+    /**
+     * Unfollow an user
+     */
     private void unfollowUser(){
         Map<String, Object> object = new HashMap<>();
         object.put("id", id);

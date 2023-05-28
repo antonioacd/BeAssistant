@@ -4,9 +4,11 @@ import static android.content.ContentValues.TAG;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Binder;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -43,12 +45,11 @@ public class ProfileFragment extends Fragment {
     // Declare the database controller
     FirebaseFirestore db;
 
-    //Recycler view variables
-    View view;
+    // Recycler view variables
     RecyclerView rvCategories;
     ProfileRecyclerAdapter recAdapter;
 
-    //Profile parameters
+    // Profile parameters
     ImageView img_profile;
     TextView txt_username;
     TextView txt_name;
@@ -56,6 +57,7 @@ public class ProfileFragment extends Fragment {
     TextView txt_numFollowers;
     TextView txt_numFollowing;
 
+    // Declare the storage controllers and reference
     FirebaseStorage storage;
     StorageReference storageRef;
 
@@ -63,11 +65,58 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Init the variables
+        initVariables();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_profile, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Init the variables
+        initViewVariables(view);
+
+        // Configure the recicler aadpter
+        setReciclerAdapter();
+
+        // Get the categories
+        getCategories();
+
+        // Get my user
+        getMyUser();
+
+        // Set the listeners
+        listeners();
+    }
+
+    /**
+     * Set the recycler view variables
+     */
+    private void setReciclerAdapter(){
+
+        // Creamos un LinearLayout para establecer el Layout del recyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        rvCategories.setLayoutManager(layoutManager);
+
+        // Implementamos el recyclerAdapter en el recyclerView
+        rvCategories.setAdapter(recAdapter);
+    };
+
+    /**
+     * Init the varibles
+     */
+    private void initVariables(){
         // Init the database controller
         db = FirebaseFirestore.getInstance();
 
@@ -81,50 +130,27 @@ public class ProfileFragment extends Fragment {
         storageRef = storage.getReference();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    /**
+     * Init the view variables
+     * @param view
+     */
+    private void initViewVariables(View view){
 
-        view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        // Get the categories
-        db.collection("categorias")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                recAdapter.categoryList.add(document.getId().toUpperCase());
-                                recAdapter.notifyDataSetChanged();
-                                Log.d("Category", recAdapter.categoryList.toString());
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
-        // Get my user
-        getMyUser();
-
+        rvCategories = (RecyclerView) view.findViewById(R.id.rv_clasification);
         img_profile = view.findViewById(R.id.img_profile);
         txt_username = view.findViewById(R.id.txt_username);
         txt_name = view.findViewById(R.id.txt_name);
         txt_numOpinions = view.findViewById(R.id.txt_num_opinions);
         txt_numFollowers = view.findViewById(R.id.txt_num_followers);
         txt_numFollowing = view.findViewById(R.id.txt_num_following);
+    }
 
-        //Asignamos a la variable rV el recyclerView
-        rvCategories = (RecyclerView) view.findViewById(R.id.rv_clasification);
+    /**
+     * Set the listeners
+     */
+    private void listeners(){
 
-        //Creamos un LinearLayout para establecer el Layout del recyclerView
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        rvCategories.setLayoutManager(layoutManager);
-
-        //Implementamos el recyclerAdapter en el recyclerView
-        rvCategories.setAdapter(recAdapter);
-
+        // Number of followers
         txt_numFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,6 +167,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        // Number of following
         txt_numFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,10 +184,55 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        // Inflate the layout for this fragment
-        return view;
+        recAdapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int index = 0;
+
+                // Get the index
+                index = rvCategories.getChildAdapterPosition(v);
+
+                Fragment fragment = new MyOpinionsFragment();
+                Bundle args = new Bundle();
+                args.putString("userId", Shared.myUser.getId());
+                args.putString("category", recAdapter.categoryList.get(index));
+
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.setFragmentResult("myOpinions", args);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
     }
 
+    /**
+     * Get the categories
+     */
+    private void getCategories(){
+        // Get the categories
+        db.collection("categorias")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                recAdapter.categoryList.add(document.getId().toUpperCase());
+                                recAdapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Get the foto
+     * @param imgRef
+     */
     private void cargarFoto(String imgRef){
 
         storageRef.child(imgRef).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -177,6 +249,9 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    /**
+     * Get my user
+     */
     private void getMyUser(){
         // Search the user in the database
         db.collection("users")
@@ -208,6 +283,4 @@ public class ProfileFragment extends Fragment {
                     }
                 });
     }
-
-
 }

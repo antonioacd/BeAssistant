@@ -231,7 +231,7 @@ public class AddOpinionActivity extends AppCompatActivity {
                                                                 newProduct.put("type", document.getString("type"));
                                                                 newProduct.put("rating", media);
 
-                                                                db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getString("name")).set(newProduct);
+                                                                db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getId()).set(newProduct);
 
                                                                 Log.d("Sumatorio: ", ""+media);
 

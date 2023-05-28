@@ -21,7 +21,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.beassistant.R;
-import com.example.beassistant.adapters.ProductsRecyclerAdapter;
+import com.example.beassistant.adapters.SimpleProductsRecyclerAdapter;
 import com.example.beassistant.controllers.AddOpinionActivity;
 import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCanceledListener;
@@ -53,7 +53,7 @@ public class AddProductFragment extends Fragment{
     // Declare the data base object
     private FirebaseFirestore db;
 
-    ProductsRecyclerAdapter recAdapter;
+    SimpleProductsRecyclerAdapter recAdapter;
     RecyclerView rV;
 
     public AddProductFragment() {
@@ -69,7 +69,7 @@ public class AddProductFragment extends Fragment{
 
         categories = getCategories();
 
-        recAdapter = new ProductsRecyclerAdapter(getContext());
+        recAdapter = new SimpleProductsRecyclerAdapter(getContext());
 
     }
 

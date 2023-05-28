@@ -4,7 +4,6 @@ import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -24,9 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.example.beassistant.R;
-import com.example.beassistant.Shared;
-import com.example.beassistant.adapters.HomeRecyclerAdapter;
-import com.example.beassistant.controllers.MainActivity;
+import com.example.beassistant.adapters.ProductsRecyclerAdapter;
 import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,7 +37,6 @@ import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
 
-    View view;
     FloatingActionButton btn_filter;
 
     ArrayList<String> categories = new ArrayList<String>();
@@ -59,7 +55,7 @@ public class HomeFragment extends Fragment {
     // Creamos las variables necesarias para implementar el recyclerView
     ConstraintLayout constraintLayout;
     RecyclerView rV;
-    HomeRecyclerAdapter recAdapter;
+    ProductsRecyclerAdapter recAdapter;
 
     // Declare the data base object
     private FirebaseFirestore db;
@@ -73,7 +69,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         // Creamos un objeto del recicler adapter
-        recAdapter = new HomeRecyclerAdapter(getContext());
+        recAdapter = new ProductsRecyclerAdapter(getContext());
 
         // Generate the instance
         db = FirebaseFirestore.getInstance();
@@ -100,7 +96,7 @@ public class HomeFragment extends Fragment {
         });
 
         //Asignamos a la variable rV el recyclerView
-        rV = (RecyclerView) view.findViewById(R.id.recView);
+        rV = (RecyclerView) view.findViewById(R.id.recycler_view_my_opinions);
 
         //Creamos un LinearLayout para establecer el Layout del recyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
