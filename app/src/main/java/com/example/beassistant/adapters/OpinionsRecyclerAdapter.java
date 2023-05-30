@@ -124,8 +124,6 @@ public class OpinionsRecyclerAdapter extends RecyclerView.Adapter<OpinionsRecycl
                                 }
                                 DocumentSnapshot document = task.getResult();
 
-                                Log.d("Data: ", "Foto: " + document.getString("imgRef"));
-
                                 storageRef.child(document.getString("imgRef")).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                     @Override
                                     public void onSuccess(byte[] bytes) {
@@ -135,8 +133,8 @@ public class OpinionsRecyclerAdapter extends RecyclerView.Adapter<OpinionsRecycl
                                 });
 
                                 holder.txt_username.setText(document.getString("username"));
-                                holder.txt_rating.setText(String.valueOf(doc.getDouble("rating")));
-                                holder.txt_price.setText(String.valueOf(doc.getDouble("price")));
+                                holder.txt_rating.setText(String.valueOf(doc.getDouble("rating")) + " ⭐");
+                                holder.txt_price.setText(String.valueOf(doc.getDouble("price")) + "€");
                                 holder.txt_shopBuy.setText(doc.getString("shopBuy"));
                                 holder.txt_toneOrColor.setText(doc.getString("toneOrColor"));
                                 holder.txt_opinion.setText(doc.getString("opinion"));

@@ -156,6 +156,6 @@ public class OpinionsFragment extends Fragment {
         txt_name.setText(name);
         txt_brand.setText(brand);
         txt_type.setText(type);
-        txt_mediaRating.setText(String.valueOf(mediaRating));
+        txt_mediaRating.setText(String.valueOf(mediaRating) + " ⭐");
     }
 }

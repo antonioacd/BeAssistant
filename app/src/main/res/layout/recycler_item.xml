@@ -13,10 +13,10 @@
         android:layout_height="75dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintHorizontal_bias="0.539"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.216"
+        app:layout_constraintVertical_bias="0.094"
         tools:srcCompat="@tools:sample/avatars" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -35,8 +35,10 @@
 
     <TextView
         android:id="@+id/txt_type"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:text="Type"
         android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
@@ -62,8 +64,10 @@
 
     <TextView
         android:id="@+id/txt_brand"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:text="Brand"
         android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
@@ -80,12 +84,15 @@
 
     <TextView
         android:id="@+id/txt_media_rating"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:text="Rating"
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.59"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toTopOf="@+id/guideline6" />
 
@@ -100,6 +107,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.67639905" />
+        app:layout_constraintGuide_percent="0.78" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

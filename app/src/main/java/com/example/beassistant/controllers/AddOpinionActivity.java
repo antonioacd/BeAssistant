@@ -114,7 +114,7 @@ public class AddOpinionActivity extends AppCompatActivity {
                                     txt_product_name.setText(document.getString("name"));
                                     txt_product_brand.setText(document.getString("brand"));
                                     txt_product_type.setText(document.getString("type"));
-                                    txt_product_media_rating.setText("5");
+                                    txt_product_media_rating.setText(document.getString("rating") + " ⭐");
                                 }
                             }
                         } else {

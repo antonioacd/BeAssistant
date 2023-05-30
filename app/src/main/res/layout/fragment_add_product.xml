@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#D4C1C3"
     tools:context=".fragments.AddProductFragment">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -24,6 +25,8 @@
             android:id="@+id/select_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:backgroundTint="#FFFFFF"
             android:inputType="none"
             android:paddingTop="0dp"
             android:paddingBottom="0dp" />
@@ -56,6 +59,7 @@
         android:id="@+id/searchView"
         android:layout_width="355dp"
         android:layout_height="45dp"
+        android:background="@drawable/item_rounded"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,6 +71,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:background="#D4C1C3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

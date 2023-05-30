@@ -7,14 +7,18 @@
 
     <TextView
         android:id="@+id/txt_product_media_rating3"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Product Media Rating"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:text="PMR"
         android:textColor="#000000"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline21"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.771"
-        app:layout_constraintStart_toStartOf="@+id/guideline25"
+        app:layout_constraintStart_toStartOf="@+id/guideline33"
         app:layout_constraintTop_toTopOf="@+id/guideline22" />
 
     <TextView
@@ -27,6 +31,7 @@
         android:maxLines="5"
         android:text="Product Name"
         android:textColor="#000000"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline22"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline24"
@@ -34,25 +39,33 @@
 
     <TextView
         android:id="@+id/txt_product_type3"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
         android:maxLines="5"
         android:text="Product Type"
         android:textColor="#000000"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline21"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline33"
+        app:layout_constraintStart_toStartOf="@+id/guideline32"
         app:layout_constraintTop_toTopOf="@+id/guideline22" />
 
     <TextView
         android:id="@+id/txt_product_brand3"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
         android:maxLines="5"
         android:text="Product Brand"
         android:textColor="#000000"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline21"
-        app:layout_constraintEnd_toStartOf="@+id/guideline25"
+        app:layout_constraintEnd_toStartOf="@+id/guideline32"
         app:layout_constraintHorizontal_bias="0.367"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline22" />
@@ -98,9 +111,24 @@
         android:id="@+id/recycler_view_opinions"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#F0F0F0"
+        android:background="#D4C1C3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline21" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline33"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#D4C1C3"
     tools:context=".controllers.AddOpinionActivity">
 
     <androidx.constraintlayout.widget.Guideline
@@ -22,6 +23,8 @@
         android:gravity="center"
         android:maxLines="5"
         android:text="Product Name"
+        android:textColor="#000000"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline15"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.472"
@@ -60,7 +63,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline15"
-        app:layout_constraintVertical_bias="0.933"
+        app:layout_constraintVertical_bias="0.893"
         app:srcCompat="@drawable/ic_baseline_check_24" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -72,17 +75,19 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="158dp"
-        android:layout_height="19dp"
+        android:layout_width="172dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:text="¿Cuanto te ha costado?"
         android:textColor="#000000"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.574"
+        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="@+id/separator"
         app:layout_constraintTop_toTopOf="@+id/guideline15"
-        app:layout_constraintVertical_bias="0.307" />
+        app:layout_constraintVertical_bias="0.212" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
@@ -93,16 +98,18 @@
         android:hint="⭐"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.774"
+        app:layout_constraintHorizontal_bias="0.851"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.598">
+        app:layout_constraintVertical_bias="0.544">
 
         <AutoCompleteTextView
             android:id="@+id/select_rating"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:inputType="none"
+            android:padding="0dp"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -113,13 +120,14 @@
         android:ems="10"
         android:hint="Ej: 05 / Ej: Azul"
         android:inputType="textPersonName"
+        android:textColor="#000000"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/separator"
-        app:layout_constraintHorizontal_bias="0.547"
+        app:layout_constraintHorizontal_bias="0.452"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="0.017" />
+        app:layout_constraintVertical_bias="0.037" />
 
     <EditText
         android:id="@+id/et_opinion"
@@ -128,26 +136,45 @@
         android:ems="10"
         android:hint="Ej: Me gusta este producto porque..."
         android:inputType="textPersonName"
+        android:textColor="#000000"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.043" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="Opinión:"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/separator"
+        app:layout_constraintHorizontal_bias="0.436"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_toneOrColor"
+        app:layout_constraintVertical_bias="0.184" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="154dp"
-        android:layout_height="34dp"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:text="¿Donde has comprado este articulo?"
         android:textColor="#000000"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/separator"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline15"
-        app:layout_constraintVertical_bias="0.29" />
+        app:layout_constraintVertical_bias="0.202" />
 
     <EditText
         android:id="@+id/et_price"
@@ -157,51 +184,40 @@
         android:ems="10"
         android:hint="Ej: 5.50"
         android:inputType="numberDecimal"
+        android:textColor="#000000"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.142"
+        app:layout_constraintHorizontal_bias="0.326"
         app:layout_constraintStart_toStartOf="@+id/separator"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.018" />
+        app:layout_constraintVertical_bias="0.02" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:text="Tono/Color"
+        android:text="Tono/Color:"
         android:textColor="#000000"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/separator"
-        app:layout_constraintHorizontal_bias="0.403"
+        app:layout_constraintHorizontal_bias="0.405"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_shopBuy"
-        app:layout_constraintVertical_bias="0.122" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="Tono/Color"
-        android:textColor="#000000"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/separator"
-        app:layout_constraintHorizontal_bias="0.403"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_toneOrColor"
-        app:layout_constraintVertical_bias="0.09" />
+        app:layout_constraintVertical_bias="0.103" />
 
     <EditText
         android:id="@+id/et_shopBuy"
-        android:layout_width="163dp"
+        android:layout_width="0dp"
         android:layout_height="39dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="Ej: Primor de Granada"
         android:inputType="textPersonName"
+        android:textColor="#000000"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/separator"
@@ -212,24 +228,34 @@
 
     <TextView
         android:id="@+id/txt_product_media_rating"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="ProductMedia Rating"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:text="PMR"
+        android:textColor="#000000"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.932"
-        app:layout_constraintStart_toStartOf="@+id/separator"
+        app:layout_constraintHorizontal_bias="0.527"
+        app:layout_constraintStart_toStartOf="@+id/guideline30"
         app:layout_constraintTop_toTopOf="@+id/guideline15"
         app:layout_constraintVertical_bias="0.062" />
 
     <TextView
         android:id="@+id/txt_product_brand"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
         android:maxLines="5"
         android:text="Product Brand"
+        android:textColor="#000000"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/separator"
+        app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintHorizontal_bias="0.256"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline15"
@@ -237,14 +263,34 @@
 
     <TextView
         android:id="@+id/txt_product_type"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
         android:maxLines="5"
         android:text="Product Type"
+        android:textColor="#000000"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline30"
+        app:layout_constraintHorizontal_bias="0.393"
+        app:layout_constraintStart_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="@+id/guideline15"
         app:layout_constraintVertical_bias="0.062" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline30"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.79" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

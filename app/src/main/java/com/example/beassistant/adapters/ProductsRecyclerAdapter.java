@@ -137,7 +137,7 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<ProductsRecycl
         holder.txt_brand.setText(objeto.getBrand());
         holder.txt_type.setText(objeto.getType());
         double ratingRounded = Math.round((objeto.getMediaRating()) * 10.0) / 10.0;
-        holder.txt_media_rating.setText(String.valueOf(ratingRounded));
+        holder.txt_media_rating.setText(String.valueOf(ratingRounded) + " ⭐");
 
     }
 
