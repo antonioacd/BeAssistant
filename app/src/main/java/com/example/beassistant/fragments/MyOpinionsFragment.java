@@ -126,7 +126,7 @@ public class MyOpinionsFragment extends Fragment {
                                                                 doc.getString("brand"),
                                                                 doc.getString("category"),
                                                                 doc.getString("type"),
-                                                                doc.getDouble("rating")
+                                                                Math.round(doc.getDouble("rating") * 100.0) / 100.0
                                                         );
                                                         recAdapter.productsList.add(product);
                                                         recAdapter.notifyDataSetChanged();

@@ -59,34 +59,73 @@ public class RegisterImageProfileController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_image_profile_controller);
 
+        // Init the database variables
+        initDatabaseVariables();
+
+        // Init the view variables
+        initViewVariables();
+
+        // Get intent data
+        getIntentData();
+
+        // Listener of take foto button
+        buttonTakeListener();
+
+        //Listener of get gallery image button
+        buttonGetGalleryImgListener();
+
+        // Listener of register button
+        buttonRegisterListener();
+
+    }
+
+    private void initDatabaseVariables() {
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
+        // Create a storage reference from our app
+        storageRef = storage.getReference();
+    }
+
+    private void initViewVariables() {
         btn_take = (Button) findViewById(R.id.btn_take);
         btn_register_last = (Button) findViewById(R.id.btn_register_last);
         btn_getGalleryImg = (Button) findViewById(R.id.btn_getGalleryImg);
         img_profile_register = (ImageView) findViewById(R.id.img_profile_register);
+    }
 
-        db = FirebaseFirestore.getInstance();
-
-        mAuth = FirebaseAuth.getInstance();
-
-        storage = FirebaseStorage.getInstance();
-        // Create a storage reference from our app
-        storageRef = storage.getReference();
-
+    private void getIntentData() {
         Intent i = getIntent();
-
         username = i.getStringExtra("username");
         name = i.getStringExtra("name");
         img = "profileImages/" + username + "_img_profile.jpg";
         email = i.getStringExtra("email");
         password = i.getStringExtra("password");
+    }
 
+    private void buttonTakeListener() {
         btn_take.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 abrirCamara();
             }
         });
+    }
 
+    private void buttonRegisterListener() {
+        btn_register_last.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (username.isEmpty() || name.isEmpty() || img.isEmpty() || email.isEmpty() || password.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Debe rellenar todos los campos", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                generateUser();
+            }
+        });
+    }
+
+    private void buttonGetGalleryImgListener() {
         // Get the image from gallery
         btn_getGalleryImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,18 +137,6 @@ public class RegisterImageProfileController extends AppCompatActivity {
                 startActivityForResult(i.createChooser(i, "Seleccione la Aplicacion"), 10);
             }
         });
-
-        btn_register_last.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (username.isEmpty() || name.isEmpty() || img.isEmpty() || email.isEmpty() || password.isEmpty()){
-                    Toast.makeText(getApplicationContext(), "Debe rellenar todos los campos", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                generateUser();
-            }
-        });
-
     }
 
     private void abrirCamara(){
@@ -218,6 +245,4 @@ public class RegisterImageProfileController extends AppCompatActivity {
                     }
                 });
     }
-
-
 }
