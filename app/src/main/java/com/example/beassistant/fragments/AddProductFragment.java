@@ -172,8 +172,7 @@ public class AddProductFragment extends Fragment {
         });
     }
 
-    @NonNull
-    private static Product getProductWithDocument(QueryDocumentSnapshot document) {
+    private Product getProductWithDocument(QueryDocumentSnapshot document) {
 
         // Generate a product
         Product p = new Product(
@@ -200,12 +199,13 @@ public class AddProductFragment extends Fragment {
                 recAdapter.productsList.clear();
                 recAdapter.notifyDataSetChanged();
                 brands.clear();
+
                 db.collection("/categorias/" + selected_category + "/marcas")
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
+                                if (!task.isSuccessful()) {
                                     return;
                                 }
 
@@ -265,7 +265,6 @@ public class AddProductFragment extends Fragment {
 
         Toast.makeText(getContext(), "No se han encontrado resultados", Toast.LENGTH_LONG).show();
     }
-
 
     private ArrayList getCategories() {
 
