@@ -14,7 +14,23 @@
       },
       "oauth_client": [
         {
-          "client_id": "1061115692110-mk971jfj7vf1fngdf01prqvpiur4k0s3.apps.googleusercontent.com",
+          "client_id": "1061115692110-hbdo9cl8sd66fo1ebfvpq2h37qb789b1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.beassistant",
+            "certificate_hash": "a2c08510ac25b8535d9778fdedae692ec66c43b3"
+          }
+        },
+        {
+          "client_id": "1061115692110-nhetba71tc33pfj3fcn8c9mch43m098t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.beassistant",
+            "certificate_hash": "25d4c3489ad74e80f29fcab888315ae520806c41"
+          }
+        },
+        {
+          "client_id": "1061115692110-65g65f79krst02cb5e246gv3ldj58vo9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +43,36 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1061115692110-mk971jfj7vf1fngdf01prqvpiur4k0s3.apps.googleusercontent.com",
+              "client_id": "1061115692110-65g65f79krst02cb5e246gv3ldj58vo9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061115692110:android:d350016f0e9910a36c2f1f",
+        "android_client_info": {
+          "package_name": "com.example.beassistantadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1061115692110-65g65f79krst02cb5e246gv3ldj58vo9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALLD_Auvsju7MU-Ewf6hzukFR1kDrJEVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1061115692110-65g65f79krst02cb5e246gv3ldj58vo9.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

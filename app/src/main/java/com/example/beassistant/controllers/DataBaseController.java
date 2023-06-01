@@ -32,7 +32,7 @@ public class DataBaseController {
          listUsernames = new HashMap<>();
     }
 
-    protected void addUser(User user_get){
+    public void addUser(User user_get){
 
         /**
          * Create a new user with username, gmail, password and phone number
@@ -41,7 +41,6 @@ public class DataBaseController {
         user.put("username", user_get.getUsername());
         user.put("name", user_get.getName());
         user.put("email", user_get.getEmail());
-        user.put("phoneNumber", user_get.getNumber());
         user.put("password", user_get.getPassword());
 
         /**
@@ -51,7 +50,7 @@ public class DataBaseController {
                 .set(user);
     }
 
-    protected void getLogins(){
+    public void getLogins(){
         db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -68,7 +67,7 @@ public class DataBaseController {
                 });
     }
 
-    protected void getUsernames(){
+    public void getUsernames(){
         db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -10,24 +14,33 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BeAssistant"
+        android:theme="@style/Theme.BeAssistant.NoActionBar"
         tools:targetApi="31">
         <activity
-            android:name=".CameraActivity"
+            android:name=".controllers.AddOpinionActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".controllers.RegisterController"
+            android:name=".controllers.logins.RegisterImageProfileController"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".controllers.logins.RegisterController"
             android:exported="false" />
         <activity
-            android:name=".controllers.LoginController"
+            android:name=".controllers.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".controllers.logins.LoginController"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
