@@ -44,8 +44,7 @@ public class AddOpinionActivity extends AppCompatActivity {
     ImageView img_product;
     TextView txt_product_name;
     TextView txt_product_brand;
-    TextView txt_product_type;
-    TextView txt_product_media_rating;
+    TextView txt_product_type, txt_product_media_rating;
 
     int selected_rating = -1;
     ArrayList<Integer> number_ratings = new ArrayList<>(Arrays.asList(0,1,2,3,4,5));

@@ -26,18 +26,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
 
-        btn_add = (FloatingActionButton) findViewById(R.id.btn_add);
+        setBindingConfiguration();
 
-        btn_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                replaceFragment(new AddProductFragment());
-            }
-        });
+        initViewVariables();
 
+        buttonAddOpinionListener();
+
+        navigationBarListener();
+    }
+
+    private void navigationBarListener() {
         replaceFragment(new HomeFragment());
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -60,6 +59,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void buttonAddOpinionListener() {
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new AddProductFragment());
+            }
+        });
+    }
+
+    private void initViewVariables() {
+        btn_add = (FloatingActionButton) findViewById(R.id.btn_add);
+    }
+
+    private void setBindingConfiguration() {
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+    }
+
     private void replaceFragment(Fragment fragment){
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -67,9 +84,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
     }
-
 
     @Override
     public void onBackPressed() {

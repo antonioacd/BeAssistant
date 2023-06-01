@@ -37,10 +37,8 @@ public class LoginController extends AppCompatActivity {
 
 
     // Declare the variables
-    private EditText et_email;
-    private EditText et_password;
-    private Button btn_login;
-    private Button btn_register;
+    private EditText et_email, et_password;
+    private Button btn_login, btn_register;
     private ImageView btn_google;
 
     // Declare the firebase variables
@@ -56,48 +54,46 @@ public class LoginController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        btn_google = findViewById(R.id.btn_google);
+        initDatabaseVariables();
 
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        gsc = GoogleSignIn.getClient(this, gso);
+        initViewVariables();
 
-        btn_google.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-            }
-        });
+        initVariables();
 
-        db = FirebaseFirestore.getInstance();
+        checkCurrentUser();
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        buttonGoogleListener();
 
+        buttonLoginListener();
+
+        buttonRegisterListener();
+    }
+
+    private void checkCurrentUser() {
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
 
         if (user != null){
             fillSharedUser();
-            return;
         }
 
         if (acct != null){
             fillGoogleUser(acct);
-            return;
         }
+    }
 
-        /**
-         * Inicialice the variables
-         */
+    private void buttonRegisterListener() {
+        btn_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), RegisterController.class);
+                startActivity(i);
+            }
+        });
+    }
 
-        et_email = (EditText) findViewById(R.id.et_email);
-        et_password = (EditText) findViewById(R.id.et_password);
-        btn_login = (Button) findViewById(R.id.btn_login);
-        btn_register = (Button) findViewById(R.id.btn_register);
-
-        /**
-         * Add the listeners of the buttons
-         */
+    private void buttonLoginListener() {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,14 +114,33 @@ public class LoginController extends AppCompatActivity {
 
             }
         });
+    }
 
-        btn_register.setOnClickListener(new View.OnClickListener() {
+    private void buttonGoogleListener() {
+        btn_google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), RegisterController.class);
-                startActivity(i);
+                signIn();
             }
         });
+    }
+
+    private void initVariables() {
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        gsc = GoogleSignIn.getClient(this, gso);
+    }
+
+    private void initViewVariables() {
+        btn_google = findViewById(R.id.btn_google);
+        et_email = (EditText) findViewById(R.id.et_email);
+        et_password = (EditText) findViewById(R.id.et_password);
+        btn_login = (Button) findViewById(R.id.btn_login);
+        btn_register = (Button) findViewById(R.id.btn_register);
+    }
+
+    private void initDatabaseVariables() {
+        db = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     private void fillSharedUser(){
