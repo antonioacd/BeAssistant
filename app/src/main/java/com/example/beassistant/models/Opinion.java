@@ -3,6 +3,8 @@ package com.example.beassistant.models;
 public class Opinion {
 
     private String opinionId;
+    private String username;
+    private String imgRef;
     private String shopBuy;
     private double price;
     private String toneOrColor;
@@ -14,8 +16,10 @@ public class Opinion {
     private String productCategory;
     private String productBrand;
 
-    public Opinion(String opinionId, String shopBuy, double price, String toneOrColor, String opinion, int rating, Boolean visible, String userId, String productId, String productCategory, String productBrand) {
+    public Opinion(String opinionId, String username, String imgRef, String shopBuy, double price, String toneOrColor, String opinion, int rating, Boolean visible, String userId, String productId, String productCategory, String productBrand) {
         this.opinionId = opinionId;
+        this.username = username;
+        this.imgRef = imgRef;
         this.shopBuy = shopBuy;
         this.price = price;
         this.toneOrColor = toneOrColor;
@@ -28,8 +32,22 @@ public class Opinion {
         this.productBrand = productBrand;
     }
 
-    public Opinion(String opinionId) {
+    public Opinion(String opinionId, String shopBuy, double price, String toneOrColor, String opinion, int rating, Boolean visible, String userId, String productId, String productCategory, String productBrand) {
         this.opinionId = opinionId;
+
+        this.shopBuy = shopBuy;
+        this.price = price;
+        this.toneOrColor = toneOrColor;
+        this.opinion = opinion;
+        this.rating = rating;
+        this.visible = visible;
+        this.userId = userId;
+        this.productId = productId;
+        this.productCategory = productCategory;
+        this.productBrand = productBrand;
+    }
+
+    public Opinion() {
     }
 
     public String getOpinionId() {
@@ -38,6 +56,22 @@ public class Opinion {
 
     public void setOpinionId(String opinionId) {
         this.opinionId = opinionId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getImgRef() {
+        return imgRef;
+    }
+
+    public void setImgRef(String imgRef) {
+        this.imgRef = imgRef;
     }
 
     public String getShopBuy() {
@@ -124,6 +158,8 @@ public class Opinion {
     public String toString() {
         return "Opinion{" +
                 "opinionId='" + opinionId + '\'' +
+                ", username='" + username + '\'' +
+                ", imgRef='" + imgRef + '\'' +
                 ", shopBuy='" + shopBuy + '\'' +
                 ", price=" + price +
                 ", toneOrColor='" + toneOrColor + '\'' +

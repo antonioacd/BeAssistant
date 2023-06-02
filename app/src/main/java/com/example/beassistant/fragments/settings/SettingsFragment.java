@@ -1,4 +1,4 @@
-package com.example.beassistant.fragments;
+package com.example.beassistant.fragments.settings;
 
 import android.content.Intent;
 import android.os.Bundle;

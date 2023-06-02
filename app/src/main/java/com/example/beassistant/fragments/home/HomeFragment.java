@@ -1,4 +1,4 @@
-package com.example.beassistant.fragments;
+package com.example.beassistant.fragments.home;
 
 import static android.content.ContentValues.TAG;
 
@@ -26,6 +26,7 @@ import com.example.beassistant.R;
 import com.example.beassistant.adapters.ProductsRecyclerAdapter;
 import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -73,6 +74,8 @@ public class HomeFragment extends Fragment {
 
         // Generate the instance
         db = FirebaseFirestore.getInstance();
+
+        getAllProducts();
     }
 
     @Override
@@ -134,6 +137,32 @@ public class HomeFragment extends Fragment {
                 view.setSelected(true);
             }
         });
+    }
+
+    private void getAllProducts(){
+        db.collectionGroup("productos").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        Log.d("Query:", "Entra");
+                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
+                            Log.d("Query:", doc.getString("name"));
+
+                            Product product = new Product(
+                                    doc.getString("id"),
+                                    doc.getString("name"),
+                                    doc.getString("imgRef"),
+                                    doc.getString("brand"),
+                                    doc.getString("category"),
+                                    doc.getString("type"),
+                                    doc.getDouble("rating")
+                            );
+                            recAdapter.productList.add(product);
+                            recAdapter.notifyDataSetChanged();
+                        }
+
+                    }
+                });
     }
 
     private void replaceFragment(Fragment fragment){

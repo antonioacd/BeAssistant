@@ -48,6 +48,8 @@ public class OpinionsRecyclerAdapter extends RecyclerView.Adapter<OpinionsRecycl
     // Declare the database contoller
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    private int expandedPosition = -1;
+
     //Constructor de RecyclerAdapter
     public OpinionsRecyclerAdapter(Context contexto) {
         this.contexto = contexto;
@@ -101,48 +103,22 @@ public class OpinionsRecyclerAdapter extends RecyclerView.Adapter<OpinionsRecycl
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
 
-        Opinion p = opinionsList.get(position);
+        Opinion opinion = opinionsList.get(position);
 
-        db.collection("opiniones")
-                .document(p.getOpinionId())
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (!task.isSuccessful()) {
-                            return;
-                        }
-                        DocumentSnapshot doc = task.getResult();
+        storageRef.child(opinion.getImgRef()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                holder.img_user_profile.setImageBitmap(bitmap);
+            }
+        });
 
-                        db.collection("users")
-                                .document(doc.getString("userId"))
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (!task.isSuccessful()) {
-                                    return;
-                                }
-                                DocumentSnapshot document = task.getResult();
-
-                                storageRef.child(document.getString("imgRef")).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                    @Override
-                                    public void onSuccess(byte[] bytes) {
-                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                        holder.img_user_profile.setImageBitmap(bitmap);
-                                    }
-                                });
-
-                                holder.txt_username.setText(document.getString("username"));
-                                holder.txt_rating.setText(String.valueOf(doc.getDouble("rating")) + " ⭐");
-                                holder.txt_price.setText(String.valueOf(doc.getDouble("price")) + "€");
-                                holder.txt_shopBuy.setText(doc.getString("shopBuy"));
-                                holder.txt_toneOrColor.setText(doc.getString("toneOrColor"));
-                                holder.txt_opinion.setText(doc.getString("opinion"));
-
-                            }
-                        });
-                    }
-                });
+        holder.txt_username.setText(opinion.getUsername());
+        holder.txt_rating.setText(String.valueOf(opinion.getRating()) + " ⭐");
+        holder.txt_price.setText(String.valueOf(opinion.getPrice()) + "€");
+        holder.txt_shopBuy.setText(opinion.getShopBuy());
+        holder.txt_toneOrColor.setText(opinion.getToneOrColor());
+        holder.txt_opinion.setText(opinion.getOpinion());
     }
 
     @Override

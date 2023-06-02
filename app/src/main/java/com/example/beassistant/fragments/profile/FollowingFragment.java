@@ -1,4 +1,4 @@
-package com.example.beassistant.fragments;
+package com.example.beassistant.fragments.profile;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.FollowersRecyclerAdapter;
+import com.example.beassistant.fragments.profile.ProfileFragment;
+import com.example.beassistant.fragments.profile.ProfileOthersFragment;
 import com.example.beassistant.models.UserInAList;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

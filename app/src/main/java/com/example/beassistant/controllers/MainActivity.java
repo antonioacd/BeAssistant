@@ -11,11 +11,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.beassistant.R;
 import com.example.beassistant.databinding.ActivityMainBinding;
-import com.example.beassistant.fragments.AddProductFragment;
-import com.example.beassistant.fragments.HomeFragment;
-import com.example.beassistant.fragments.ProfileFragment;
-import com.example.beassistant.fragments.SearchFragment;
-import com.example.beassistant.fragments.SettingsFragment;
+import com.example.beassistant.fragments.add.AddProductFragment;
+import com.example.beassistant.fragments.home.HomeFragment;
+import com.example.beassistant.fragments.profile.ProfileFragment;
+import com.example.beassistant.fragments.search.SearchFragment;
+import com.example.beassistant.fragments.settings.SettingsFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {

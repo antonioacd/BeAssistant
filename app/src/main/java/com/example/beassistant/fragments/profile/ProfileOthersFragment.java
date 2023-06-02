@@ -1,4 +1,4 @@
-package com.example.beassistant.fragments;
+package com.example.beassistant.fragments.profile;
 
 import static android.content.ContentValues.TAG;
 

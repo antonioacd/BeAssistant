@@ -55,53 +55,7 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<ProductsRecycl
 
         // Create a storage reference from our app
         storageRef = storage.getReference();
-
-        // Obtains all the products
-        getAllProducts();
     }
-
-    public void getAllProducts(){
-        db.collectionGroup("productos").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        Log.d("Query:", "Entra");
-                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
-                            Log.d("Query:", doc.getString("name"));
-
-                            Product product = new Product(
-                                    doc.getString("id"),
-                                    doc.getString("name"),
-                                    doc.getString("imgRef"),
-                                    doc.getString("brand"),
-                                    doc.getString("category"),
-                                    doc.getString("type"),
-                                    doc.getDouble("rating")
-                            );
-                            productList.add(product);
-                            notifyDataSetChanged();
-                        }
-
-                    }
-                });
-        Log.d("Query:", "Lista:" + productList.toString());
-    }
-
-    //Metodo para añadir un Item a la lista y al recyclerAdapter
-    public void insertarItem(Product p){
-        productList.add(p);
-        this.notifyDataSetChanged();
-    }
-
-    /*//Metodo para modificar un Item del RecyclerAdapter
-    public void modItem(int seleccionado,String id,String name, String desc){
-
-        productList.get(seleccionado).setTitulo(name);
-        productList.get(seleccionado).setDescripcion(desc);
-        productList.get(seleccionado).setFotoId(id);
-
-        this.notifyDataSetChanged();
-    }*/
 
     //Creamos la vista de nuestro RecyclerAdapter
     @NonNull
@@ -123,7 +77,6 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<ProductsRecycl
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
 
         Product objeto = productList.get(position);
-        Log.d("Query:", "Objeto: " + objeto.getName());
 
         storageRef.child(objeto.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -151,10 +104,7 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<ProductsRecycl
     public class RecyclerHolder extends RecyclerView.ViewHolder {
 
         ImageView img_product;
-        TextView txt_brand;
-        TextView txt_type;
-        TextView txt_name;
-        TextView txt_media_rating;
+        TextView txt_brand, txt_type, txt_name, txt_media_rating;
 
         public RecyclerHolder(@NonNull View itemView) {
             super(itemView);
