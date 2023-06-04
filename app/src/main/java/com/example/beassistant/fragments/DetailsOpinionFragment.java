@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.beassistant.R;
 import com.example.beassistant.models.Opinion;
@@ -33,6 +35,9 @@ public class DetailsOpinionFragment extends Fragment {
     // Declare the data base storage controller
     private FirebaseStorage storage;
     private StorageReference storageRef;
+
+    TextView txt_username, txt_rating, txt_price, txt_shopBuy, txt_toneOrColor, txt_opinion;
+    ImageView img_user_profile;
 
     public DetailsOpinionFragment() {
         // Required empty public constructor
@@ -73,55 +78,62 @@ public class DetailsOpinionFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
+        txt_username = (TextView) view.findViewById(R.id.txt_username_opinion_item_02);
+        txt_rating = (TextView) view.findViewById(R.id.txt_rating_02);
+        txt_price = (TextView) view.findViewById(R.id.txt_price_02);
+        txt_shopBuy = (TextView) view.findViewById(R.id.txt_shopBuy_02);
+        txt_toneOrColor = (TextView) view.findViewById(R.id.txt_toneOrColor_02);
+        txt_opinion = (TextView) view.findViewById(R.id.txt_opinion_02);
+        img_user_profile = (ImageView) view.findViewById(R.id.img_user_profile_02);
     }
 
     private void getData(Bundle result){
 
         // Get the own user id
-        String productId = result.getString("id");
-        String name = result.getString("name");
-        String brand = result.getString("brand");
-        String type = result.getString("type");
-        String imgRef = result.getString("imgRef");
-        Double mediaRating = result.getDouble("mediaRating");
+        String opinionId = result.getString("id");
 
         db.collection("opiniones")
+                .document(opinionId)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
                         if (!task.isSuccessful()) {
                             return;
                         }
 
-                        for (DocumentSnapshot doc : task.getResult()) {
+                        DocumentSnapshot doc = task.getResult();
 
-                            if (!doc.getString("productId").equals(productId)) {
-                                continue;
-                            }
+                        db.collection("users")
+                                .document(doc.getString("userId"))
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (!task.isSuccessful()) {
+                                            return;
+                                        }
+                                        DocumentSnapshot document = task.getResult();
 
+                                        storageRef.child(document.getString("imgRef")).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                            @Override
+                                            public void onSuccess(byte[] bytes) {
+                                                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                img_user_profile.setImageBitmap(bitmap);
+                                            }
+                                        });
 
+                                        txt_username.setText(document.getString("username"));
+                                        txt_rating.setText(String.valueOf(doc.getDouble("rating")) + " ⭐");
+                                        txt_price.setText(String.valueOf(doc.getDouble("price")) + "€");
+                                        txt_shopBuy.setText(doc.getString("shopBuy"));
+                                        txt_toneOrColor.setText(doc.getString("toneOrColor"));
+                                        txt_opinion.setText(doc.getString("opinion"));
 
-                            //Opinion op = new Opinion(doc.getId());
-                            //recAdapter.opinionsList.add(op);
-                            //recAdapter.notifyDataSetChanged();
-                        }
+                                    }
+                                });
                     }
                 });
-
-        storageRef.child(imgRef).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                //img_product.setImageBitmap(bitmap);
-            }
-        });
-
-        /*
-        txt_name.setText(name);
-        txt_brand.setText(brand);
-        txt_type.setText(type);
-        txt_mediaRating.setText(String.valueOf(mediaRating) + " ⭐");*/
     }
 }

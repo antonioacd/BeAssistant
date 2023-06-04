@@ -122,7 +122,7 @@ public class OpinionsFragment extends Fragment {
                 // Get the index
                 index = rV.getChildAdapterPosition(v);
 
-                Fragment fragment = new OpinionsFragment();
+                Fragment fragment = new DetailsOpinionFragment();
                 Bundle args = new Bundle();
                 args.putString("id", recAdapter.opinionsList.get(index).getOpinionId());
 
