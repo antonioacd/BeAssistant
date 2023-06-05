@@ -7,7 +7,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -70,8 +72,26 @@ public class MyOpinionsFragment extends Fragment {
 
         setReciclerAdapter();
 
-        // Fill the recycler adapter
-        fillRecylerAdapter();
+        recAdapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int index = 0;
+
+                // Get the index
+                index = rV.getChildAdapterPosition(v);
+
+                Fragment fragment = new OpinionsFragment();
+                Bundle args = new Bundle();
+                args.putString("id", recAdapter.productsList.get(index).getUuID());
+
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.setFragmentResult("keyProduct", args);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
     }
 
     /**
@@ -107,79 +127,42 @@ public class MyOpinionsFragment extends Fragment {
 
                         // Loop the result
                         for (DocumentSnapshot document : task.getResult()) {
-                            // Check the user id to get their opinion products
-                            if (document.getString("userId").equals(userId) && document.getString("productCategory").equals(category.toLowerCase())){
-                                // Get all the products
-                                db.collectionGroup("productos")
-                                        .get()
-                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                                // Loop all the products
-                                                for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
-                                                    // Check if the
-                                                    if (doc.getId().equals(document.getString("productId"))){
-                                                        Product product = new Product(
-                                                                doc.getString("id"),
-                                                                doc.getString("name"),
-                                                                doc.getString("imgRef"),
-                                                                doc.getString("brand"),
-                                                                doc.getString("category"),
-                                                                doc.getString("type"),
-                                                                Math.round(doc.getDouble("rating") * 100.0) / 100.0
-                                                        );
-                                                        recAdapter.productsList.add(product);
-                                                        recAdapter.notifyDataSetChanged();
-                                                    }
 
+                            // Check the user id to get their opinion products
+                            if (!document.getString("userId").equals(userId) && !document.getString("productCategory").equals(category.toLowerCase())) {
+                                continue;
+                            }
+
+                            // Get all the products
+                            db.collectionGroup("productos")
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                            // Loop all the products
+                                            for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
+                                                // Check if the
+                                                if (doc.getId().equals(document.getString("productId"))){
+                                                    Product product = new Product(
+                                                            doc.getString("id"),
+                                                            doc.getString("name"),
+                                                            doc.getString("imgRef"),
+                                                            doc.getString("brand"),
+                                                            doc.getString("category"),
+                                                            doc.getString("type"),
+                                                            Math.round(doc.getDouble("rating") * 100.0) / 100.0
+                                                    );
+                                                    recAdapter.productsList.add(product);
+                                                    recAdapter.notifyDataSetChanged();
                                                 }
 
                                             }
-                                        });
 
-                                /*if (document.getString("productCategory").equals(category.toLowerCase())){
-                                    Log.d("Datos: ", "SegundoIf");
-                                    Opinion o = new Opinion(document.getId());
-                                    // recAdapter.opinionsList.add(o);
-                                    recAdapter.notifyDataSetChanged();
-                                }*/
-                            }
+                                        }
+                                    });
                         }
                     }
                 });
-    }
-
-    /*private void fillRecyclerAdapter(String userId, String category){
-        // Search the user in the database
-        db.collection("opiniones")
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (!task.isSuccessful()){
-                            return;
-                        }
-                        Log.d("Datos: ", "Pasa");
-                        for (DocumentSnapshot doc : task.getResult()) {
-                            Log.d("Datos: ", "Dentro del for");
-                            if (doc.getString("userId").equals(userId)){
-                                Log.d("Datos: ", "PrimerIf");
-                                if (doc.getString("productCategory").equals(category.toLowerCase())){
-                                    Log.d("Datos: ", "SegundoIf");
-                                    Opinion o = new Opinion(doc.getId());
-                                    recAdapter.opinionsList.add(o);
-                                    recAdapter.notifyDataSetChanged();
-                                }
-                            }
-                        }
-                    }
-                });
-    }*/
-
-    /**
-     * Fill the recycler adapter
-     */
-    private void fillRecylerAdapter(){
-
     }
 
     /**

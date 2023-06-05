@@ -1,4 +1,4 @@
-package com.example.beassistant.fragments.home;
+package com.example.beassistant.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,7 +20,9 @@ import android.widget.TextView;
 
 import com.example.beassistant.R;
 import com.example.beassistant.adapters.OpinionsRecyclerAdapter;
+import com.example.beassistant.adapters.UsersRecyclerAdapter;
 import com.example.beassistant.models.Opinion;
+import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -109,14 +111,8 @@ public class OpinionsFragment extends Fragment {
 
         // Set the recycler adapter in the recycler view
         rV.setAdapter(recAdapter);
-
-        recAdapter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
+
 
     private void getData(Bundle result){
 
@@ -137,37 +133,14 @@ public class OpinionsFragment extends Fragment {
                             return;
                         }
 
-                        for (DocumentSnapshot opinionDoc : task.getResult()) {
-                            Log.d("Data: ","Doc: " + opinionDoc.toString());
-                            if (!opinionDoc.getString("productId").equals(productId)) {
-                                continue;
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            Log.d("Data: ","Doc: " + doc.toString());
+                            if (doc.getString("productId").equals(productId)){
+                                Opinion op = new Opinion(doc.getId());
+                                recAdapter.opinionsList.add(op);
+                                recAdapter.notifyDataSetChanged();
                             }
 
-                            Log.d("Opiniones: ", opinionDoc.getString("userId"));
-                            db.collection("users").document(opinionDoc.getString("userId")).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                                    Opinion op = new Opinion();
-
-                                    DocumentSnapshot userDoc = task.getResult();
-
-                                    if (!task.isSuccessful()){
-                                        return;
-                                    }
-
-                                    op.setImgRef(userDoc.getString("imgRef"));
-                                    op.setUsername(userDoc.getString("username"));
-                                    op.setRating(opinionDoc.getDouble("rating").intValue());
-                                    op.setPrice(opinionDoc.getDouble("price").intValue());
-                                    op.setShopBuy(opinionDoc.getString("shopBuy"));
-                                    op.setToneOrColor(opinionDoc.getString("toneOrColor"));
-                                    op.setOpinion(opinionDoc.getString("opinion"));
-
-                                    recAdapter.opinionsList.add(op);
-                                    recAdapter.notifyDataSetChanged();
-                                }
-                            });
                         }
                     }
                 });
@@ -183,6 +156,6 @@ public class OpinionsFragment extends Fragment {
         txt_name.setText(name);
         txt_brand.setText(brand);
         txt_type.setText(type);
-        txt_mediaRating.setText(mediaRating + " ⭐");
+        txt_mediaRating.setText(String.valueOf(mediaRating) + " ⭐");
     }
 }
