@@ -1,7 +1,5 @@
 package com.example.beassistant.fragments.profile;
 
-import static android.content.ContentValues.TAG;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -14,7 +12,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +21,7 @@ import android.widget.TextView;
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.ProfileRecyclerAdapter;
+import com.example.beassistant.models.Category;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,6 +32,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -194,7 +194,7 @@ public class ProfileFragment extends Fragment {
                 Fragment fragment = new MyOpinionsFragment();
                 Bundle args = new Bundle();
                 args.putString("userId", Shared.myUser.getId());
-                args.putString("category", recAdapter.categoryList.get(index));
+                args.putString("category", recAdapter.categoryList.get(index).getCategory_name());
 
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.setFragmentResult("myOpinions", args);
@@ -210,22 +210,97 @@ public class ProfileFragment extends Fragment {
      * Get the categories
      */
     private void getCategories(){
-        // Get the categories
-        db.collection("categorias")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                recAdapter.categoryList.add(document.getId().toUpperCase());
-                                recAdapter.notifyDataSetChanged();
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
+
+        // Clear the category list
+        recAdapter.categoryList.clear();
+        recAdapter.notifyDataSetChanged();
+
+        ArrayList<String> auxCategories = new ArrayList();
+
+        // Loop all the categories
+        db.collection("categorias").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                // Check if task is successful
+                if (!task.isSuccessful()){
+                    return;
+                }
+
+                // Loop the docs of categorias
+                for (QueryDocumentSnapshot categoriesDoc : task.getResult()) {
+                    // Add the categories to an aux array list
+                    auxCategories.add(categoriesDoc.getId());
+                }
+
+                // Get the opinions
+                getOpinionsFromDatabase(auxCategories);
+            }
+        });
+    }
+
+    private void getOpinionsFromDatabase(ArrayList<String> categories) {
+        // Get the opinions
+        db.collection("opiniones").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                // Check if task is successful
+                if (!task.isSuccessful()){
+                    return;
+                }
+
+                // Declare the index to count the opinions
+                int index = 0;
+
+                // Loop the categories to found the occurrences
+                loopAuxCategories(task, categories);
+            }
+        });
+    }
+
+    private void loopAuxCategories(@NonNull Task<QuerySnapshot> task, ArrayList<String> categories) {
+        int index;
+        // Loop the aux array list of categories
+        for (String category : categories) {
+
+            // Reset the index
+            index = 0;
+
+            // Check if the category are contain yet
+            if (!categories.contains(category)){
+                continue;
+            }
+
+            // Get the names of final categories and the number of products the user has reviewed in those categories
+            getCategoriesAndNumber(task, index, category);
+        }
+    }
+
+    private void getCategoriesAndNumber(@NonNull Task<QuerySnapshot> task, int index, String category) {
+        // Loop the opinions doc
+        for (QueryDocumentSnapshot opinionsDoc : task.getResult()) {
+
+            // Check if the opinion are made for the current user
+            if (!opinionsDoc.getString("userId").equals(Shared.myUser.getId())){
+                continue;
+            }
+
+            // Check if the product category is the same that the category that we are looping
+            if (!opinionsDoc.getString("productCategory").equals(category)){
+                continue;
+            }
+
+            // Increase the index
+            index++;
+        }
+
+        // Create the category
+        Category cat = new Category(category, String.valueOf(index));
+
+        // Add the category to the category list of the recycler adapter
+        recAdapter.categoryList.add(cat);
+        recAdapter.notifyDataSetChanged();
     }
 
     /**

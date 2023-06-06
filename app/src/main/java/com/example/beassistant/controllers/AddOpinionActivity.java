@@ -286,7 +286,6 @@ public class AddOpinionActivity extends AppCompatActivity {
                         txt_product_type.setText(document.getString("type"));
 
                         txt_product_media_rating.setText(Math.round(document.getDouble("rating") * 100.0) / 100.0 + " ⭐");
-
                     }
                 });
     }

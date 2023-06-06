@@ -22,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -87,6 +88,7 @@ public class LoginController extends AppCompatActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("Sesion: ", "Registrar");
                 Intent i = new Intent(getApplicationContext(), RegisterController.class);
                 startActivity(i);
             }
@@ -101,14 +103,26 @@ public class LoginController extends AppCompatActivity {
                 String user = et_email.getText().toString().trim();
                 String password = et_password.getText().toString().trim();
 
+                if (et_email.getText().toString().isEmpty() || et_email.getText().toString().isEmpty()){
+                    Log.d("Sesion: ", user + ", " + password);
+                    return;
+                }
+                Log.d("Sesion: ", user + ". " + password);
+
                 firebaseAuth.signInWithEmailAndPassword(user, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
+                            Log.d("Sesion: ", "No iniciada");
                             return;
                         }
                         // Fill the shared user
                         fillSharedUser();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Sesion: ", e.getMessage());
                     }
                 });
 

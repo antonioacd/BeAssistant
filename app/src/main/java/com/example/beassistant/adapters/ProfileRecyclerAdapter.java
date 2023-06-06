@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.beassistant.R;
+import com.example.beassistant.models.Category;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,7 +26,7 @@ import java.util.Locale;
 
 public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecyclerAdapter.RecyclerHolder>{
 
-    public ArrayList<String> categoryList;
+    public ArrayList<Category> categoryList;
     //private CircularProgressDrawable progressDrawable;
 
     //Declaramos los listener de nuestro RecyclerAdapter
@@ -47,57 +48,12 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
 
     }
 
-    private ArrayList getCategories(){
-
-        ArrayList<String> auxArray = new ArrayList<>();
-
-        db.collection("categorias")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                auxArray.add(document.getId());
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
-        return auxArray;
-    }
-
-    /*//Metodo para borrar un item del recyclerAdapter, borrandolo de la lista
-    public void deleteItem(int seleccionado){
-        productList.remove(seleccionado);
-        this.notifyDataSetChanged();
-        
-    }
-
-    //Metodo para añadir un Item a la lista y al recyclerAdapter
-    public void insertarItem(Objeto o){
-        productList.add(o);
-        this.notifyDataSetChanged();
-    }
-
-    //Metodo para modificar un Item del RecyclerAdapter
-    public void modItem(int seleccionado,String id,String name, String desc){
-
-        productList.get(seleccionado).setTitulo(name);
-        productList.get(seleccionado).setDescripcion(desc);
-        productList.get(seleccionado).setFotoId(id);
-
-        this.notifyDataSetChanged();
-    }*/
-
     //Creamos la vista de nuestro RecyclerAdapter
     @NonNull
     @Override
     public RecyclerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item,parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_profile_item,parent, false);
         RecyclerHolder recyclerHolder = new RecyclerHolder(view);
 
         //asignamos los listener a nuestra vista
@@ -111,23 +67,9 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
 
-        /*progressDrawable = new CircularProgressDrawable(contexto);
-        progressDrawable.setStrokeWidth(10f);
-        progressDrawable.setStyle(CircularProgressDrawable.LARGE);
-        progressDrawable.setCenterRadius(30f);
-        progressDrawable.start();
-
-        Objeto objeto = productList.get(position);
-        holder.txtViewDesc.setText(objeto.getDescripcion());
-        holder.txtViewTitle.setText(objeto.getTitulo());
-        Glide.with(contexto)
-                .load(objeto.getFotoId())
-                .placeholder(progressDrawable)
-                .error(R.mipmap.ic_launcher)
-                .into(holder.img);*/
-
-        Object o = categoryList.get(position);
-        holder.txt_category.setText(o.toString());
+        Category c = categoryList.get(position);
+        holder.txt_category.setText(c.getCategory_name().toUpperCase());
+        holder.txt_category_number.setText(c.getNumber_of_opinions());
 
     }
 
@@ -139,12 +81,13 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
     //Asignamos los elementos de nustro recycled holder a variables creadas
     public class RecyclerHolder extends RecyclerView.ViewHolder {
 
-        TextView txt_category;
+        TextView txt_category, txt_category_number;
 
         public RecyclerHolder(@NonNull View itemView) {
             super(itemView);
 
-            txt_category = (TextView) itemView.findViewById(R.id.txt_item);
+            txt_category = (TextView) itemView.findViewById(R.id.txt_category_profile);
+            txt_category_number = (TextView) itemView.findViewById(R.id.txt_category_number);
 
         }
     }

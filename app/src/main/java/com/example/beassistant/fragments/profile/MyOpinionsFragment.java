@@ -22,6 +22,7 @@ import com.example.beassistant.R;
 import com.example.beassistant.adapters.OpinionsRecyclerAdapter;
 import com.example.beassistant.adapters.ProductsRecyclerAdapter;
 import com.example.beassistant.adapters.SimpleProductsRecyclerAdapter;
+import com.example.beassistant.fragments.home.OpinionsFragment;
 import com.example.beassistant.models.Opinion;
 import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;

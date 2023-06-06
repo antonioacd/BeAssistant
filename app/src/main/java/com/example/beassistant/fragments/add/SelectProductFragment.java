@@ -22,20 +22,20 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.beassistant.R;
+import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.SimpleProductsRecyclerAdapter;
 import com.example.beassistant.controllers.AddOpinionActivity;
 import com.example.beassistant.models.Product;
-import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class AddProductFragment extends Fragment {
+public class SelectProductFragment extends Fragment {
 
     private SearchView searchView;
 
@@ -52,7 +52,7 @@ public class AddProductFragment extends Fragment {
     SimpleProductsRecyclerAdapter recAdapter;
     RecyclerView rV;
 
-    public AddProductFragment() {
+    public SelectProductFragment() {
         // Required empty public constructor
     }
 
@@ -120,9 +120,38 @@ public class AddProductFragment extends Fragment {
         recAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkIfYouOpined(view);
+            }
+        });
+    }
+
+    private void checkIfYouOpined(View view) {
+        db.collection("opiniones").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (!task.isSuccessful()){
+                    return;
+                }
+
                 int indice = 0;
                 //Capturamos el indice del elemento seleccionado
                 indice = rV.getChildAdapterPosition(view);
+
+                String productId = recAdapter.productsList.get(indice).getUuID();
+
+                for (DocumentSnapshot doc : task.getResult()) {
+
+                    if (!doc.getString("productId").equals(productId)){
+                        continue;
+                    }
+
+                    if(!doc.getString("userId").equals(Shared.myUser.getId())){
+                        continue;
+                    }
+
+                    Toast.makeText(getContext(), "Ya has opinado de este producto", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
                 Intent i = new Intent(getContext(), AddOpinionActivity.class);
                 i.putExtra("id", recAdapter.productsList.get(indice).getUuID());

@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.beassistant.R;
 import com.example.beassistant.databinding.ActivityMainBinding;
-import com.example.beassistant.fragments.add.AddProductFragment;
+import com.example.beassistant.fragments.add.SelectProductFragment;
 import com.example.beassistant.fragments.home.HomeFragment;
 import com.example.beassistant.fragments.profile.ProfileFragment;
 import com.example.beassistant.fragments.search.SearchFragment;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                replaceFragment(new AddProductFragment());
+                replaceFragment(new SelectProductFragment());
             }
         });
     }

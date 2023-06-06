@@ -24,6 +24,7 @@ import android.widget.AutoCompleteTextView;
 
 import com.example.beassistant.R;
 import com.example.beassistant.adapters.ProductsRecyclerAdapter;
+import com.example.beassistant.models.Opinion;
 import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;

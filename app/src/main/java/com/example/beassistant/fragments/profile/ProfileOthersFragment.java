@@ -92,7 +92,7 @@ public class ProfileOthersFragment extends Fragment {
         initViewVariables(view);
 
         // Get the categories
-        getCategories();
+        //getCategories();
 
         // Set the listeners
         listeners();
@@ -252,7 +252,7 @@ public class ProfileOthersFragment extends Fragment {
     /**
      * Get categories
      */
-    private void getCategories(){
+    /*private void getCategories(){
         // Get the categories
         db.collection("categorias")
                 .get()
@@ -269,7 +269,7 @@ public class ProfileOthersFragment extends Fragment {
                         }
                     }
                 });
-    }
+    }*/
 
     /**
      * Check if you follow the user

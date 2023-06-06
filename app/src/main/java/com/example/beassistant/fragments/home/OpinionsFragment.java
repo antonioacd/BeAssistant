@@ -1,4 +1,4 @@
-package com.example.beassistant.fragments;
+package com.example.beassistant.fragments.home;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,7 +7,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +23,7 @@ import android.widget.TextView;
 import com.example.beassistant.R;
 import com.example.beassistant.adapters.OpinionsRecyclerAdapter;
 import com.example.beassistant.adapters.UsersRecyclerAdapter;
+import com.example.beassistant.fragments.DetailsOpinionFragment;
 import com.example.beassistant.models.Opinion;
 import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -111,6 +114,28 @@ public class OpinionsFragment extends Fragment {
 
         // Set the recycler adapter in the recycler view
         rV.setAdapter(recAdapter);
+
+        recAdapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int index = 0;
+
+                // Get the index
+                index = rV.getChildAdapterPosition(v);
+
+                Fragment fragment = new DetailsOpinionFragment();
+                Bundle args = new Bundle();
+                args.putString("id", recAdapter.opinionsList.get(index).getOpinionId());
+
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.setFragmentResult("keyOpinion", args);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+            }
+        });
     }
 
 
@@ -156,6 +181,6 @@ public class OpinionsFragment extends Fragment {
         txt_name.setText(name);
         txt_brand.setText(brand);
         txt_type.setText(type);
-        txt_mediaRating.setText(String.valueOf(mediaRating) + " ⭐");
-    }
+        txt_mediaRating.setText(String.valueOf(mediaRating) +"⭐");
+}
 }
