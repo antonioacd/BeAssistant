@@ -27,6 +27,7 @@ import com.example.beassistant.adapters.SimpleProductsRecyclerAdapter;
 import com.example.beassistant.controllers.AddOpinionActivity;
 import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -92,6 +93,8 @@ public class SelectProductFragment extends Fragment {
 
         initViewVariables(view);
 
+        fillRecyclerAdapter();
+
         categorySelectorConfigurationAndListener();
 
         brandSelectorConfigurationAndListener();
@@ -99,6 +102,28 @@ public class SelectProductFragment extends Fragment {
         recyclerAdapterListener();
 
         searchViewListener();
+    }
+
+    private void fillRecyclerAdapter(){
+        db.collectionGroup("productos").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        Log.d("Query:", "Entra");
+                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
+
+                            Product product = new Product(
+                                    doc.getString("id"),
+                                    doc.getString("name"),
+                                    doc.getString("imgRef")
+                            );
+                            recAdapter.productsList.add(product);
+                            recAdapter.notifyDataSetChanged();
+                        }
+                        // Set the full list
+                        fullList = recAdapter.productsList;
+                    }
+                });
     }
 
     private void searchViewListener() {
@@ -207,11 +232,7 @@ public class SelectProductFragment extends Fragment {
         Product p = new Product(
                 document.getString("id"),
                 document.getString("name"),
-                document.getString("imgRef"),
-                document.getString("brand"),
-                document.getString("category"),
-                document.getString("type"),
-                0
+                document.getString("imgRef")
         );
         return p;
     }

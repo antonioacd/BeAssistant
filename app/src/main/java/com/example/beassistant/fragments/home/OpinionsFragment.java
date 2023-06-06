@@ -22,10 +22,7 @@ import android.widget.TextView;
 
 import com.example.beassistant.R;
 import com.example.beassistant.adapters.OpinionsRecyclerAdapter;
-import com.example.beassistant.adapters.UsersRecyclerAdapter;
-import com.example.beassistant.fragments.DetailsOpinionFragment;
 import com.example.beassistant.models.Opinion;
-import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;

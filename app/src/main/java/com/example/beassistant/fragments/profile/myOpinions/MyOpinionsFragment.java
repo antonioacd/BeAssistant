@@ -1,4 +1,4 @@
-package com.example.beassistant.fragments.profile;
+package com.example.beassistant.fragments.profile.myOpinions;
 
 import android.os.Bundle;
 
@@ -113,7 +113,7 @@ public class MyOpinionsFragment extends Fragment {
     }
 
     /**
-     * Get User with id
+     * Fill the recycler adapter with the user id and category
      * @param userId
      */
     private void fillRecyclerAdapter(String userId, String category){
@@ -130,7 +130,12 @@ public class MyOpinionsFragment extends Fragment {
                         for (DocumentSnapshot document : task.getResult()) {
 
                             // Check the user id to get their opinion products
-                            if (!document.getString("userId").equals(userId) && !document.getString("productCategory").equals(category.toLowerCase())) {
+                            if (!document.getString("userId").equals(userId)) {
+                                continue;
+                            }
+
+                            // Check if the product category are the same
+                            if (!document.getString("productCategory").equals(category.toLowerCase())){
                                 continue;
                             }
 

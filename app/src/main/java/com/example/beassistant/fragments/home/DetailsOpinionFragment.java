@@ -1,4 +1,4 @@
-package com.example.beassistant.fragments;
+package com.example.beassistant.fragments.home;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

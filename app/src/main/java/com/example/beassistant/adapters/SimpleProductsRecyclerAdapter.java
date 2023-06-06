@@ -44,24 +44,6 @@ public class SimpleProductsRecyclerAdapter extends RecyclerView.Adapter<SimplePr
         productsList = new ArrayList<>();
     }
 
-    //Metodo para borrar un item del recyclerAdapter, borrandolo de la lista
-    public void deleteItem(int seleccionado){
-        productsList.remove(seleccionado);
-        this.notifyDataSetChanged();
-        
-    }
-
-    //Metodo para añadir un Item a la lista y al recyclerAdapter
-    public void insertarItem(Product o){
-        productsList.add(o);
-        this.notifyDataSetChanged();
-    }
-
-    //Metodo para modificar un Item del RecyclerAdapter
-    public void modItem(int seleccionado,String id,String name, String desc){
-        this.notifyDataSetChanged();
-    }
-
     public void setFilteredList(ArrayList<Product> filteredList){
         productsList = filteredList;
         notifyDataSetChanged();

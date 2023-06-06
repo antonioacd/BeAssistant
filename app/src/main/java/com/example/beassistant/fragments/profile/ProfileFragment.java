@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.ProfileRecyclerAdapter;
+import com.example.beassistant.fragments.profile.myOpinions.MyOpinionsFragment;
 import com.example.beassistant.models.Category;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
