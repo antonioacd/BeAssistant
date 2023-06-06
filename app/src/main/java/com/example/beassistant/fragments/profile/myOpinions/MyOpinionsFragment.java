@@ -81,12 +81,12 @@ public class MyOpinionsFragment extends Fragment {
                 // Get the index
                 index = rV.getChildAdapterPosition(v);
 
-                Fragment fragment = new OpinionsFragment();
+                Fragment fragment = new MyOpinionsDetails();
                 Bundle args = new Bundle();
                 args.putString("id", recAdapter.productsList.get(index).getUuID());
 
                 FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.setFragmentResult("keyProduct", args);
+                fragmentManager.setFragmentResult("keyOpinions", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame_layout, fragment);
                 fragmentTransaction.addToBackStack(null);
