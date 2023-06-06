@@ -112,12 +112,17 @@ public class SelectProductFragment extends Fragment {
                         Log.d("Query:", "Entra");
                         for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
 
-                            Product product = new Product(
+                            // Generate a product
+                            Product p = new Product(
                                     doc.getString("id"),
                                     doc.getString("name"),
-                                    doc.getString("imgRef")
+                                    doc.getString("imgRef"),
+                                    doc.getString("brand"),
+                                    doc.getString("category"),
+                                    doc.getString("type"),
+                                    doc.getDouble("rating")
                             );
-                            recAdapter.productsList.add(product);
+                            recAdapter.productsList.add(p);
                             recAdapter.notifyDataSetChanged();
                         }
                         // Set the full list
@@ -182,6 +187,7 @@ public class SelectProductFragment extends Fragment {
                 i.putExtra("id", recAdapter.productsList.get(indice).getUuID());
                 i.putExtra("category", recAdapter.productsList.get(indice).getCategory());
                 i.putExtra("brand", recAdapter.productsList.get(indice).getBrand());
+                Log.d("ProductoAntes: ", recAdapter.productsList.get(indice).toString());
                 startActivity(i);
 
                 //Indicamos que se ha seleccionado un elemento de la vista
@@ -232,7 +238,11 @@ public class SelectProductFragment extends Fragment {
         Product p = new Product(
                 document.getString("id"),
                 document.getString("name"),
-                document.getString("imgRef")
+                document.getString("imgRef"),
+                document.getString("brand"),
+                document.getString("category"),
+                document.getString("type"),
+                document.getDouble("rating")
         );
         return p;
     }

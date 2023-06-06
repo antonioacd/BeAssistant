@@ -7,7 +7,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +23,7 @@ import com.example.beassistant.Shared;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -39,6 +41,10 @@ public class MyOpinionsDetails extends Fragment {
 
     TextView txt_username, txt_rating, txt_price, txt_shopBuy, txt_toneOrColor, txt_opinion;
     ImageView img_user_profile;
+    FloatingActionButton btn_edit, btn_delete;
+
+    // Get the own user id
+    String productId = "";
 
     public MyOpinionsDetails() {
         // Required empty public constructor
@@ -65,6 +71,7 @@ public class MyOpinionsDetails extends Fragment {
 
         // Create a storage reference from our app
         storageRef = storage.getReference();
+
     }
 
     @Override
@@ -78,7 +85,6 @@ public class MyOpinionsDetails extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         txt_username = (TextView) view.findViewById(R.id.txt_username_opinion_item_02_my_opinions_details);
         txt_rating = (TextView) view.findViewById(R.id.txt_rating_02_my_opinions_details);
         txt_price = (TextView) view.findViewById(R.id.txt_price_02_my_opinions_details);
@@ -86,12 +92,30 @@ public class MyOpinionsDetails extends Fragment {
         txt_toneOrColor = (TextView) view.findViewById(R.id.txt_toneOrColor_02_my_opinions_details);
         txt_opinion = (TextView) view.findViewById(R.id.txt_opinion_02_my_opinions_details);
         img_user_profile = (ImageView) view.findViewById(R.id.img_user_profile_02_my_opinions_details);
+        btn_edit = (FloatingActionButton) view.findViewById(R.id.btn_edit_my_opinion);
+        btn_delete = (FloatingActionButton) view.findViewById(R.id.btn_delete_my_opinion);
+
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new MyOpinionEdit();
+                Bundle args = new Bundle();
+                args.putString("id", productId);
+
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.setFragmentResult("keyMyOpinionEdit", args);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
     }
 
     private void getDataFromLastFragment(Bundle result){
 
-        // Get the own user id
-        String productId = result.getString("id");
+        productId = result.getString("id");
 
         Log.d("Recibe: ", productId);
 
@@ -99,8 +123,6 @@ public class MyOpinionsDetails extends Fragment {
     }
 
     private void getOpinionDetails(String productId) {
-
-        Log.d("Recibe: ", productId);
 
         db.collection("opiniones")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -113,13 +135,17 @@ public class MyOpinionsDetails extends Fragment {
 
                         for (QueryDocumentSnapshot opinionsDoc : task.getResult()){
 
-                            if (opinionsDoc.getString("userId").equals(Shared.myUser.getId())) {
+                            if (!opinionsDoc.getString("userId").equals(Shared.myUser.getId())) {
+                                Log.d("OpinionMia: ", "Entraa");
                                 continue;
                             }
 
                             if (!opinionsDoc.getString("productId").equals(productId)){
+                                Log.d("OpinionMia: ", "entra");
                                 continue;
                             }
+
+                            Log.d("OpinionMia: ", opinionsDoc.toString());
 
                             storageRef.child(Shared.myUser.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                 @Override

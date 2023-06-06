@@ -190,16 +190,7 @@ public class AddOpinionActivity extends AppCompatActivity {
                                         for (QueryDocumentSnapshot document : task.getResult()) {
                                             if (document.getString("id").equals(uuId)) {
 
-                                                Map<String, Object> newProduct = new HashMap<>();
-                                                newProduct.put("id", document.getString("id"));
-                                                newProduct.put("name", document.getString("name"));
-                                                newProduct.put("imgRef", document.getString("imgRef"));
-                                                newProduct.put("brand", document.getString("brand"));
-                                                newProduct.put("category", document.getString("category"));
-                                                newProduct.put("type", document.getString("type"));
-                                                newProduct.put("rating", media);
-
-                                                db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getId()).set(newProduct);
+                                                db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getId()).update("rating", media);
 
                                                 Log.d("Sumatorio: ", ""+media);
 
@@ -228,6 +219,7 @@ public class AddOpinionActivity extends AppCompatActivity {
         uuId = i.getStringExtra("id");
         category = i.getStringExtra("category");
         brand = i.getStringExtra("brand");
+        Log.d("ProductoDespues: ", category + " - " + brand);
     }
 
     private void initViewVariables(){
@@ -264,15 +256,17 @@ public class AddOpinionActivity extends AppCompatActivity {
                         }
 
                         // Get the document
-                        DocumentSnapshot document = task.getResult();
+                        DocumentSnapshot productsDocument = task.getResult();
 
                         // Check if document is null
-                        if (document == null){
+                        if (productsDocument == null){
                             return;
                         }
 
+                        Log.d("Producto: ", productsDocument.toString());
+
                         // Set the image
-                        storageRef.child(document.getString("imgRef")).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        storageRef.child(productsDocument.getString("imgRef")).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                             @Override
                             public void onSuccess(byte[] bytes) {
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -281,11 +275,11 @@ public class AddOpinionActivity extends AppCompatActivity {
                         });
 
                         // Set the text of the view texts view
-                        txt_product_name.setText(document.getString("name"));
-                        txt_product_brand.setText(document.getString("brand"));
-                        txt_product_type.setText(document.getString("type"));
+                        txt_product_name.setText(productsDocument.getString("name"));
+                        txt_product_brand.setText(productsDocument.getString("brand"));
+                        txt_product_type.setText(productsDocument.getString("type"));
 
-                        txt_product_media_rating.setText(Math.round(document.getDouble("rating") * 100.0) / 100.0 + " ⭐");
+                        txt_product_media_rating.setText(Math.round(productsDocument.getDouble("rating") * 100.0) / 100.0 + " ⭐");
                     }
                 });
     }
