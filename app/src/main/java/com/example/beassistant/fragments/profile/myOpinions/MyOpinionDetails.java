@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
@@ -15,15 +16,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
+import com.example.beassistant.fragments.profile.ProfileFragment;
+import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,10 +48,14 @@ public class MyOpinionDetails extends Fragment {
 
     TextView txt_username, txt_rating, txt_price, txt_shopBuy, txt_toneOrColor, txt_opinion;
     ImageView img_user_profile;
-    FloatingActionButton btn_edit, btn_delete;
+    FloatingActionButton btn_edit, btn_delete, btn_delete_confimation, btn_delete_cancel;
 
     // Get the own user id
     String productId = "";
+
+    String opinionId = "";
+
+    private AlertDialog dialog;
 
     public MyOpinionDetails() {
         // Required empty public constructor
@@ -110,6 +121,61 @@ public class MyOpinionDetails extends Fragment {
             }
         });
 
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                delete();
+            }
+        });
+
+    }
+
+    private void delete(){
+
+        AlertDialog.Builder window = new AlertDialog.Builder(getContext());
+
+        View v = getLayoutInflater().inflate(R.layout.confirmation_dialog, null);
+
+        //Select Category
+        btn_delete_confimation = v.findViewById(R.id.btn_delete_confirmation);
+        btn_delete_cancel = v.findViewById(R.id.btn_delete_cancel);
+
+        btn_delete_confimation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                db.collection("opiniones")
+                        .document(opinionId)
+                        .delete()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(getContext(), "Opinion eliminada correctamente", Toast.LENGTH_SHORT).show();
+
+                                Fragment fragment = new ProfileFragment();
+                                FragmentManager fragmentManager = getParentFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                                fragmentTransaction.commit();
+
+                                dialog.dismiss();
+                            }
+                        });
+            }
+        });
+
+        btn_delete_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        window.setView(v);
+
+        dialog = window.create();
+
+        dialog.show();
     }
 
     private void getDataFromLastFragment(Bundle result){
@@ -145,6 +211,8 @@ public class MyOpinionDetails extends Fragment {
                             }
 
                             Log.d("OpinionMia: ", opinionsDoc.toString());
+
+                            opinionId = opinionsDoc.getId();
 
                             storageRef.child(Shared.myUser.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                 @Override

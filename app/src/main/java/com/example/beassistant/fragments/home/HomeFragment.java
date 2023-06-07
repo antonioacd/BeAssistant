@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
     String selected_category = "Todos";
     String selected_brand = "Todos";
 
-    AlertDialog dialog;
+    private AlertDialog dialog;
 
     // Creamos las variables necesarias para implementar el recyclerView
     ConstraintLayout constraintLayout;
