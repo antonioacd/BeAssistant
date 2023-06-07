@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="125dp" />
+        app:layout_constraintGuide_begin="133dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline63_my_opinions_details_02"
@@ -61,6 +61,22 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="277dp" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/item_rounded"
+        android:backgroundTint="#D4C1C3"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/guideline28_my_opinions_details_02"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.523" />
 
     <TextView
         android:id="@+id/txt_rating_02_my_opinions_details_02"
@@ -142,8 +158,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/txt_shopBuy_02_my_opinions_details_02"
         app:layout_constraintEnd_toStartOf="@+id/guideline63_my_opinions_details_02"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="@+id/guideline61_my_opinions_details_02"
-        app:layout_constraintTop_toTopOf="@+id/guideline62_my_opinions_details_02" />
+        app:layout_constraintTop_toTopOf="@+id/guideline62_my_opinions_details_02"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/textView5_02_my_opinions_details_02"
@@ -153,8 +171,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/txt_toneOrColor_02_my_opinions_details_02"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="@+id/guideline63_my_opinions_details_02"
-        app:layout_constraintTop_toTopOf="@+id/guideline62_my_opinions_details_02" />
+        app:layout_constraintTop_toTopOf="@+id/guideline62_my_opinions_details_02"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/textView6_02_my_opinions_details_02"
@@ -164,8 +184,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/txt_price_02_my_opinions_details_02"
         app:layout_constraintEnd_toStartOf="@+id/guideline61_my_opinions_details_02"
+        app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline62_my_opinions_details_02" />
+        app:layout_constraintTop_toTopOf="@+id/guideline62_my_opinions_details_02"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/textView7_02_my_opinions_details_02"

@@ -9,6 +9,22 @@
     android:layout_marginRight="12dp"
     android:background="@drawable/item_rounded">
 
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/item_rounded"
+        android:backgroundTint="#D4C1C3"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/guideline28"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.469" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline60"
         android:layout_width="wrap_content"
@@ -62,7 +78,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="134dp" />
+        app:layout_constraintGuide_begin="152dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline63"
@@ -151,8 +167,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/txt_shopBuy_02"
         app:layout_constraintEnd_toStartOf="@+id/guideline63"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="@+id/guideline61"
-        app:layout_constraintTop_toTopOf="@+id/guideline62" />
+        app:layout_constraintTop_toTopOf="@+id/guideline62"
+        app:layout_constraintVertical_bias="0.777" />
 
     <TextView
         android:id="@+id/textView5_02"
@@ -162,8 +180,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/txt_toneOrColor_02"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.562"
         app:layout_constraintStart_toStartOf="@+id/guideline63"
-        app:layout_constraintTop_toTopOf="@+id/guideline62" />
+        app:layout_constraintTop_toTopOf="@+id/guideline62"
+        app:layout_constraintVertical_bias="0.777" />
 
     <TextView
         android:id="@+id/textView6_02"
@@ -173,8 +193,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/txt_price_02"
         app:layout_constraintEnd_toStartOf="@+id/guideline61"
+        app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline62" />
+        app:layout_constraintTop_toTopOf="@+id/guideline62"
+        app:layout_constraintVertical_bias="0.777" />
 
     <TextView
         android:id="@+id/textView7_02"

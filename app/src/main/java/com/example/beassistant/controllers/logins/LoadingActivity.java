@@ -58,21 +58,34 @@ public class LoadingActivity extends AppCompatActivity {
      * Function to fill the google user
      */
     protected void fillGoogleUser(GoogleSignInAccount acct){
-        User user = new User();
+        db.collection("users").document(acct.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-        user.setId(acct.getId());
-        user.setUsername(acct.getDisplayName() + acct.getId());
-        user.setName(acct.getDisplayName());
-        user.setImg_reference("/profileImages/default-profile.png");
-        user.setEmail(acct.getEmail());
-        user.setNumOpiniones(0);
-        user.setNumSeguidores(0);
-        user.setNumSeguidos(0);
+                // Check if task is successful
+                if (!task.isSuccessful()){
+                    return;
+                }
 
-        Shared.myUser = user;
+                DocumentSnapshot doc = task.getResult();
 
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(i);
+                User user = new User();
+
+                user.setId(acct.getId());
+                user.setUsername(acct.getDisplayName() + acct.getId());
+                user.setName(acct.getDisplayName());
+                user.setImg_reference("/profileImages/default-profile.png");
+                user.setEmail(acct.getEmail());
+                user.setNumOpiniones(doc.getDouble("numOpiniones").intValue());
+                user.setNumSeguidores(doc.getDouble("numSeguidores").intValue());
+                user.setNumSeguidos(doc.getDouble("numSeguidos").intValue());
+
+                Shared.myUser = user;
+
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     protected void fillSharedUser(){
@@ -100,9 +113,9 @@ public class LoadingActivity extends AppCompatActivity {
                         user.setName(doc.getString("name"));
                         user.setImg_reference(doc.getString("imgRef"));
                         user.setEmail(doc.getString("email"));
-                        user.setNumOpiniones(0);
-                        user.setNumSeguidores(0);
-                        user.setNumSeguidos(0);
+                        user.setNumOpiniones(doc.getDouble("numOpiniones").intValue());
+                        user.setNumSeguidores(doc.getDouble("numSeguidores").intValue());
+                        user.setNumSeguidos(doc.getDouble("numSeguidos").intValue());
 
                         Shared.myUser = user;
 

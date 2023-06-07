@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -110,9 +111,7 @@ public class OthersOpinionDetails extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                        if (!task.isSuccessful()) {
-                            return;
-                        }
+
 
                         for (QueryDocumentSnapshot opinionsDoc : task.getResult()){
 
@@ -128,21 +127,35 @@ public class OthersOpinionDetails extends Fragment {
 
                             Log.d("OpinionMia: ", opinionsDoc.toString());
 
-                            storageRef.child(Shared.myUser.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            db.collection("users").document(userId)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
-                                public void onSuccess(byte[] bytes) {
-                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                    img_user_profile.setImageBitmap(bitmap);
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                    if (!task.isSuccessful()) {
+                                        return;
+                                    }
+
+                                    DocumentSnapshot doc = task.getResult();
+
+                                    storageRef.child(doc.getString("imgRef")).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                        @Override
+                                        public void onSuccess(byte[] bytes) {
+                                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                            img_user_profile.setImageBitmap(bitmap);
+                                        }
+                                    });
+
+                                    txt_username.setText(doc.getString("username"));
+                                    txt_rating.setText(opinionsDoc.getDouble("rating") + " ⭐");
+                                    txt_price.setText(opinionsDoc.getDouble("price") + "€");
+                                    txt_shopBuy.setText(opinionsDoc.getString("shopBuy"));
+                                    txt_toneOrColor.setText(opinionsDoc.getString("toneOrColor"));
+                                    txt_opinion.setText(opinionsDoc.getString("opinion"));
+
                                 }
                             });
-
-                            txt_username.setText(Shared.myUser.getUsername());
-                            txt_rating.setText(opinionsDoc.getDouble("rating") + " ⭐");
-                            txt_price.setText(opinionsDoc.getDouble("price") + "€");
-                            txt_shopBuy.setText(opinionsDoc.getString("shopBuy"));
-                            txt_toneOrColor.setText(opinionsDoc.getString("toneOrColor"));
-                            txt_opinion.setText(opinionsDoc.getString("opinion"));
-
                         }
                     }
                 });

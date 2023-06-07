@@ -407,7 +407,6 @@ public class ProfileOthersFragment extends Fragment {
                         btn_follow.setText((following) ? "Siguiendo" : "Seguir");
 
                         btn_follow.setEnabled(true);
-
                     }
                 });
     }
@@ -474,6 +473,7 @@ public class ProfileOthersFragment extends Fragment {
      * Follow an user
      */
     private void followUser(){
+        btn_follow.setEnabled(false);
         Map<String, Object> object = new HashMap<>();
         object.put("id", id);
         db.collection("users/"+Shared.myUser.getId()+"/seguidos/")
@@ -525,6 +525,7 @@ public class ProfileOthersFragment extends Fragment {
      * Unfollow an user
      */
     private void unfollowUser(){
+        btn_follow.setEnabled(false);
         Map<String, Object> object = new HashMap<>();
         object.put("id", id);
         // Delete the user from mi following
