@@ -91,7 +91,9 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Atras:", "Pulsado");
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().beginTransaction().commit();
             Log.d("Atras:", "Anterior Fragment");
+            Log.d("Atras:", "Cantidad: " + getSupportFragmentManager().getBackStackEntryCount());
         } else {
             Log.d("Atras:", "Cantidad: " + getSupportFragmentManager().getBackStackEntryCount());
         }

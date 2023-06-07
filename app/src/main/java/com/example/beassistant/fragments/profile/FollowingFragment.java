@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -43,6 +44,8 @@ public class FollowingFragment extends Fragment {
 
     private String userId = "";
 
+    private Boolean isFirstResume = true;
+
     public FollowingFragment() {
         // Required empty public constructor
     }
@@ -51,6 +54,8 @@ public class FollowingFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        initVariables();
+
         getDataFromLastFragment();
     }
 
@@ -58,13 +63,22 @@ public class FollowingFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        if (isFirstResume){
+            isFirstResume = false;
+            return;
+        }
+
         getDataFromLastFragment();
     }
 
     private void getDataFromLastFragment() {
 
+        recyclerAdapter.followersList.clear();
+        recyclerAdapter.notifyDataSetChanged();
+
         if (!userId.isEmpty()) {
             getFollowingWithUserId(userId);
+            Log.d("Followers: ", "Llena de vuelta");
             return;
         }
 
@@ -76,6 +90,7 @@ public class FollowingFragment extends Fragment {
                 userId = result.getString("id");
 
                 getFollowingWithUserId(userId);
+                Log.d("Followers: ", "Llena");
             }
         });
     }
@@ -90,30 +105,14 @@ public class FollowingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Generate the instance
-        db = FirebaseFirestore.getInstance();
+        initViewVariables(view);
 
-        // Init the title
-        txt_title = view.findViewById(R.id.txt_title);
+        recyclerViewConfiguration();
 
-        // Set the title
-        txt_title.setText("Siguiendo");
+        recyclerAdapterListener();
+    }
 
-        // Init the recicler adapter
-        recyclerAdapter = new FollowersRecyclerAdapter(getContext());
-
-        // Init the recicler view
-        reciclerView = (RecyclerView) view.findViewById(R.id.rec_view_followers);
-
-        // Create a linear layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-
-        // Set the layout managetr to the recicler view
-        reciclerView.setLayoutManager(layoutManager);
-
-        // Implement the recicler adapter in the recicler view
-        reciclerView.setAdapter(recyclerAdapter);
-
+    private void recyclerAdapterListener() {
         // Set a listener to the recicler adapter items
         recyclerAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +146,6 @@ public class FollowingFragment extends Fragment {
                 fragmentManager.setFragmentResult("follower", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame_layout, fragment);
-                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
                 // Set the view selected as true
@@ -156,11 +154,42 @@ public class FollowingFragment extends Fragment {
         });
     }
 
+    private void recyclerViewConfiguration(){
+        // Create a linear layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        // Set the layout managetr to the recicler view
+        reciclerView.setLayoutManager(layoutManager);
+
+        // Implement the recicler adapter in the recicler view
+        reciclerView.setAdapter(recyclerAdapter);
+    }
+
+    private void initViewVariables(@NonNull View view) {
+
+        // Init the title
+        txt_title = view.findViewById(R.id.txt_title);
+
+        // Set the title
+        txt_title.setText("Siguiendo");
+
+        // Init the recicler view
+        reciclerView = (RecyclerView) view.findViewById(R.id.rec_view_followers);
+    }
+
+    private void initVariables() {
+        // Generate the instance
+        db = FirebaseFirestore.getInstance();
+
+        // Init the recicler adapter
+        recyclerAdapter = new FollowersRecyclerAdapter(getContext());
+    }
+
     private void getFollowingWithUserId(String userId) {
 
         // Clear the recycler adapter
         recyclerAdapter.followersList.clear();
-
+        Log.d("Followers: ", "Limpia");
         // Notify data set changed
         recyclerAdapter.notifyDataSetChanged();
 
@@ -230,7 +259,5 @@ public class FollowingFragment extends Fragment {
         // Notify data set changed
         recyclerAdapter.notifyDataSetChanged();
     }
-
-
 
 }
