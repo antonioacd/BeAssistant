@@ -51,6 +51,11 @@ public class OpinionsFragment extends Fragment {
     // The recicler view
     private RecyclerView rV;
 
+    private String productId = "", name = "", brand = "", type = "", imgRef = "";
+    private Double mediaRating;
+
+    private Boolean isFirstResume = true;
+
     public OpinionsFragment() {
         // Required empty public constructor
     }
@@ -71,17 +76,21 @@ public class OpinionsFragment extends Fragment {
         // Init the recycler adapter
         recAdapter = new OpinionsRecyclerAdapter(getContext());
 
-        getParentFragmentManager().setFragmentResultListener("keyProduct", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                Log.d("Data: ", result.toString());
+        getDataFromLastFragment();
 
-                // Obtains the followers id
-                getData(result);
+    }
 
-            }
-        });
+    @Override
+    public void onResume() {
+        super.onResume();
 
+        if (isFirstResume){
+            isFirstResume = false;
+            return;
+        }
+
+        getOpinions(productId);
+        fillProductData(name, brand, type, imgRef, mediaRating);
     }
 
     @Override
@@ -136,17 +145,38 @@ public class OpinionsFragment extends Fragment {
         });
     }
 
+    private void getDataFromLastFragment() {
 
-    private void getData(Bundle result){
+        if (!productId.isEmpty()) {
+            getOpinions(productId);
+            fillProductData(name, brand, type, imgRef, mediaRating);
+            return;
+        }
+
+        getParentFragmentManager().setFragmentResultListener("keyProduct", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+
+                productId = result.getString("id");
+                name = result.getString("name");
+                brand = result.getString("brand");
+                type = result.getString("type");
+                imgRef = result.getString("imgRef");
+                mediaRating = result.getDouble("mediaRating");
+
+                getOpinions(productId);
+                fillProductData(name, brand, type, imgRef, mediaRating);
+            }
+
+        });
+    }
+
+    private void getOpinions(String productId) {
+
+        recAdapter.opinionsList.clear();
+        recAdapter.notifyDataSetChanged();
 
         // Get the own user id
-        String productId = result.getString("id");
-        String name = result.getString("name");
-        String brand = result.getString("brand");
-        String type = result.getString("type");
-        String imgRef = result.getString("imgRef");
-        Double mediaRating = result.getDouble("mediaRating");
-
         db.collection("opiniones")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -176,6 +206,10 @@ public class OpinionsFragment extends Fragment {
                     }
                 });
 
+
+    }
+
+    private void fillProductData(String name, String brand, String type, String imgRef, Double mediaRating) {
         storageRef.child(imgRef).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
@@ -188,5 +222,5 @@ public class OpinionsFragment extends Fragment {
         txt_brand.setText(brand);
         txt_type.setText(type);
         txt_mediaRating.setText(mediaRating +" ⭐");
-}
+    }
 }

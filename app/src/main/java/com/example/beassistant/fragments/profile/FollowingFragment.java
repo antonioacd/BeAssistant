@@ -78,7 +78,6 @@ public class FollowingFragment extends Fragment {
 
         if (!userId.isEmpty()) {
             getFollowingWithUserId(userId);
-            Log.d("Followers: ", "Llena de vuelta");
             return;
         }
 
