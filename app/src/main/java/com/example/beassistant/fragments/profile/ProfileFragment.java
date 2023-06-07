@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.ProfileRecyclerAdapter;
-import com.example.beassistant.fragments.profile.myOpinions.MyOpinionsFragment;
+import com.example.beassistant.fragments.profile.myOpinions.MyOpinionsList;
 import com.example.beassistant.models.Category;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -192,7 +192,7 @@ public class ProfileFragment extends Fragment {
                 // Get the index
                 index = rvCategories.getChildAdapterPosition(v);
 
-                Fragment fragment = new MyOpinionsFragment();
+                Fragment fragment = new MyOpinionsList();
                 Bundle args = new Bundle();
                 args.putString("userId", Shared.myUser.getId());
                 args.putString("category", recAdapter.categoryList.get(index).getCategory_name());
@@ -336,11 +336,6 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                        // Chek if the task is successful
-                        if (!task.isSuccessful()) {
-                            return;
-                        }
-
                         // Get the document
                         DocumentSnapshot document = task.getResult();
 
@@ -355,6 +350,26 @@ public class ProfileFragment extends Fragment {
                         txt_numFollowers.setText(String.valueOf(document.getDouble("numSeguidores").intValue()));
                         txt_numFollowing.setText(String.valueOf(document.getDouble("numSeguidos").intValue()));
                         cargarFoto(document.getString("imgRef"));
+
+                        db.collection("opiniones").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                // Chek if the task is successful
+                                if (!task.isSuccessful()) {
+                                    return;
+                                }
+
+                                int index = 0;
+
+                                for (QueryDocumentSnapshot doc : task.getResult()) {
+                                    if (doc.getString("userId").equals(Shared.myUser.getId())){
+                                        index++;
+                                    }
+                                }
+
+                                txt_numOpinions.setText(index+"");
+                            }
+                        });
                     }
                 });
     }

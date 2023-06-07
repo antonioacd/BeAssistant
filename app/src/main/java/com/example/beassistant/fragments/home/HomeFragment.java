@@ -210,7 +210,7 @@ public class HomeFragment extends Fragment {
         //Select Category
         select_category = v.findViewById(R.id.select_category);
 
-        adapterItems = new ArrayAdapter<String>(getContext(),R.layout.list_item,categories);
+        adapterItems = new ArrayAdapter<String>(getContext(),R.layout.list_item02,categories);
         select_category.setAdapter(adapterItems);
 
         select_category.setOnItemClickListener(new AdapterView.OnItemClickListener() {

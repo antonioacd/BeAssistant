@@ -27,6 +27,9 @@ import android.widget.TextView;
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.ProfileRecyclerAdapter;
+import com.example.beassistant.fragments.profile.myOpinions.MyOpinionsList;
+import com.example.beassistant.fragments.profile.othersOpinion.OthersOpinionsList;
+import com.example.beassistant.models.Category;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,6 +42,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,6 +66,8 @@ public class ProfileOthersFragment extends Fragment {
     RecyclerView rvCategories;
     ProfileRecyclerAdapter recAdapter;
 
+    private String userId = "";
+
     public ProfileOthersFragment() {
         // Required empty public constructor
     }
@@ -75,7 +81,13 @@ public class ProfileOthersFragment extends Fragment {
         checkFollow();
 
         getDataFromLastFragment();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getDataFromLastFragment();
     }
 
     @Override
@@ -92,7 +104,7 @@ public class ProfileOthersFragment extends Fragment {
         initViewVariables(view);
 
         // Get the categories
-        //getCategories();
+        getCategories();
 
         // Set the listeners
         listeners();
@@ -118,17 +130,25 @@ public class ProfileOthersFragment extends Fragment {
         storageRef = storage.getReference();
     }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     /**
      * Get the data from last fragment
      */
     private void getDataFromLastFragment(){
+
+        if (!userId.isEmpty()) {
+            getUser(userId);
+            return;
+        }
+
         getParentFragmentManager().setFragmentResultListener("follower", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 // Obtain the follower id
-                String userId = result.getString("id");
-
-                // Get the user
+                userId = result.getString("id");
                 getUser(userId);
             }
         });
@@ -221,10 +241,17 @@ public class ProfileOthersFragment extends Fragment {
                 // Get the index
                 index = rvCategories.getChildAdapterPosition(v);
 
+                Fragment fragment = new OthersOpinionsList();
+                Bundle args = new Bundle();
+                args.putString("userId", id);
+                args.putString("category", recAdapter.categoryList.get(index).getCategory_name());
 
-
-
-
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.setFragmentResult("OthersOpinions", args);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
     }
@@ -250,26 +277,101 @@ public class ProfileOthersFragment extends Fragment {
     }
 
     /**
-     * Get categories
+     * Get the categories
      */
-    /*private void getCategories(){
-        // Get the categories
-        db.collection("categorias")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                recAdapter.categoryList.add(document.getId().toUpperCase());
-                                recAdapter.notifyDataSetChanged();
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-    }*/
+    private void getCategories(){
+
+        // Clear the category list
+        recAdapter.categoryList.clear();
+        recAdapter.notifyDataSetChanged();
+
+        ArrayList<String> auxCategories = new ArrayList();
+
+        // Loop all the categories
+        db.collection("categorias").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                // Check if task is successful
+                if (!task.isSuccessful()){
+                    return;
+                }
+
+                // Loop the docs of categorias
+                for (QueryDocumentSnapshot categoriesDoc : task.getResult()) {
+                    // Add the categories to an aux array list
+                    auxCategories.add(categoriesDoc.getId());
+                }
+
+                // Get the opinions
+                getOpinionsFromDatabase(auxCategories);
+            }
+        });
+    }
+
+    private void getOpinionsFromDatabase(ArrayList<String> categories) {
+        // Get the opinions
+        db.collection("opiniones").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                // Check if task is successful
+                if (!task.isSuccessful()){
+                    return;
+                }
+
+                // Declare the index to count the opinions
+                int index = 0;
+
+                // Loop the categories to found the occurrences
+                loopAuxCategories(task, categories);
+            }
+        });
+    }
+
+    private void loopAuxCategories(@NonNull Task<QuerySnapshot> task, ArrayList<String> categories) {
+        int index;
+        // Loop the aux array list of categories
+        for (String category : categories) {
+
+            // Reset the index
+            index = 0;
+
+            // Check if the category are contain yet
+            if (!categories.contains(category)){
+                continue;
+            }
+
+            // Get the names of final categories and the number of products the user has reviewed in those categories
+            getCategoriesAndNumber(task, index, category);
+        }
+    }
+
+    private void getCategoriesAndNumber(@NonNull Task<QuerySnapshot> task, int index, String category) {
+        // Loop the opinions doc
+        for (QueryDocumentSnapshot opinionsDoc : task.getResult()) {
+
+            // Check if the opinion are made for the current user
+            if (!opinionsDoc.getString("userId").equals(id)){
+                continue;
+            }
+
+            // Check if the product category is the same that the category that we are looping
+            if (!opinionsDoc.getString("productCategory").equals(category)){
+                continue;
+            }
+
+            // Increase the index
+            index++;
+        }
+
+        // Create the category
+        Category cat = new Category(category, String.valueOf(index));
+
+        // Add the category to the category list of the recycler adapter
+        recAdapter.categoryList.add(cat);
+        recAdapter.notifyDataSetChanged();
+    }
 
     /**
      * Check if you follow the user
@@ -343,6 +445,25 @@ public class ProfileOthersFragment extends Fragment {
                         txt_numFollowers.setText(String.valueOf(document.getDouble("numSeguidores").intValue()));
                         txt_numFollowing.setText(String.valueOf(document.getDouble("numSeguidos").intValue()));
                         cargarFoto(document.getString("imgRef"));
+
+                        db.collection("opiniones").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                // Chek if the task is successful
+                                if (!task.isSuccessful()) {
+                                    return;
+                                }
+
+                                int index = 0;
+
+                                for (QueryDocumentSnapshot doc : task.getResult()) {
+                                    if (doc.getString("userId").equals(Shared.myUser.getId())){
+                                        index++;
+                                    }
+                                }
+                                txt_numOpinions.setText(index+"");
+                            }
+                        });
 
                         checkFollow();
                     }

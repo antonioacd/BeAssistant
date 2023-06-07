@@ -19,8 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.FollowersRecyclerAdapter;
-import com.example.beassistant.fragments.profile.ProfileFragment;
-import com.example.beassistant.fragments.profile.ProfileOthersFragment;
 import com.example.beassistant.models.UserInAList;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -43,6 +41,8 @@ public class FollowingFragment extends Fragment {
     // Declare the title text view
     TextView txt_title;
 
+    private String userId = "";
+
     public FollowingFragment() {
         // Required empty public constructor
     }
@@ -51,11 +51,31 @@ public class FollowingFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getDataFromLastFragment();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getDataFromLastFragment();
+    }
+
+    private void getDataFromLastFragment() {
+
+        if (!userId.isEmpty()) {
+            getFollowingWithUserId(userId);
+            return;
+        }
+
         getParentFragmentManager().setFragmentResultListener("key", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                // Obtains the followers id
-                getFollowingId(result);
+
+                // Get the own user id
+                userId = result.getString("id");
+
+                getFollowingWithUserId(userId);
             }
         });
     }
@@ -127,6 +147,7 @@ public class FollowingFragment extends Fragment {
                 fragmentManager.setFragmentResult("follower", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
                 // Set the view selected as true
@@ -135,11 +156,7 @@ public class FollowingFragment extends Fragment {
         });
     }
 
-    /**
-     * Function to get the followers id
-     * @param result
-     */
-    private void getFollowingId(Bundle result){
+    private void getFollowingWithUserId(String userId) {
 
         // Clear the recycler adapter
         recyclerAdapter.followersList.clear();
@@ -147,14 +164,8 @@ public class FollowingFragment extends Fragment {
         // Notify data set changed
         recyclerAdapter.notifyDataSetChanged();
 
-        // Get the own user id
-        String userId = result.getString("id");
-
-        // Create the path to the query
-        String path = "/users/"+userId+"/seguidos";
-
         // Query about the followers
-        db.collection(path)
+        db.collection("/users/"+ userId +"/seguidos")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

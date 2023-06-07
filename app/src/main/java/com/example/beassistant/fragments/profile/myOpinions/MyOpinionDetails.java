@@ -30,7 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class MyOpinionsDetails extends Fragment {
+public class MyOpinionDetails extends Fragment {
 
     // Declare the data base controller
     private FirebaseFirestore db;
@@ -46,7 +46,7 @@ public class MyOpinionsDetails extends Fragment {
     // Get the own user id
     String productId = "";
 
-    public MyOpinionsDetails() {
+    public MyOpinionDetails() {
         // Required empty public constructor
     }
 
@@ -106,7 +106,6 @@ public class MyOpinionsDetails extends Fragment {
                 fragmentManager.setFragmentResult("keyMyOpinionEdit", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame_layout, fragment);
-                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });

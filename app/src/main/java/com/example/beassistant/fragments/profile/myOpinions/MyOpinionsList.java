@@ -13,17 +13,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.beassistant.R;
-import com.example.beassistant.adapters.OpinionsRecyclerAdapter;
-import com.example.beassistant.adapters.ProductsRecyclerAdapter;
 import com.example.beassistant.adapters.SimpleProductsRecyclerAdapter;
-import com.example.beassistant.fragments.home.OpinionsFragment;
-import com.example.beassistant.models.Opinion;
 import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,7 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class MyOpinionsFragment extends Fragment {
+public class MyOpinionsList extends Fragment {
 
     AlertDialog dialog;
 
@@ -44,7 +39,7 @@ public class MyOpinionsFragment extends Fragment {
     // Declare the data base object
     private FirebaseFirestore db;
 
-    public MyOpinionsFragment() {
+    public MyOpinionsList() {
         // Required empty public constructor
     }
 
@@ -81,7 +76,7 @@ public class MyOpinionsFragment extends Fragment {
                 // Get the index
                 index = rV.getChildAdapterPosition(v);
 
-                Fragment fragment = new MyOpinionsDetails();
+                Fragment fragment = new MyOpinionDetails();
                 Bundle args = new Bundle();
                 args.putString("id", recAdapter.productsList.get(index).getUuID());
 

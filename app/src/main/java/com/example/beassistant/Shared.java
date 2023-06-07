@@ -8,6 +8,6 @@ import java.util.ArrayList;
 public class Shared {
 
     public static User myUser;
-    public static ArrayList<Product> myProductList = new ArrayList<Product>();
+    public static String otherUserId = "";
 
 }
