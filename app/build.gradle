@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.beassistant"
-        minSdk 22
+        minSdk 24
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -46,6 +46,10 @@ dependencies {
 
     // Firebase storage
     implementation 'com.google.firebase:firebase-storage-ktx:20.2.0'
+
+    // Barcode reader
+    implementation 'com.google.zxing:core:3.4.1'
+    implementation 'com.journeyapps:zxing-android-embedded:4.2.0'
 
     // Others
     testImplementation 'junit:junit:4.13.2'

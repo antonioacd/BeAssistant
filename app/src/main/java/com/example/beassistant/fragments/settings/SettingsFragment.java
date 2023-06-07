@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.beassistant.R;
+import com.example.beassistant.controllers.BarcodeScannerActivity;
 import com.example.beassistant.controllers.logins.LoginController;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -46,6 +47,9 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Button btn_sign_out = view.findViewById(R.id.btn_sign_out);
+        Button btn_change_user = view.findViewById(R.id.btn_change_user);
+        Button btn_change_img_profile = view.findViewById(R.id.btn_change_img_profile);
+        Button btn_change_name = view.findViewById(R.id.btn_change_name);
 
         btn_sign_out.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +68,13 @@ public class SettingsFragment extends Fragment {
                 signOutTask.addOnCompleteListener(task -> {
                     startActivity(new Intent(getContext(), LoginController.class));
                 });
+            }
+        });
+
+        btn_change_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), BarcodeScannerActivity.class));
             }
         });
 
