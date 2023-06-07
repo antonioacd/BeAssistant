@@ -219,7 +219,7 @@ public class AddOpinionActivity extends AppCompatActivity {
         uuId = i.getStringExtra("id");
         category = i.getStringExtra("category");
         brand = i.getStringExtra("brand");
-        Log.d("ProductoDespues: ", category + " - " + brand);
+        Log.d("ProductoDespues: ", uuId + " - " + brand);
     }
 
     private void initViewVariables(){
@@ -257,11 +257,6 @@ public class AddOpinionActivity extends AppCompatActivity {
 
                         // Get the document
                         DocumentSnapshot productsDocument = task.getResult();
-
-                        // Check if document is null
-                        if (productsDocument == null){
-                            return;
-                        }
 
                         Log.d("Producto: ", productsDocument.toString());
 
