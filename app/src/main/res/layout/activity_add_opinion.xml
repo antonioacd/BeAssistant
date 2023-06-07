@@ -58,6 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        app:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -178,8 +179,8 @@
 
     <EditText
         android:id="@+id/et_price"
-        android:layout_width="136dp"
-        android:layout_height="38dp"
+        android:layout_width="145dp"
+        android:layout_height="46dp"
         android:layout_marginStart="20dp"
         android:ems="10"
         android:hint="Ej: 5.50"

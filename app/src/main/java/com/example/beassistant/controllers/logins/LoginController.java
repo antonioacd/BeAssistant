@@ -61,27 +61,11 @@ public class LoginController extends AppCompatActivity {
 
         initVariables();
 
-        checkCurrentUser();
-
         buttonGoogleListener();
 
         buttonLoginListener();
 
         buttonRegisterListener();
-    }
-
-    private void checkCurrentUser() {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-
-        if (user != null){
-            fillSharedUser();
-        }
-
-        if (acct != null){
-            fillGoogleUser(acct);
-        }
     }
 
     private void buttonRegisterListener() {
@@ -157,7 +141,7 @@ public class LoginController extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
-    private void fillSharedUser(){
+    protected void fillSharedUser(){
 
         // Get the current user
         String currentUserId = firebaseAuth.getCurrentUser().getUid();
@@ -251,7 +235,7 @@ public class LoginController extends AppCompatActivity {
     /**
      * Function to fill the google user
      */
-    private void fillGoogleUser(GoogleSignInAccount acct){
+    protected void fillGoogleUser(GoogleSignInAccount acct){
         User user = new User();
 
         user.setId(acct.getId());

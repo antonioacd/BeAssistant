@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.beassistant.R;
 import com.example.beassistant.adapters.OpinionsRecyclerAdapter;
@@ -155,15 +156,23 @@ public class OpinionsFragment extends Fragment {
                             return;
                         }
 
-                        for (DocumentSnapshot doc : task.getResult()) {
-                            Log.d("Data: ","Doc: " + doc.toString());
-                            if (doc.getString("productId").equals(productId)){
-                                Opinion op = new Opinion(doc.getId());
-                                recAdapter.opinionsList.add(op);
-                                recAdapter.notifyDataSetChanged();
-                            }
+                        int index = 0;
 
+                        for (DocumentSnapshot doc : task.getResult()) {
+
+                            if (!doc.getString("productId").equals(productId)){
+                                continue;
+                            }
+                            index++;
+                            Opinion op = new Opinion(doc.getId());
+                            recAdapter.opinionsList.add(op);
+                            recAdapter.notifyDataSetChanged();
                         }
+
+                        if (index == 0){
+                            Toast.makeText(getContext(), "El producto seleccionado aún no dispone de opiniones", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 });
 
@@ -178,6 +187,6 @@ public class OpinionsFragment extends Fragment {
         txt_name.setText(name);
         txt_brand.setText(brand);
         txt_type.setText(type);
-        txt_mediaRating.setText(String.valueOf(mediaRating) +"⭐");
+        txt_mediaRating.setText(mediaRating +" ⭐");
 }
 }

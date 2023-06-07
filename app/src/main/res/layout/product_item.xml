@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/item_rounded"
-    android:backgroundTint="#D4C1C3">
+    android:background="@drawable/item_rounded">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline13"

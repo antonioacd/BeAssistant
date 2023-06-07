@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="199dp" />
+        app:layout_constraintGuide_begin="215dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline10_02"
@@ -69,7 +69,7 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_follow"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="31dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="4dp"
@@ -79,19 +79,21 @@
         android:paddingBottom="0dp"
         android:text="Seguir"
         android:textColor="#FFFFFF"
-        android:textSize="10sp"
+        android:textSize="14sp"
         app:backgroundTint="#E6B0B3"
         app:layout_constraintBottom_toTopOf="@+id/guideline9_02"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline17_02"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintVertical_bias="0.545" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_clasification_02"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#D4C1C3"
+        android:background="@drawable/item_rounded_less"
+        android:backgroundTint="#D4C1C3"
         android:padding="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

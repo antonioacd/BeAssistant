@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="86dp" />
+        app:layout_constraintGuide_percent="0.20924574" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline62_my_opinions_details_02"
@@ -93,6 +93,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
+        android:inputType="numberDecimal"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline28_my_opinions_details_02"
@@ -203,13 +204,13 @@
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
         android:clickable="true"
-        app:backgroundTint="#3AD692"
+        app:backgroundTint="@color/follow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.045"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_opinion_02_my_opinions_details_02"
-        app:layout_constraintVertical_bias="0.292"
+        app:layout_constraintVertical_bias="0.195"
         app:srcCompat="@drawable/ic_baseline_check_24" />
 
     <androidx.constraintlayout.widget.Guideline
