@@ -76,7 +76,6 @@ public class RegisterImageProfileController extends AppCompatActivity {
 
         // Listener of register button
         buttonRegisterListener();
-
     }
 
     private void initDatabaseVariables() {

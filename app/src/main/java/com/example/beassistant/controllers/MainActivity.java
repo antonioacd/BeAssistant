@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.beassistant.R;
 import com.example.beassistant.databinding.ActivityMainBinding;
+import com.example.beassistant.fragments.VideosFragment;
 import com.example.beassistant.fragments.add.SelectProductFragment;
 import com.example.beassistant.fragments.home.HomeFragment;
 import com.example.beassistant.fragments.profile.ProfileFragment;
@@ -40,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         replaceFragment(new HomeFragment());
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-
             switch (item.getItemId()){
                 case R.id.home:
                     replaceFragment(new HomeFragment());
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(new ProfileFragment());
                     break;
                 case R.id.settings:
-                    replaceFragment(new SettingsFragment());
+                    replaceFragment(new VideosFragment());
                     break;
             }
             return true;

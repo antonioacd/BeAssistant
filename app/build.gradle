@@ -17,6 +17,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -50,6 +54,9 @@ dependencies {
     // Barcode reader
     implementation 'com.google.zxing:core:3.4.1'
     implementation 'com.journeyapps:zxing-android-embedded:4.2.0'
+
+    // Youtube
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev222-1.25.0'
 
     // Others
     testImplementation 'junit:junit:4.13.2'
