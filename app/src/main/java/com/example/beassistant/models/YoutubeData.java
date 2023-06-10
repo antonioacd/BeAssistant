@@ -2,19 +2,26 @@ package com.example.beassistant.models;
 
 public class YoutubeData {
 
+    private String videoId = "";
     private String title = "";
     private String description = "";
     private String published = "";
     private String thumbnail = "";
 
-    public YoutubeData(String title, String description, String published, String thumbnail) {
+    public YoutubeData(String videoId, String title, String description, String published, String thumbnail) {
+        this.videoId = videoId;
         this.title = title;
         this.description = description;
         this.published = published;
         this.thumbnail = thumbnail;
     }
 
-    public YoutubeData() {
+    public String getVideoId() {
+        return videoId;
+    }
+
+    public void setVideoId(String videoId) {
+        this.videoId = videoId;
     }
 
     public String getTitle() {
@@ -52,7 +59,8 @@ public class YoutubeData {
     @Override
     public String toString() {
         return "YoutubeData{" +
-                "title='" + title + '\'' +
+                "videoId='" + videoId + '\'' +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", published='" + published + '\'' +
                 ", thumbnail='" + thumbnail + '\'' +

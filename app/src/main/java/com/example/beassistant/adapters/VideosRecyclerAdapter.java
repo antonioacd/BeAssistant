@@ -16,6 +16,7 @@ import com.example.beassistant.models.YoutubeData;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -77,6 +78,8 @@ public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideosRecyclerAd
         holder.txt_des.setText(video.getDescription());
         holder.txt_date.setText(video.getPublished());
 
+        Picasso.get().load(video.getThumbnail()).into(holder.img_thumb);
+
     }
 
     @Override
@@ -98,7 +101,6 @@ public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideosRecyclerAd
             txt_title = (TextView)  itemView.findViewById(R.id.txt_video_title);
             txt_des = (TextView)  itemView.findViewById(R.id.txt_video_desc);
             txt_date = (TextView)  itemView.findViewById(R.id.txt_video_date);
-
         }
     }
 

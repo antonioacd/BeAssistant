@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.beassistant.R;
 import com.example.beassistant.databinding.ActivityMainBinding;
+import com.example.beassistant.fragments.PlayerFragment;
 import com.example.beassistant.fragments.VideosFragment;
 import com.example.beassistant.fragments.add.SelectProductFragment;
 import com.example.beassistant.fragments.home.HomeFragment;

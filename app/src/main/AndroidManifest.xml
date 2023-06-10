@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -61,7 +64,7 @@
             android:exported="false" />
         <activity
             android:name=".controllers.logins.LoginController"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>
