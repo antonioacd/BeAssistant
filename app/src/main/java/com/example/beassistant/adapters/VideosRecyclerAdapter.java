@@ -1,6 +1,8 @@
 package com.example.beassistant.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,7 +81,6 @@ public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideosRecyclerAd
         holder.txt_date.setText(video.getPublished());
 
         Picasso.get().load(video.getThumbnail()).into(holder.img_thumb);
-
     }
 
     @Override

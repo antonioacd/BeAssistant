@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@drawable/item_rounded"
     android:backgroundTint="#FFFFFF">
 
@@ -136,19 +136,17 @@
 
     <TextView
         android:id="@+id/txt_opinion_02_my_opinions_details"
-        android:layout_width="380dp"
-        android:layout_height="325dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="360dp"
+        android:layout_height="429dp"
         android:ellipsize="end"
         android:gravity="fill_horizontal"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline28_my_opinions_details" />
+        app:layout_constraintTop_toTopOf="@+id/guideline28_my_opinions_details"
+        app:layout_constraintVertical_bias="0.291" />
 
     <TextView
         android:id="@+id/textView_02_my_opinions_details"
@@ -201,7 +199,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline28_my_opinions_details"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.714" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_delete_my_opinion"
@@ -212,7 +210,7 @@
         app:backgroundTint="#00B7FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline61_my_opinions_details"
-        app:layout_constraintHorizontal_bias="0.533"
+        app:layout_constraintHorizontal_bias="0.866"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_opinion_02_my_opinions_details"
         app:srcCompat="@drawable/ic_baseline_delete_24" />
@@ -226,7 +224,7 @@
         app:backgroundTint="#D4C1C3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.794"
+        app:layout_constraintHorizontal_bias="0.679"
         app:layout_constraintStart_toStartOf="@+id/guideline63_my_opinions_details"
         app:layout_constraintTop_toBottomOf="@+id/txt_opinion_02_my_opinions_details"
         app:srcCompat="@drawable/ic_baseline_edit_24" />

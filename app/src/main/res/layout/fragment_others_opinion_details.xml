@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@drawable/item_rounded"
     android:backgroundTint="#FFFFFF">
 
@@ -136,19 +136,17 @@
 
     <TextView
         android:id="@+id/txt_opinion_02_my_opinions_details_02"
-        android:layout_width="379dp"
-        android:layout_height="355dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="374dp"
+        android:layout_height="523dp"
         android:ellipsize="end"
         android:gravity="fill_horizontal"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline28_my_opinions_details_02" />
+        app:layout_constraintTop_toTopOf="@+id/guideline28_my_opinions_details_02"
+        app:layout_constraintVertical_bias="0.533" />
 
     <TextView
         android:id="@+id/textView_02_my_opinions_details_02"

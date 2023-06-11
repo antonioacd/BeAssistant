@@ -3,6 +3,8 @@ package com.example.beassistant.controllers;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -85,6 +87,20 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+
+        FrameLayout fragmentContainer = findViewById(R.id.frame_layout);
+
+        // Ajustar la altura del FrameLayout después de que el fragmento se haya agregado
+        fragmentContainer.post(new Runnable() {
+            @Override
+            public void run() {
+                int fragmentHeight = fragmentContainer.getHeight();
+                ViewGroup.LayoutParams layoutParams = fragmentContainer.getLayoutParams();
+                layoutParams.height = fragmentHeight;
+                fragmentContainer.setLayoutParams(layoutParams);
+            }
+        });
+
     }
 
     @Override
