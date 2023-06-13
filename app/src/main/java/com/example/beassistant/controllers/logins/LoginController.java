@@ -1,5 +1,6 @@
 package com.example.beassistant.controllers.logins;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,7 +40,7 @@ public class LoginController extends AppCompatActivity {
 
     // Declare the variables
     private EditText et_email, et_password;
-    private Button btn_login, btn_register;
+    private Button btn_login, btn_register, btn_reset;
     private ImageView btn_google;
 
     // Declare the firebase variables
@@ -50,6 +51,8 @@ public class LoginController extends AppCompatActivity {
     private GoogleSignInOptions gso;
     private GoogleSignInClient gsc;
 
+    private ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,15 +60,52 @@ public class LoginController extends AppCompatActivity {
 
         initDatabaseVariables();
 
+        initVariables();
+
         initViewVariables();
 
-        initVariables();
+        fillUserFields();
 
         buttonGoogleListener();
 
         buttonLoginListener();
 
         buttonRegisterListener();
+
+        buttonResetListener();
+    }
+
+    private void fillUserFields(){
+        Intent i = getIntent();
+
+        i.getExtras();
+
+        if (i == null || i.getExtras() == null) {
+            return;
+        }
+
+        Log.d("Intent:", i.getExtras().toString());
+
+        String email = "", password = "";
+
+        email = i.getStringExtra("email");
+        password = i.getStringExtra("password");
+
+        if (email.isEmpty() || password.isEmpty()){
+            return;
+        }
+
+        et_email.setText(email);
+        et_password.setText(password);
+    }
+
+    private void buttonResetListener() {
+        btn_reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), ResetPassword.class));
+            }
+        });
     }
 
     private void buttonRegisterListener() {
@@ -87,10 +127,16 @@ public class LoginController extends AppCompatActivity {
                 String user = et_email.getText().toString().trim();
                 String password = et_password.getText().toString().trim();
 
-                if (et_email.getText().toString().isEmpty() || et_email.getText().toString().isEmpty()){
-                    Log.d("Sesion: ", user + ", " + password);
-                    return;
+                dialog.setMessage("Iniciando sesión...\nEspere por favor");
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+
+                if (et_email.getText().toString().isEmpty() || et_password.getText().toString().isEmpty()){
+                   Toast.makeText(LoginController.this, "Debe rellenar todos los campos", Toast.LENGTH_SHORT).show();
+                   dialog.dismiss();
+                   return;
                 }
+
                 Log.d("Sesion: ", user + ". " + password);
 
                 firebaseAuth.signInWithEmailAndPassword(user, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -98,6 +144,8 @@ public class LoginController extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
                             Log.d("Sesion: ", "No iniciada");
+                            Toast.makeText(LoginController.this, "Algo ha fallado, intentelo de nuevo", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
                             return;
                         }
                         // Fill the shared user
@@ -126,6 +174,7 @@ public class LoginController extends AppCompatActivity {
     private void initVariables() {
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
+        dialog = new ProgressDialog(this);
     }
 
     private void initViewVariables() {
@@ -134,6 +183,7 @@ public class LoginController extends AppCompatActivity {
         et_password = (EditText) findViewById(R.id.et_password);
         btn_login = (Button) findViewById(R.id.btn_login);
         btn_register = (Button) findViewById(R.id.btn_register);
+        btn_reset = (Button) findViewById(R.id.btn_reset);
     }
 
     private void initDatabaseVariables() {
@@ -172,6 +222,8 @@ public class LoginController extends AppCompatActivity {
 
                         Shared.myUser = user;
 
+                        dialog.dismiss();
+                        Toast.makeText(LoginController.this, "¡ Bienvenido " + user.getUsername() + " !", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         finish();
                     }
@@ -266,6 +318,10 @@ public class LoginController extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 
 }

@@ -16,6 +16,7 @@ import android.widget.Button;
 import com.example.beassistant.R;
 import com.example.beassistant.controllers.BarcodeScannerActivity;
 import com.example.beassistant.controllers.logins.LoginController;
+import com.example.beassistant.controllers.logins.ResetPassword;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -50,6 +51,7 @@ public class SettingsFragment extends Fragment {
         Button btn_change_user = view.findViewById(R.id.btn_change_user);
         Button btn_change_img_profile = view.findViewById(R.id.btn_change_img_profile);
         Button btn_change_name = view.findViewById(R.id.btn_change_name);
+        Button btn_reset_password = view.findViewById(R.id.btn_change_password_settings);
 
         btn_sign_out.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,15 +68,16 @@ public class SettingsFragment extends Fragment {
 
                 Task<Void> signOutTask = gsc.signOut();
                 signOutTask.addOnCompleteListener(task -> {
+                    getActivity().finish();
                     startActivity(new Intent(getContext(), LoginController.class));
                 });
             }
         });
 
-        btn_change_user.setOnClickListener(new View.OnClickListener() {
+        btn_reset_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), BarcodeScannerActivity.class));
+                startActivity(new Intent(getContext(), ResetPassword.class));
             }
         });
 

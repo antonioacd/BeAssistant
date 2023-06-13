@@ -239,6 +239,9 @@ public class RegisterImageProfileController extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         finish();
                         Intent i = new Intent(getApplicationContext(), LoginController.class);
+                        i.putExtra("email", email);
+                        i.putExtra("password", password);
+
                         startActivity(i);
                         Toast.makeText(getApplicationContext(), "Foto de perfil establecida ", Toast.LENGTH_LONG).show();
                     }
