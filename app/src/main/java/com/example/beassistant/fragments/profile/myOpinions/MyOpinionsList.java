@@ -151,7 +151,8 @@ public class MyOpinionsList extends Fragment {
                                                             doc.getString("brand"),
                                                             doc.getString("category"),
                                                             doc.getString("type"),
-                                                            Math.round(doc.getDouble("rating") * 100.0) / 100.0
+                                                            Math.round(doc.getDouble("rating") * 100.0) / 100.0,
+                                                            doc.getString("url")
                                                     );
                                                     recAdapter.productsList.add(product);
                                                     recAdapter.notifyDataSetChanged();

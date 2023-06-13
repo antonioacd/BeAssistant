@@ -13,13 +13,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.beassistant.R;
 import com.example.beassistant.databinding.ActivityMainBinding;
-import com.example.beassistant.fragments.PlayerFragment;
-import com.example.beassistant.fragments.VideosFragment;
+import com.example.beassistant.fragments.settings.SettingsFragment;
+import com.example.beassistant.fragments.videos.VideosFragment;
 import com.example.beassistant.fragments.add.SelectProductFragment;
 import com.example.beassistant.fragments.home.HomeFragment;
 import com.example.beassistant.fragments.profile.ProfileFragment;
 import com.example.beassistant.fragments.search.SearchFragment;
-import com.example.beassistant.fragments.settings.SettingsFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(new ProfileFragment());
                     break;
                 case R.id.settings:
-                    replaceFragment(new VideosFragment());
+                    replaceFragment(new SettingsFragment());
                     break;
             }
             return true;

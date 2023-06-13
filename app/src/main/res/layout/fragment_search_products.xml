@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D4C1C3"
+    android:background="#FFFFFF"
     tools:context=".fragments.add.SelectProductFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="150dp"
+        android:layout_width="160dp"
         android:layout_height="50dp"
         android:layout_margin="16dp"
         android:hint="Categoria"
@@ -35,7 +35,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout02"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="165dp"
+        android:layout_width="170dp"
         android:layout_height="50dp"
         android:layout_margin="16dp"
         android:hint="Marca"
@@ -57,26 +57,51 @@
 
     <SearchView
         android:id="@+id/searchView"
-        android:layout_width="355dp"
-        android:layout_height="45dp"
+        android:layout_width="278dp"
+        android:layout_height="42dp"
         android:background="@drawable/item_rounded"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:backgroundTint="#D4C1C3"
+        app:layout_constraintBottom_toTopOf="@+id/guideline37"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.218"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.119" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+        app:layout_constraintVertical_bias="0.476" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:background="#D4C1C3"
+        android:background="@drawable/item_rounded"
+        android:backgroundTint="#D4C1C3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        app:layout_constraintTop_toTopOf="@+id/guideline37"
         app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_refresh_02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#D4C1C3"
+        android:clickable="true"
+        android:src="@drawable/ic_baseline_replay_circle_filled_24"
+        android:visibility="invisible"
+        app:backgroundTint="#D4C1C3"
+        app:layout_constraintBottom_toBottomOf="@+id/searchView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.659"
+        app:layout_constraintStart_toEndOf="@+id/searchView"
+        app:layout_constraintTop_toTopOf="@+id/searchView"
+        app:layout_constraintVertical_bias="0.47" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline37"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="150dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

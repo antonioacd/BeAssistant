@@ -29,6 +29,7 @@ import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -46,6 +47,8 @@ public class SelectProductFragment extends Fragment {
     ArrayAdapter<String> adapterItems, adapterItems02;
 
     String selected_category, selected_brand;
+
+    FloatingActionButton btn_refresh;
 
     // Declare the data base object
     private FirebaseFirestore db;
@@ -82,7 +85,7 @@ public class SelectProductFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_product, container, false);
+        return inflater.inflate(R.layout.fragment_search_products, container, false);
     }
 
     @Override
@@ -93,18 +96,37 @@ public class SelectProductFragment extends Fragment {
 
         initViewVariables(view);
 
-        fillRecyclerAdapter();
+        getAllProducts();
 
         categorySelectorConfigurationAndListener();
 
         brandSelectorConfigurationAndListener();
+
+        buttonRefreshListener();
 
         recyclerAdapterListener();
 
         searchViewListener();
     }
 
-    private void fillRecyclerAdapter(){
+    private void buttonRefreshListener() {
+        btn_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getAllProducts();
+                btn_refresh.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    private void getAllProducts(){
+
+        selected_category = "";
+        selected_brand = "";
+
+        recAdapter.productsList.clear();
+        recAdapter.notifyDataSetChanged();
+
         db.collectionGroup("productos").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -113,16 +135,17 @@ public class SelectProductFragment extends Fragment {
                         for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
 
                             // Generate a product
-                            Product p = new Product(
+                            Product product = new Product(
                                     doc.getString("id"),
                                     doc.getString("name"),
                                     doc.getString("imgRef"),
                                     doc.getString("brand"),
                                     doc.getString("category"),
                                     doc.getString("type"),
-                                    doc.getDouble("rating")
+                                    doc.getDouble("rating"),
+                                    doc.getString("url")
                             );
-                            recAdapter.productsList.add(p);
+                            recAdapter.productsList.add(product);
                             recAdapter.notifyDataSetChanged();
                         }
                         // Set the full list
@@ -218,11 +241,13 @@ public class SelectProductFragment extends Fragment {
                                         Product p = getProductWithDocument(document);
 
                                         recAdapter.productsList.add(p);
-                                        recAdapter.notifyDataSetChanged();
-
                                     }
+
+                                    recAdapter.notifyDataSetChanged();
+
                                     // Set the full list
                                     fullList = recAdapter.productsList;
+                                    btn_refresh.setVisibility(View.VISIBLE);
                                 } else {
                                     Log.d(TAG, "Error getting documents: ", task.getException());
                                 }
@@ -232,19 +257,20 @@ public class SelectProductFragment extends Fragment {
         });
     }
 
-    private Product getProductWithDocument(QueryDocumentSnapshot document) {
+    private Product getProductWithDocument(QueryDocumentSnapshot doc) {
 
         // Generate a product
-        Product p = new Product(
-                document.getString("id"),
-                document.getString("name"),
-                document.getString("imgRef"),
-                document.getString("brand"),
-                document.getString("category"),
-                document.getString("type"),
-                document.getDouble("rating")
+        Product product = new Product(
+                doc.getString("id"),
+                doc.getString("name"),
+                doc.getString("imgRef"),
+                doc.getString("brand"),
+                doc.getString("category"),
+                doc.getString("type"),
+                doc.getDouble("rating"),
+                doc.getString("url")
         );
-        return p;
+        return product;
     }
 
     private void categorySelectorConfigurationAndListener() {
@@ -256,8 +282,6 @@ public class SelectProductFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selected_category = parent.getItemAtPosition(position).toString();
-                recAdapter.productsList.clear();
-                recAdapter.notifyDataSetChanged();
                 brands.clear();
 
                 db.collection("/categorias/" + selected_category + "/marcas")
@@ -287,6 +311,8 @@ public class SelectProductFragment extends Fragment {
 
         // Select Brand
         select_brand = view.findViewById(R.id.select_brand);
+
+        btn_refresh = (FloatingActionButton) view.findViewById(R.id.btn_refresh_02);
     }
 
     private void recyclerViewConfiguration(@NonNull View view) {

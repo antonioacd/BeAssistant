@@ -9,9 +9,10 @@ public class Product {
     private String category;
     private String type;
     private double mediaRating;
+    private String url;
     private Opinion opinion;
 
-    public Product(String uuID, String name, String img_reference, String brand, String category, String type, double mediaRating) {
+    public Product(String uuID, String name, String img_reference, String brand, String category, String type, double mediaRating, String url) {
         this.uuID = uuID;
         this.name = name;
         this.img_reference = img_reference;
@@ -19,6 +20,7 @@ public class Product {
         this.category = category;
         this.type = type;
         this.mediaRating = mediaRating;
+        this.url = url;
     }
 
     public Product(String uuID, String name, String img_reference, String brand, String category, String type, double mediaRating, Opinion opinion) {
@@ -104,6 +106,14 @@ public class Product {
 
     public void setOpinion(Opinion opinion) {
         this.opinion = opinion;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override

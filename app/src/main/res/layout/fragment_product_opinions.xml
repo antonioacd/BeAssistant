@@ -84,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="215dp" />
+        app:layout_constraintGuide_begin="224dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline22"
@@ -140,20 +140,29 @@
         app:layout_constraintGuide_begin="166dp" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btn_comprar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:backgroundTint="#D4C1C3"
+        android:padding="0dp"
+        android:text="Comprar"
+        android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline21"
         app:layout_constraintEnd_toStartOf="@+id/guideline25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline36" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btn_ver_videos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:backgroundTint="#D4C1C3"
+        android:paddingLeft="8dp"
+        android:paddingTop="0dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="0dp"
+        android:text="Ver Videos"
+        android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline21"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline25"

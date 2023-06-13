@@ -17,12 +17,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.beassistant.R;
 import com.example.beassistant.adapters.OpinionsRecyclerAdapter;
+import com.example.beassistant.fragments.videos.VideosFragment;
+import com.example.beassistant.fragments.shoping.WebFragment;
 import com.example.beassistant.models.Opinion;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,7 +36,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class OpinionsFragment extends Fragment {
+public class DetailsProductFragment extends Fragment {
 
     TextView txt_name, txt_brand, txt_type, txt_mediaRating;
     ImageView img_product;
@@ -51,12 +54,13 @@ public class OpinionsFragment extends Fragment {
     // The recicler view
     private RecyclerView rV;
 
-    private String productId = "", name = "", brand = "", type = "", imgRef = "";
+    private String productId = "", name = "", brand = "", type = "", imgRef = "", url="";
     private Double mediaRating;
+    Button btn_ver_videos, btn_comprar;
 
     private Boolean isFirstResume = true;
 
-    public OpinionsFragment() {
+    public DetailsProductFragment() {
         // Required empty public constructor
     }
 
@@ -89,6 +93,8 @@ public class OpinionsFragment extends Fragment {
             return;
         }
 
+        Log.d("Args:", "Resume:" + name + brand + type + imgRef + mediaRating);
+
         getOpinions(productId);
         fillProductData(name, brand, type, imgRef, mediaRating);
     }
@@ -109,6 +115,8 @@ public class OpinionsFragment extends Fragment {
         txt_brand = view.findViewById(R.id.txt_product_brand3);
         txt_mediaRating = view.findViewById(R.id.txt_product_media_rating3);
         txt_type = view.findViewById(R.id.txt_product_type3);
+        btn_comprar = (Button) view.findViewById(R.id.btn_comprar);
+        btn_ver_videos = (Button) view.findViewById(R.id.btn_ver_videos);
 
         // Init the recycler view
         rV = (RecyclerView) view.findViewById(R.id.recycler_view_opinions);
@@ -140,14 +148,47 @@ public class OpinionsFragment extends Fragment {
                 fragmentTransaction.replace(R.id.frame_layout, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-
             }
         });
+
+        btn_comprar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Fragment fragment = new WebFragment();
+                Bundle args = new Bundle();
+                args.putString("url", url);
+
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.setFragmentResult("shopFragment", args);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
+        btn_ver_videos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new VideosFragment();
+                Bundle args = new Bundle();
+                args.putString("productName", name);
+
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.setFragmentResult("videosFragment", args);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.commit();
+            }
+        });
+
     }
 
     private void getDataFromLastFragment() {
 
         if (!productId.isEmpty()) {
+            Log.d("Args:", "isEmpty" + name + brand + type + imgRef + mediaRating);
             getOpinions(productId);
             fillProductData(name, brand, type, imgRef, mediaRating);
             return;
@@ -163,6 +204,7 @@ public class OpinionsFragment extends Fragment {
                 type = result.getString("type");
                 imgRef = result.getString("imgRef");
                 mediaRating = result.getDouble("mediaRating");
+                url = result.getString("url");
 
                 getOpinions(productId);
                 fillProductData(name, brand, type, imgRef, mediaRating);
@@ -210,6 +252,9 @@ public class OpinionsFragment extends Fragment {
     }
 
     private void fillProductData(String name, String brand, String type, String imgRef, Double mediaRating) {
+
+        Log.d("Args:", name + brand + type + imgRef + mediaRating);
+
         storageRef.child(imgRef).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {

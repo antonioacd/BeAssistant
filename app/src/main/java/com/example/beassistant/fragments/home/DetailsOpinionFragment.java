@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,6 +39,7 @@ public class DetailsOpinionFragment extends Fragment {
 
     TextView txt_username, txt_rating, txt_price, txt_shopBuy, txt_toneOrColor, txt_opinion;
     ImageView img_user_profile;
+
 
     public DetailsOpinionFragment() {
         // Required empty public constructor
@@ -77,7 +79,6 @@ public class DetailsOpinionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         txt_username = (TextView) view.findViewById(R.id.txt_username_opinion_item_02);
         txt_rating = (TextView) view.findViewById(R.id.txt_rating_02);
         txt_price = (TextView) view.findViewById(R.id.txt_price_02);
@@ -85,11 +86,13 @@ public class DetailsOpinionFragment extends Fragment {
         txt_toneOrColor = (TextView) view.findViewById(R.id.txt_toneOrColor_02);
         txt_opinion = (TextView) view.findViewById(R.id.txt_opinion_02);
         img_user_profile = (ImageView) view.findViewById(R.id.img_user_profile_02);
+
+
     }
 
     private void getData(Bundle result){
 
-        // Get the own user id
+        // Get the own user ids
         String opinionId = result.getString("id");
 
         db.collection("opiniones")

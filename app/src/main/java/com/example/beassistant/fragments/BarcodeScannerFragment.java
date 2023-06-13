@@ -1,20 +1,23 @@
-package com.example.beassistant.controllers;
+package com.example.beassistant.fragments;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.SurfaceHolder;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.beassistant.R;
 import com.example.beassistant.fragments.home.DetailsProductFragment;
@@ -31,7 +34,7 @@ import com.journeyapps.barcodescanner.DefaultDecoderFactory;
 
 import java.util.List;
 
-public class BarcodeScannerActivity extends AppCompatActivity implements SurfaceHolder.Callback {
+public class BarcodeScannerFragment extends Fragment implements SurfaceHolder.Callback{
 
     private static final int CAMERA_PERMISSION_REQUEST = 100;
 
@@ -39,31 +42,50 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Surface
 
     private FirebaseFirestore db;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_barcode_scanner);
+    public BarcodeScannerFragment() {
+        // Required empty public constructor
+    }
 
-        barcodeView = findViewById(R.id.barcode_scanner);
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_barcode_scanner, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        barcodeView = view.findViewById(R.id.barcode_scanner);
 
         db = FirebaseFirestore.getInstance();
 
         // Solicitar permiso de cámara si no se ha concedido
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST);
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST);
         } else {
             startBarcodeScanner();
         }
+
+
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         barcodeView.resume();
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         barcodeView.pause();
     }
@@ -91,8 +113,7 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Surface
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startBarcodeScanner();
             } else {
-                Toast.makeText(this, "La aplicación necesita acceso a la cámara", Toast.LENGTH_SHORT).show();
-                finish();
+                Toast.makeText(getContext(), "La aplicación necesita acceso a la cámara", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -108,7 +129,6 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Surface
                             Log.d("Referencia01: ", doc.getId());
 
                             if (!doc.getId().equals(reference)){
-                                Log.d("Referencia01: ", "-" + doc.getId() + "- - -" + reference + "-");
                                 continue;
                             }
 
@@ -125,11 +145,7 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Surface
                                     doc.getString("url")
                             );
 
-                            // Detener la lectura continua después de obtener un resultado válido
-                            barcodeView.pause();
-
-                            finish();
-                            //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            Log.d("Referencia: ", product.toString());
 
                             Fragment fragment = new DetailsProductFragment();
                             Bundle args = new Bundle();
@@ -141,7 +157,9 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Surface
                             args.putString("imgRef", product.getImg_reference());
                             args.putString("url", product.getUrl());
 
-                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            Log.d("Args: ", args.toString());
+
+                            FragmentManager fragmentManager = getParentFragmentManager();
                             fragmentManager.setFragmentResult("keyProduct", args);
                             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                             fragmentTransaction.replace(R.id.frame_layout, fragment);
@@ -162,9 +180,8 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Surface
             public void barcodeResult(BarcodeResult result) {
                 // Resultado del escaneo del código de barras
                 String barcode = result.getText();
-
-                Log.d("Barcode:", barcode);
-
+                // Detener la lectura continua después de obtener un resultado válido
+                barcodeView.pause();
                 getProduct(barcode);
             }
 

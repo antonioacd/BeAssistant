@@ -2,6 +2,7 @@ package com.example.beassistant.fragments.home;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,7 +25,8 @@ import android.widget.AutoCompleteTextView;
 
 import com.example.beassistant.R;
 import com.example.beassistant.adapters.ProductsRecyclerAdapter;
-import com.example.beassistant.models.Opinion;
+import com.example.beassistant.controllers.BarcodeScannerActivity;
+import com.example.beassistant.fragments.BarcodeScannerFragment;
 import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,7 +41,7 @@ import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
 
-    FloatingActionButton btn_filter;
+    FloatingActionButton btn_filter, btn_scan, btn_refresh;
 
     ArrayList<String> categories = new ArrayList<String>();
     AutoCompleteTextView select_category;
@@ -49,8 +51,8 @@ public class HomeFragment extends Fragment {
     AutoCompleteTextView select_brand;
     ArrayAdapter<String> adapterItems02;
 
-    String selected_category = "Todos";
-    String selected_brand = "Todos";
+    String selected_category = "";
+    String selected_brand = "";
 
     private AlertDialog dialog;
 
@@ -91,11 +93,33 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         btn_filter = (FloatingActionButton) view.findViewById(R.id.btn_filter);
+        btn_scan = (FloatingActionButton) view.findViewById(R.id.btn_scan);
+        btn_refresh = (FloatingActionButton) view.findViewById(R.id.btn_refresh);
 
         btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 categories = getCategories();
+            }
+        });
+
+        btn_scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new BarcodeScannerFragment();
+                FragmentManager fragmentManager = getParentFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
+        btn_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getAllProducts();
+                btn_refresh.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -118,7 +142,7 @@ public class HomeFragment extends Fragment {
                 // Get the index
                 index = rV.getChildAdapterPosition(view);
 
-                Fragment fragment = new OpinionsFragment();
+                Fragment fragment = new DetailsProductFragment();
                 Bundle args = new Bundle();
                 args.putString("id", recAdapter.productList.get(index).getUuID());
                 args.putString("name", recAdapter.productList.get(index).getName());
@@ -126,6 +150,7 @@ public class HomeFragment extends Fragment {
                 args.putString("type", recAdapter.productList.get(index).getType());
                 args.putDouble("mediaRating", recAdapter.productList.get(index).getMediaRating());
                 args.putString("imgRef", recAdapter.productList.get(index).getImg_reference());
+                args.putString("url", recAdapter.productList.get(index).getUrl());
 
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.setFragmentResult("keyProduct", args);
@@ -141,6 +166,10 @@ public class HomeFragment extends Fragment {
     }
 
     private void getAllProducts(){
+
+        recAdapter.productList.clear();
+        recAdapter.notifyDataSetChanged();
+
         db.collectionGroup("productos").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -156,7 +185,8 @@ public class HomeFragment extends Fragment {
                                     doc.getString("brand"),
                                     doc.getString("category"),
                                     doc.getString("type"),
-                                    doc.getDouble("rating")
+                                    doc.getDouble("rating"),
+                                    doc.getString("url")
                             );
                             recAdapter.productList.add(product);
                             recAdapter.notifyDataSetChanged();
@@ -200,6 +230,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void filter(){
+
+        selected_category = "";
+        selected_brand = "";
+
+        brands.clear();
 
         AlertDialog.Builder ventana = new AlertDialog.Builder(getContext());
 
@@ -256,7 +291,10 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                recAdapter.productList.clear();
+                if (selected_category.isEmpty() || selected_brand.isEmpty()){
+                    dialog.dismiss();
+                    return;
+                }
 
                 db.collection("categorias/"+selected_category+"/marcas/"+selected_brand+"/productos")
                         .get()
@@ -264,7 +302,11 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+
+                            recAdapter.productList.clear();
+
                             for (DocumentSnapshot doc: task.getResult()) {
+
                                 Product product = new Product(
                                         doc.getString("id"),
                                         doc.getString("name"),
@@ -272,12 +314,15 @@ public class HomeFragment extends Fragment {
                                         doc.getString("brand"),
                                         doc.getString("category"),
                                         doc.getString("type"),
-                                        5
+                                        doc.getDouble("rating"),
+                                        doc.getString("url")
                                 );
                                 recAdapter.productList.add(product);
-                                recAdapter.notifyDataSetChanged();
                             }
 
+                            recAdapter.notifyDataSetChanged();
+
+                            btn_refresh.setVisibility(View.VISIBLE);
                             dialog.dismiss();
                         } else {
                             Log.d("Result", "Error getting documents: ", task.getException());

@@ -1,4 +1,4 @@
-package com.example.beassistant.fragments;
+package com.example.beassistant.fragments.videos;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;

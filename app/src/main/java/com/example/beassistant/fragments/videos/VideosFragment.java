@@ -1,4 +1,4 @@
-package com.example.beassistant.fragments;
+package com.example.beassistant.fragments.videos;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,12 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.beassistant.R;
 import com.example.beassistant.adapters.VideosRecyclerAdapter;
+import com.example.beassistant.fragments.videos.PlayerFragment;
 import com.example.beassistant.models.YoutubeData;
 
 import org.apache.http.HttpEntity;
@@ -35,7 +37,7 @@ public class VideosFragment extends Fragment {
 
     private static String GOOGLE_YOUTUBE_KEY = "AIzaSyABYNXEFSjLiKEn5GdNPwppfQR1r51w94g";
     private static String CHANNEL_ID = "UCio2lnOtW4ZYPBZqhfxXheA";
-    private static String CHANNEL_GET_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&order=date&q=gatos&maxResults=20&key="+GOOGLE_YOUTUBE_KEY;
+    private String CHANNEL_GET_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&order=date&q=&maxResults=20&key=" + GOOGLE_YOUTUBE_KEY;
 
     // The recicler adapter
     private VideosRecyclerAdapter recAdapter;
@@ -53,8 +55,25 @@ public class VideosFragment extends Fragment {
 
         recAdapter = new VideosRecyclerAdapter(getContext());
 
-        new RequestYoutubeAPI().execute();
+        getDataFromLastFragment();
 
+    }
+
+    private void getDataFromLastFragment() {
+
+        getParentFragmentManager().setFragmentResultListener("videosFragment", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+
+                String name = result.getString("productName").trim();
+                name = name.replaceAll(" ", "+");
+
+                // Actualizar la URL de la API de YouTube con el nombre del producto
+                CHANNEL_GET_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&order=date&q=" + name + "&maxResults=50&key=" + GOOGLE_YOUTUBE_KEY;
+
+                new RequestYoutubeAPI().execute();
+            }
+        });
     }
 
     // Create an async task to get the data from youtube
@@ -119,7 +138,7 @@ public class VideosFragment extends Fragment {
                                 String videId = jsonId.getString("videoId");
                                 String title = jsonSnippet.getString("title");
                                 String desc = jsonSnippet.getString("description");
-                                String published = jsonSnippet.getString("publishedAt");
+                                String published = "Publicado el: " + jsonSnippet.getString("publishedAt").substring(0,10);
                                 String thumbnail = jsonSnippet.getJSONObject("thumbnails").getJSONObject("high").getString("url");
 
                                 YoutubeData youtubeData = new YoutubeData(videId, title, desc, published, thumbnail);
