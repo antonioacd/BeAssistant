@@ -70,7 +70,7 @@
 
     <!-- Email -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/et_email_reg_til"
+        android:id="@+id/et_aux"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="340dp"
         android:layout_height="60dp"
@@ -106,7 +106,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_email_reg_til"
+        app:layout_constraintTop_toBottomOf="@+id/et_aux"
         app:layout_constraintVertical_bias="0.005"
         app:startIconDrawable="@drawable/ic_baseline_lock_24">
 

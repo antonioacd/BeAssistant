@@ -1,4 +1,4 @@
-package com.example.beassistant.controllers.logins;
+package com.example.beassistant.controllers.init;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.util.Log;
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.controllers.MainActivity;
+import com.example.beassistant.controllers.logins.LoginController;
 import com.example.beassistant.models.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;

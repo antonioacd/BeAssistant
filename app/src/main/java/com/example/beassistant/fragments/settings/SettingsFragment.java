@@ -7,18 +7,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.beassistant.R;
-import com.example.beassistant.controllers.BarcodeScannerActivity;
 import com.example.beassistant.controllers.logins.LoginController;
-import com.example.beassistant.controllers.logins.ResetPassword;
+import com.example.beassistant.controllers.logins.ResetAux;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.Task;
@@ -49,7 +46,6 @@ public class SettingsFragment extends Fragment {
 
         Button btn_sign_out = view.findViewById(R.id.btn_sign_out);
         Button btn_change_user = view.findViewById(R.id.btn_change_user);
-        Button btn_change_img_profile = view.findViewById(R.id.btn_change_img_profile);
         Button btn_change_name = view.findViewById(R.id.btn_change_name);
         Button btn_reset_password = view.findViewById(R.id.btn_change_password_settings);
 
@@ -77,9 +73,28 @@ public class SettingsFragment extends Fragment {
         btn_reset_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), ResetPassword.class));
+                Intent i = new Intent(getContext(), ResetAux.class);
+                i.putExtra("action", "password");
+                startActivity(i);
             }
         });
 
+        btn_change_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), ResetAux.class);
+                i.putExtra("action", "user");
+                startActivity(i);
+            }
+        });
+
+        btn_change_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), ResetAux.class);
+                i.putExtra("action", "name");
+                startActivity(i);
+            }
+        });
     }
 }
