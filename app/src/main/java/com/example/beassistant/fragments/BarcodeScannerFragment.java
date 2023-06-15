@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -29,10 +31,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
+import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.List;
+
+
 
 public class BarcodeScannerFragment extends Fragment implements SurfaceHolder.Callback{
 
@@ -42,10 +49,11 @@ public class BarcodeScannerFragment extends Fragment implements SurfaceHolder.Ca
 
     private FirebaseFirestore db;
 
+    private ActivityResultLauncher<String> cameraPermissionLauncher;
+
     public BarcodeScannerFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,14 +76,26 @@ public class BarcodeScannerFragment extends Fragment implements SurfaceHolder.Ca
 
         db = FirebaseFirestore.getInstance();
 
-        // Solicitar permiso de cámara si no se ha concedido
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST);
-        } else {
-            startBarcodeScanner();
+        scancode();
+
+        // Iniciar el escaneo de códigos de barras si se ha otorgado el permiso
+        //startBarcodeScanner();
+
+    }
+
+    ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
+        if (result.getContents() != null){
+            Log.d("EscanerL: ", result.getContents());
         }
+    });
 
-
+    private void scancode() {
+        ScanOptions options = new ScanOptions();
+        options.setPrompt("Volume up to flash");
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(ActivityResultLauncher.class);
+        barLauncher.launch(options);
     }
 
     @Override
@@ -111,6 +131,7 @@ public class BarcodeScannerFragment extends Fragment implements SurfaceHolder.Ca
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_PERMISSION_REQUEST) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permiso de cámara concedido, iniciar el escaneo de códigos de barras
                 startBarcodeScanner();
             } else {
                 Toast.makeText(getContext(), "La aplicación necesita acceso a la cámara", Toast.LENGTH_SHORT).show();

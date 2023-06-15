@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "com.example.beassistant"
         minSdk 24
-        targetSdk 33
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
@@ -52,8 +52,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage-ktx:20.2.0'
 
     // Barcode reader
-    implementation 'com.google.zxing:core:3.4.1'
-    implementation 'com.journeyapps:zxing-android-embedded:4.2.0'
+    //implementation 'com.google.zxing:core:3.4.1'
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+
 
     // Youtube
     implementation 'com.google.apis:google-api-services-youtube:v3-rev222-1.25.0'
