@@ -38,7 +38,7 @@ import java.util.Map;
 
 public class AddOpinionActivity extends AppCompatActivity {
 
-    String uuId;
+    String productId;
     String category;
     String brand;
     ImageView img_product;
@@ -110,32 +110,30 @@ public class AddOpinionActivity extends AppCompatActivity {
     }
 
     private void createOpinion(){
-        Opinion op = new Opinion(
-                java.util.UUID.randomUUID().toString().trim(),
-                et_shopBuy.getText().toString().trim(),
-                Double.parseDouble(et_price.getText().toString().trim()),
-                et_toneOrColor.getText().toString().trim(),
-                et_opinion.getText().toString().trim(),
-                selected_rating,
-                true,
-                Shared.myUser.getId(),
-                uuId,
-                category,
-                brand
-        );
+
+        Opinion op = new Opinion();
+
+        op.setOpinionId(java.util.UUID.randomUUID().toString().trim());
+        op.setUsername(Shared.myUser.getUsername());
+        op.setProductId(productId);
+        op.setImgUser(Shared.myUser.getImg_reference());
+        op.setRating(selected_rating);
+        op.setPrice(Double.parseDouble(et_price.getText().toString().trim()));
+        op.setShopBuy(et_shopBuy.getText().toString().trim());
+        op.setToneOrColor(et_toneOrColor.getText().toString().trim());
+        op.setOpinion(et_opinion.getText().toString().trim());
 
         Map<String, Object> newOpinion = new HashMap<>();
         newOpinion.put("opinionId", op.getOpinionId());
         newOpinion.put("productId", op.getProductId());
-        newOpinion.put("productCategory", op.getProductCategory());
-        newOpinion.put("productBrand", op.getProductBrand());
-        newOpinion.put("userId", op.getUserId());
+        newOpinion.put("userId", Shared.myUser.getId());
+        newOpinion.put("username", op.getUsername());
+        newOpinion.put("imgUserRef", op.getImgUser());
         newOpinion.put("shopBuy", op.getShopBuy());
         newOpinion.put("price", op.getPrice());
         newOpinion.put("toneOrColor", op.getToneOrColor());
         newOpinion.put("opinion", op.getOpinion());
         newOpinion.put("rating", op.getRating());
-        newOpinion.put("isVisible", op.getVisible());
 
         /**
          * Add a new document with a generated ID
@@ -165,7 +163,7 @@ public class AddOpinionActivity extends AppCompatActivity {
 
     private void getRatingMedia(){
 
-        db.collection("opiniones")
+        db.collection("opiniones").whereEqualTo("productId", productId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -173,28 +171,25 @@ public class AddOpinionActivity extends AppCompatActivity {
                         int cont = 0;
                         double sumatory = 0;
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            if (document.getString("productId").equals(uuId)){
-                                cont++;
-                                Log.d("Sumatorio: ", ""+document.getDouble("rating"));
-                                sumatory += document.getDouble("rating");
-                            }
+                            cont++;
+                            Log.d("Sumatorio: ", ""+document.getDouble("rating"));
+                            sumatory += document.getDouble("rating");
+
                         }
                         double finalSumatory = sumatory;
                         int finalCont = cont;
-                        db.collection("categorias/"+category+"/marcas/"+brand+"/productos/")
+                        db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").whereEqualTo("id",productId)
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         double media = finalSumatory / finalCont;
                                         for (QueryDocumentSnapshot document : task.getResult()) {
-                                            if (document.getString("id").equals(uuId)) {
 
-                                                db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getId()).update("rating", media);
+                                            db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getId()).update("rating", media);
+                                            Log.d("Sumatorio: ", ""+media);
 
-                                                Log.d("Sumatorio: ", ""+media);
 
-                                            }
                                         }
                                     }
                                 });
@@ -216,10 +211,10 @@ public class AddOpinionActivity extends AppCompatActivity {
 
     private void getTheIntentValues(){
         Intent i = getIntent();
-        uuId = i.getStringExtra("id");
+        productId = i.getStringExtra("id");
         category = i.getStringExtra("category");
         brand = i.getStringExtra("brand");
-        Log.d("ProductoDespues: ", uuId + " - " + brand);
+        Log.d("ProductoDespues: ", productId + " - " + brand);
     }
 
     private void initViewVariables(){
@@ -244,7 +239,7 @@ public class AddOpinionActivity extends AppCompatActivity {
     private void getProductData(){
         // Get the products of the received category and brand
         db.collection("categorias/"+category+"/marcas/"+brand+"/productos")
-                .document(uuId)
+                .document(productId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override

@@ -220,6 +220,7 @@ public class DetailsProductFragment extends Fragment {
 
         // Get the own user id
         db.collection("opiniones")
+                .whereEqualTo("productId",productId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -228,23 +229,32 @@ public class DetailsProductFragment extends Fragment {
                             return;
                         }
 
-                        int index = 0;
+                        // Get the number of opinions
+                        int count = task.getResult().size();
 
-                        for (DocumentSnapshot doc : task.getResult()) {
+                        if (count == 0){
+                            Toast.makeText(getContext(), "El producto seleccionado aún no dispone de opiniones", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                            if (!doc.getString("productId").equals(productId)){
-                                continue;
-                            }
-                            index++;
-                            Opinion op = new Opinion(doc.getId());
+                        // Loop the opinions
+                        for (DocumentSnapshot opinionsDoc : task.getResult()) {
+                            Opinion op = new Opinion();
+
+                            op.setOpinionId(opinionsDoc.getId());
+                            op.setUsername(opinionsDoc.getString("username"));
+                            op.setImgUser(opinionsDoc.getString("imgUserRef"));
+                            op.setRating(opinionsDoc.getDouble("rating").intValue());
+                            op.setPrice(opinionsDoc.getDouble("price").intValue());
+                            op.setShopBuy(opinionsDoc.getString("shopBuy"));
+                            op.setToneOrColor(opinionsDoc.getString("toneOrColor"));
+                            op.setOpinion(opinionsDoc.getString("opinion"));
+
+                            Log.d("Opiniones: ", op.toString());
+
                             recAdapter.opinionsList.add(op);
                             recAdapter.notifyDataSetChanged();
                         }
-
-                        if (index == 0){
-                            Toast.makeText(getContext(), "El producto seleccionado aún no dispone de opiniones", Toast.LENGTH_SHORT).show();
-                        }
-
                     }
                 });
 
