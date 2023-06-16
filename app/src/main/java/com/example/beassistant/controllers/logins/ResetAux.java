@@ -120,7 +120,7 @@ public class ResetAux extends AppCompatActivity {
     private void resetUserNameAction(){
 
         db.collection("users")
-                .document(Shared.myUser.getId())
+                .document(Shared.myUser.getUserId())
                 .update("username", auxString).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -139,7 +139,7 @@ public class ResetAux extends AppCompatActivity {
     private void resetNameAction(){
 
         db.collection("users")
-                .document(Shared.myUser.getId())
+                .document(Shared.myUser.getUserId())
                 .update("name", auxString).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

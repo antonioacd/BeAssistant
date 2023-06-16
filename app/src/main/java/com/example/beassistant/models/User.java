@@ -2,7 +2,7 @@ package com.example.beassistant.models;
 
 public class User {
 
-    private String id;
+    private String userId;
     private String username;
     private String name;
     private String img_reference;
@@ -12,8 +12,8 @@ public class User {
     private int numSeguidores;
     private int numSeguidos;
 
-    public User(String id, String username, String name, String img_reference, String email, String password, int numOpiniones, int numSeguidores, int numSeguidos) {
-        this.id = id;
+    public User(String userId, String username, String name, String img_reference, String email, String password, int numOpiniones, int numSeguidores, int numSeguidos) {
+        this.userId = userId;
         this.username = username;
         this.name = name;
         this.img_reference = img_reference;
@@ -24,15 +24,21 @@ public class User {
         this.numSeguidos = numSeguidos;
     }
 
+    public User(String userId, String username, String img_reference) {
+        this.userId = userId;
+        this.username = username;
+        this.img_reference = img_reference;
+    }
+
     public User() {
     }
 
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {

@@ -14,48 +14,51 @@
         android:background="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/btn_take"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.466"
+        app:layout_constraintVertical_bias="0.637"
         app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
         tools:srcCompat="@drawable/defaultprofile" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_getGalleryImg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="183dp"
+        android:layout_height="55dp"
         android:background="@drawable/bottom"
+        android:drawableLeft="@drawable/ic_baseline_drive_folder_upload_24"
         android:text="Seleccionar Foto"
         android:textColor="#E6B0B3"
         app:backgroundTint="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/btn_register_last"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.886"
+        app:layout_constraintHorizontal_bias="0.873"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.81" />
+        app:layout_constraintVertical_bias="0.772" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_take"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="133dp"
+        android:layout_height="55dp"
         android:background="@drawable/bottom"
-        android:text="Hacer Foto"
+        android:drawableLeft="@drawable/ic_baseline_photo_camera_24"
+        android:text="Tomar foto"
         android:textColor="#E6B0B3"
         app:backgroundTint="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/btn_register_last"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.137"
+        app:layout_constraintHorizontal_bias="0.14"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.81" />
+        app:layout_constraintVertical_bias="0.772" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_register_last"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bottom"
-        android:text="Guardar Imagen de Perfil"
+        android:text="Establecer imagen"
         android:textColor="#E6B0B3"
         app:backgroundTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -64,4 +67,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.607" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

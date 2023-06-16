@@ -198,7 +198,7 @@ public class SelectProductFragment extends Fragment {
                         continue;
                     }
 
-                    if(!doc.getString("userId").equals(Shared.myUser.getId())){
+                    if(!doc.getString("userId").equals(Shared.myUser.getUserId())){
                         continue;
                     }
 

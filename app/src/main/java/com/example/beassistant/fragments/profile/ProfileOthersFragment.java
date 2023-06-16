@@ -1,13 +1,10 @@
 package com.example.beassistant.fragments.profile;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,7 +14,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +24,6 @@ import android.widget.TextView;
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.ProfileRecyclerAdapter;
-import com.example.beassistant.fragments.profile.myOpinions.MyOpinionsList;
 import com.example.beassistant.fragments.profile.othersOpinion.OthersOpinionsList;
 import com.example.beassistant.models.Category;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -380,7 +375,7 @@ public class ProfileOthersFragment extends Fragment {
 
         following = false;
 
-        db.collection("users/"+Shared.myUser.getId()+"/seguidos")
+        db.collection("users/"+Shared.myUser.getUserId()+"/seguidos")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -456,7 +451,7 @@ public class ProfileOthersFragment extends Fragment {
                                 int index = 0;
 
                                 for (QueryDocumentSnapshot doc : task.getResult()) {
-                                    if (doc.getString("userId").equals(Shared.myUser.getId())){
+                                    if (doc.getString("userId").equals(Shared.myUser.getUserId())){
                                         index++;
                                     }
                                 }
@@ -476,7 +471,7 @@ public class ProfileOthersFragment extends Fragment {
         btn_follow.setEnabled(false);
         Map<String, Object> object = new HashMap<>();
         object.put("id", id);
-        db.collection("users/"+Shared.myUser.getId()+"/seguidos/")
+        db.collection("users/"+Shared.myUser.getUserId()+"/seguidos/")
                 .document(id)
                 .set(object)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -488,7 +483,7 @@ public class ProfileOthersFragment extends Fragment {
 
                         // Set my user in thir followers
                         db.collection("users/"+id+"/seguidores/")
-                                .document(Shared.myUser.getId())
+                                .document(Shared.myUser.getUserId())
                                 .set(objecto02)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -504,7 +499,7 @@ public class ProfileOthersFragment extends Fragment {
 
                                                         // Add 1 to mi number of following
                                                         db.collection("users")
-                                                                .document(Shared.myUser.getId())
+                                                                .document(Shared.myUser.getUserId())
                                                                 .update("numSeguidos", FieldValue.increment(1))
                                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                     @Override
@@ -529,7 +524,7 @@ public class ProfileOthersFragment extends Fragment {
         Map<String, Object> object = new HashMap<>();
         object.put("id", id);
         // Delete the user from mi following
-        db.collection("users/"+Shared.myUser.getId()+"/seguidos/")
+        db.collection("users/"+Shared.myUser.getUserId()+"/seguidos/")
                 .document(id)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -541,7 +536,7 @@ public class ProfileOthersFragment extends Fragment {
 
                         // Delete my user from their followers
                         db.collection("users/"+id+"/seguidores/")
-                                .document(Shared.myUser.getId())
+                                .document(Shared.myUser.getUserId())
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -557,7 +552,7 @@ public class ProfileOthersFragment extends Fragment {
 
                                                         // Rest 1 to mi number of following
                                                         db.collection("users")
-                                                                .document(Shared.myUser.getId())
+                                                                .document(Shared.myUser.getUserId())
                                                                 .update("numSeguidos", FieldValue.increment(-1))
                                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                     @Override

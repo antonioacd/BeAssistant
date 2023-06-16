@@ -6,18 +6,19 @@ public class Opinion {
     private String username;
     private String imgUser;
     private String productId;
+    private String productCategory;
     private int rating;
     private double price;
     private String shopBuy;
     private String toneOrColor;
     private String opinion;
 
-
-    public Opinion(String opinionId, String username, String imgUser, String productId, int rating, double price, String shopBuy, String toneOrColor, String opinion) {
+    public Opinion(String opinionId, String username, String imgUser, String productId, String productCategory, int rating, double price, String shopBuy, String toneOrColor, String opinion) {
         this.opinionId = opinionId;
         this.username = username;
         this.imgUser = imgUser;
         this.productId = productId;
+        this.productCategory = productCategory;
         this.rating = rating;
         this.price = price;
         this.shopBuy = shopBuy;
@@ -58,6 +59,14 @@ public class Opinion {
 
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+    public String getProductCategory() {
+        return productCategory;
+    }
+
+    public void setProductCategory(String productCategory) {
+        this.productCategory = productCategory;
     }
 
     public int getRating() {
@@ -104,9 +113,10 @@ public class Opinion {
     public String toString() {
         return "Opinion{" +
                 "opinionId='" + opinionId + '\'' +
-                ", userId='" + username + '\'' +
+                ", username='" + username + '\'' +
                 ", imgUser='" + imgUser + '\'' +
                 ", productId='" + productId + '\'' +
+                ", productCategory='" + productCategory + '\'' +
                 ", rating=" + rating +
                 ", price=" + price +
                 ", shopBuy='" + shopBuy + '\'' +

@@ -21,7 +21,7 @@ import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.UsersRecyclerAdapter;
 import com.example.beassistant.fragments.profile.ProfileOthersFragment;
-import com.example.beassistant.models.UserInAList;
+import com.example.beassistant.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 public class SearchFragment extends Fragment {
 
     // Declare the full users list
-    private ArrayList<UserInAList> usersFullList;
+    private ArrayList<User> usersFullList;
 
     // The users search view
     private SearchView searchView;
@@ -120,7 +120,7 @@ public class SearchFragment extends Fragment {
 
                 Fragment fragment = new ProfileOthersFragment();
                 Bundle args = new Bundle();
-                args.putString("id", recAdapter.usersList.get(index).getId());
+                args.putString("id", recAdapter.usersList.get(index).getUserId());
 
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.setFragmentResult("follower", args);
@@ -139,10 +139,10 @@ public class SearchFragment extends Fragment {
     private void filterList(String newText){
 
         // Create a filtered list
-        ArrayList<UserInAList> filteredList = new ArrayList<>();
+        ArrayList<User> filteredList = new ArrayList<>();
 
         // Loop the user list
-        for (UserInAList u : recAdapter.usersList) {
+        for (User u : recAdapter.usersList) {
             if (u.getUsername().toLowerCase().contains(newText.toLowerCase())){
                 Log.d("Entra:","si");
                 filteredList.add(u);
@@ -175,12 +175,12 @@ public class SearchFragment extends Fragment {
                 for (QueryDocumentSnapshot doc : task.getResult()) {
 
                     // Check if is my own user
-                    if (doc.getId().equals(Shared.myUser.getId())){
+                    if (doc.getId().equals(Shared.myUser.getUserId())){
                         continue;
                     }
 
                     // Create the user
-                    UserInAList user = new UserInAList(doc.getId(), doc.getString("username"), doc.getString("imgRef"));
+                    User user = new User(doc.getId(), doc.getString("username"), doc.getString("imgRef"));
 
                     // Insert the user
                     recAdapter.usersList.add(user);

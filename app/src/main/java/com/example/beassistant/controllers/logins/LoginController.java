@@ -212,7 +212,7 @@ public class LoginController extends AppCompatActivity {
 
                         User user = new User();
 
-                        user.setId(doc.getId());
+                        user.setUserId(doc.getId());
                         user.setUsername(doc.getString("username"));
                         user.setName(doc.getString("name"));
                         user.setImg_reference(doc.getString("imgRef"));
@@ -303,7 +303,7 @@ public class LoginController extends AppCompatActivity {
 
                 User user = new User();
 
-                user.setId(acct.getId());
+                user.setUserId(acct.getId());
                 user.setUsername(acct.getDisplayName() + acct.getId());
                 user.setName(acct.getDisplayName());
                 user.setImg_reference("/profileImages/default-profile.png");

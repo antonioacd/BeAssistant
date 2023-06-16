@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
-import com.example.beassistant.fragments.home.DetailsOpinionFragment;
 import com.example.beassistant.fragments.profile.ProfileFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,8 +39,6 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MyOpinionEdit extends Fragment {
 
@@ -225,7 +222,7 @@ public class MyOpinionEdit extends Fragment {
 
                         for (QueryDocumentSnapshot opinionsDoc : task.getResult()){
 
-                            if (!opinionsDoc.getString("userId").equals(Shared.myUser.getId())) {
+                            if (!opinionsDoc.getString("userId").equals(Shared.myUser.getUserId())) {
                                 continue;
                             }
 

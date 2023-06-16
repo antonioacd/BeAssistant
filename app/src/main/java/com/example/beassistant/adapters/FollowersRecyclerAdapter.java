@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.beassistant.R;
-import com.example.beassistant.models.UserInAList;
+import com.example.beassistant.models.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecyclerAdapter.RecyclerHolder>{
 
     // Create the followers list
-    public ArrayList<UserInAList> followersList;
+    public ArrayList<User> followersList;
 
     // Declare the listeners
     private View.OnClickListener onClickListener;
@@ -64,7 +64,7 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
      * Function to delete a item of the list
      * @param o
      */
-    public void insertarItem(UserInAList o){
+    public void insertarItem(User o){
         followersList.add(o);
         this.notifyDataSetChanged();
     }
@@ -85,7 +85,7 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
      *
      * @param filteredList
      */
-    public void setFilteredList(ArrayList<UserInAList> filteredList){
+    public void setFilteredList(ArrayList<User> filteredList){
         followersList = filteredList;
         notifyDataSetChanged();
     }
@@ -129,10 +129,10 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
 
         // Crete a user
-        UserInAList user = followersList.get(position);
+        User user = followersList.get(position);
 
         // Set the image
-        storageRef.child(user.getImgRef()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        storageRef.child(user.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 //  Get the bitmap

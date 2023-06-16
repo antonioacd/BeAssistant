@@ -20,9 +20,7 @@ import android.widget.TextView;
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
 import com.example.beassistant.adapters.FollowersRecyclerAdapter;
-import com.example.beassistant.fragments.profile.ProfileFragment;
-import com.example.beassistant.fragments.profile.ProfileOthersFragment;
-import com.example.beassistant.models.UserInAList;
+import com.example.beassistant.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -104,11 +102,11 @@ public class FollowersFragment extends Fragment {
                 // Get the index
                 index = reciclerView.getChildAdapterPosition(view);
 
-                String selectedUserId = recyclerAdapter.followersList.get(index).getId();
+                String selectedUserId = recyclerAdapter.followersList.get(index).getUserId();
 
                 Fragment fragment;
 
-                if(selectedUserId.equals(Shared.myUser.getId())){
+                if(selectedUserId.equals(Shared.myUser.getUserId())){
                     fragment = new ProfileFragment();
                 }else{
                     fragment = new ProfileOthersFragment();
@@ -198,7 +196,7 @@ public class FollowersFragment extends Fragment {
     private void insertUser(DocumentSnapshot document){
 
         // Create the user
-        UserInAList user = new UserInAList(document.getId(), document.getString("username"), document.getString("imgRef"));
+        User user = new User(document.getId(), document.getString("username"), document.getString("imgRef"));
 
         // Insert the user
         recyclerAdapter.followersList.add(user);

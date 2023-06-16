@@ -116,6 +116,7 @@ public class AddOpinionActivity extends AppCompatActivity {
         op.setOpinionId(java.util.UUID.randomUUID().toString().trim());
         op.setUsername(Shared.myUser.getUsername());
         op.setProductId(productId);
+        op.setProductCategory(category);
         op.setImgUser(Shared.myUser.getImg_reference());
         op.setRating(selected_rating);
         op.setPrice(Double.parseDouble(et_price.getText().toString().trim()));
@@ -126,7 +127,8 @@ public class AddOpinionActivity extends AppCompatActivity {
         Map<String, Object> newOpinion = new HashMap<>();
         newOpinion.put("opinionId", op.getOpinionId());
         newOpinion.put("productId", op.getProductId());
-        newOpinion.put("userId", Shared.myUser.getId());
+        newOpinion.put("productCategory", op.getProductCategory());
+        newOpinion.put("userId", Shared.myUser.getUserId());
         newOpinion.put("username", op.getUsername());
         newOpinion.put("imgUserRef", op.getImgUser());
         newOpinion.put("shopBuy", op.getShopBuy());
@@ -185,15 +187,10 @@ public class AddOpinionActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         double media = finalSumatory / finalCont;
                                         for (QueryDocumentSnapshot document : task.getResult()) {
-
                                             db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getId()).update("rating", media);
-                                            Log.d("Sumatorio: ", ""+media);
-
-
                                         }
                                     }
                                 });
-                        Log.d("Sumatorio: ", ""+sumatory);
                     }
                 });
     }

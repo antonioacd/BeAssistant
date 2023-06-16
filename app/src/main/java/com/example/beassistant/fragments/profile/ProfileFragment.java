@@ -156,7 +156,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View view) {
                 Fragment fragment = new FollowersFragment();
                 Bundle args = new Bundle();
-                args.putString("id", Shared.myUser.getId());
+                args.putString("id", Shared.myUser.getUserId());
 
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.setFragmentResult("key", args);
@@ -173,7 +173,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View view) {
                 Fragment fragment = new FollowingFragment();
                 Bundle args = new Bundle();
-                args.putString("id", Shared.myUser.getId());
+                args.putString("id", Shared.myUser.getUserId());
 
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.setFragmentResult("key", args);
@@ -194,7 +194,7 @@ public class ProfileFragment extends Fragment {
 
                 Fragment fragment = new MyOpinionsList();
                 Bundle args = new Bundle();
-                args.putString("userId", Shared.myUser.getId());
+                args.putString("userId", Shared.myUser.getUserId());
                 args.putString("category", recAdapter.categoryList.get(index).getCategory_name());
 
                 FragmentManager fragmentManager = getParentFragmentManager();
@@ -242,7 +242,9 @@ public class ProfileFragment extends Fragment {
 
     private void getOpinionsFromDatabase(ArrayList<String> categories) {
         // Get the opinions
-        db.collection("opiniones").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("opiniones").whereEqualTo("userId", Shared.myUser.getUserId())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
@@ -281,11 +283,6 @@ public class ProfileFragment extends Fragment {
     private void getCategoriesAndNumber(@NonNull Task<QuerySnapshot> task, int index, String category) {
         // Loop the opinions doc
         for (QueryDocumentSnapshot opinionsDoc : task.getResult()) {
-
-            // Check if the opinion are made for the current user
-            if (!opinionsDoc.getString("userId").equals(Shared.myUser.getId())){
-                continue;
-            }
 
             // Check if the product category is the same that the category that we are looping
             if (!opinionsDoc.getString("productCategory").equals(category)){
@@ -330,7 +327,7 @@ public class ProfileFragment extends Fragment {
     private void getMyUser(){
         // Search the user in the database
         db.collection("users")
-                .document(Shared.myUser.getId())
+                .document(Shared.myUser.getUserId())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -362,7 +359,7 @@ public class ProfileFragment extends Fragment {
                                 int index = 0;
 
                                 for (QueryDocumentSnapshot doc : task.getResult()) {
-                                    if (doc.getString("userId").equals(Shared.myUser.getId())){
+                                    if (doc.getString("userId").equals(Shared.myUser.getUserId())){
                                         index++;
                                     }
                                 }

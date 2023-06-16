@@ -3,6 +3,7 @@ package com.example.beassistant.controllers.logins;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -35,12 +36,14 @@ public class RegisterController extends AppCompatActivity {
     //Declare the data base object
     private FirebaseFirestore db;
 
+    private ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_controller);
 
-        initDatabaseVariables();
+        initVariables();
 
         initViewVariables();
 
@@ -52,10 +55,13 @@ public class RegisterController extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                // bad user = -1 || bad email = 1 || correct = 0
+                dialog.setMessage("Registrando Usuario...\nEspere por favor");
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
 
                 if (et_user_reg.getText().toString().isEmpty() || et_name_reg.getText().toString().isEmpty() || et_email_reg.getText().toString().isEmpty() || et_password_reg.getText().toString().isEmpty()){
                     Toast.makeText(getApplicationContext(), "Debe rellenar todos los campos", Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }else{
                     generateUser();
                 }
@@ -71,9 +77,10 @@ public class RegisterController extends AppCompatActivity {
         btn_register_reg = (Button) findViewById(R.id.btn_register_reg);
     }
 
-    private void initDatabaseVariables() {
+    private void initVariables() {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        dialog = new ProgressDialog(this);
     }
 
     private void generateUser(){
@@ -94,8 +101,8 @@ public class RegisterController extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
+                                    dialog.dismiss();
                                     finish();
-                                    Toast.makeText(getApplicationContext(), "Usuario creado", Toast.LENGTH_LONG).show();
                                     Intent i = new Intent(getApplicationContext(), RegisterImageProfileController.class);
                                     i.putExtra("username", et_user_reg.getText().toString().trim());
                                     i.putExtra("name", et_name_reg.getText().toString().trim());

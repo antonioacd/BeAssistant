@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.beassistant.R;
 import com.example.beassistant.Shared;
@@ -72,7 +71,7 @@ public class LoadingActivity extends AppCompatActivity {
 
                 User user = new User();
 
-                user.setId(acct.getId());
+                user.setUserId(acct.getId());
                 user.setUsername(acct.getDisplayName() + acct.getId());
                 user.setName(acct.getDisplayName());
                 user.setImg_reference("/profileImages/default-profile.png");
@@ -109,7 +108,7 @@ public class LoadingActivity extends AppCompatActivity {
 
                         User user = new User();
 
-                        user.setId(doc.getId());
+                        user.setUserId(doc.getId());
                         user.setUsername(doc.getString("username"));
                         user.setName(doc.getString("name"));
                         user.setImg_reference(doc.getString("imgRef"));

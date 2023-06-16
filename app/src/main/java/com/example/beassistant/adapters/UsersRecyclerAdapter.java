@@ -13,8 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.beassistant.R;
-import com.example.beassistant.models.Product;
-import com.example.beassistant.models.UserInAList;
+import com.example.beassistant.models.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -28,7 +27,7 @@ import java.util.ArrayList;
 
 public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdapter.RecyclerHolder>{
 
-    public ArrayList<UserInAList> usersList;
+    public ArrayList<User> usersList;
 
     //Declaramos los listener de nuestro RecyclerAdapter
     View.OnClickListener onClickListener;
@@ -53,7 +52,7 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
     }
 
     //Metodo para añadir un Item a la lista y al recyclerAdapter
-    public void insertarItem(UserInAList o){
+    public void insertarItem(User o){
         usersList.add(o);
         this.notifyDataSetChanged();
     }
@@ -63,7 +62,7 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
         this.notifyDataSetChanged();
     }
 
-    public void setFilteredList(ArrayList<UserInAList> filteredList){
+    public void setFilteredList(ArrayList<User> filteredList){
         usersList = filteredList;
         notifyDataSetChanged();
     }
@@ -92,9 +91,9 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
 
-        UserInAList p = usersList.get(position);
+        User p = usersList.get(position);
 
-        storageRef.child(p.getImgRef()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        storageRef.child(p.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
