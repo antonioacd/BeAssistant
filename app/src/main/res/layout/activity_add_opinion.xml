@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".controllers.AddOpinionActivity">
+    tools:context=".controllers.addOpinion.AddOpinionActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline15"

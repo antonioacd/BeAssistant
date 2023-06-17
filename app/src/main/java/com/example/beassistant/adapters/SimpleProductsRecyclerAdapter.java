@@ -75,7 +75,7 @@ public class SimpleProductsRecyclerAdapter extends RecyclerView.Adapter<SimplePr
 
         Product p = productsList.get(position);
 
-        storageRef.child(p.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        storageRef.child(p.getImgReference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -83,7 +83,7 @@ public class SimpleProductsRecyclerAdapter extends RecyclerView.Adapter<SimplePr
             }
         });
         
-        holder.txtName.setText(p.getName());
+        holder.txtName.setText(p.getProductName());
     }
 
     @Override

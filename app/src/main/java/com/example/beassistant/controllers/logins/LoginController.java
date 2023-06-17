@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.beassistant.R;
-import com.example.beassistant.Shared;
-import com.example.beassistant.controllers.MainActivity;
+import com.example.beassistant.models.Shared;
+import com.example.beassistant.controllers.main.MainActivity;
 import com.example.beassistant.models.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -52,6 +52,8 @@ public class LoginController extends AppCompatActivity {
 
     private ProgressDialog dialog;
 
+    private static String PROFILE_DEFAULT_IMAGE = "/profileImages/defaultprofile.png";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,8 +84,6 @@ public class LoginController extends AppCompatActivity {
         if (i == null || i.getExtras() == null) {
             return;
         }
-
-        Log.d("Intent:", i.getExtras().toString());
 
         String email = "", password = "";
 
@@ -137,8 +137,6 @@ public class LoginController extends AppCompatActivity {
                    dialog.dismiss();
                    return;
                 }
-
-                Log.d("Sesion: ", user + ". " + password);
 
                 firebaseAuth.signInWithEmailAndPassword(user, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -259,11 +257,15 @@ public class LoginController extends AppCompatActivity {
             return;
         }
 
+        /**
+         * Revisar
+         */
+
         Map<String, Object> user = new HashMap<>();
         user.put("id", acct.getId());
         user.put("username", acct.getDisplayName() + acct.getId());
         user.put("name", acct.getDisplayName());
-        user.put("imgRef", "/profileImages/defaultprofile.png");
+        user.put("imgRef", PROFILE_DEFAULT_IMAGE);
         user.put("email", acct.getEmail());
         user.put("numOpiniones", 0);
         user.put("numSeguidores", 0);
@@ -306,7 +308,7 @@ public class LoginController extends AppCompatActivity {
                 user.setUserId(acct.getId());
                 user.setUsername(acct.getDisplayName() + acct.getId());
                 user.setName(acct.getDisplayName());
-                user.setImg_reference("/profileImages/default-profile.png");
+                user.setImg_reference(PROFILE_DEFAULT_IMAGE);
                 user.setEmail(acct.getEmail());
                 user.setNumOpiniones(doc.getDouble("numOpiniones").intValue());
                 user.setNumSeguidores(doc.getDouble("numSeguidores").intValue());
@@ -321,6 +323,9 @@ public class LoginController extends AppCompatActivity {
 
     }
 
+    /**
+     * Function to back
+     */
     @Override
     public void onBackPressed() {
     }

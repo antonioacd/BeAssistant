@@ -38,6 +38,8 @@ public class RegisterController extends AppCompatActivity {
 
     private ProgressDialog dialog;
 
+    private static String PROFILE_DEFAULT_IMAGE = "/profileImages/defaultprofile.png";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +94,14 @@ public class RegisterController extends AppCompatActivity {
 
                     Map<String, Object> user = new HashMap<>();
                     user.put("id", id);
+                    user.put("username", et_user_reg.getText().toString().trim());
+                    user.put("name", et_name_reg.getText().toString().trim());
+                    user.put("email", et_email_reg.getText().toString().trim());
+                    user.put("password", et_password_reg.getText().toString().trim());
+                    user.put("imgRef", PROFILE_DEFAULT_IMAGE);
+                    user.put("numOpiniones", 0);
+                    user.put("numSeguidores", 0);
+                    user.put("numSeguidos", 0);
 
                     /**
                      * Add a new document with a generated ID
@@ -104,8 +114,6 @@ public class RegisterController extends AppCompatActivity {
                                     dialog.dismiss();
                                     finish();
                                     Intent i = new Intent(getApplicationContext(), RegisterImageProfileController.class);
-                                    i.putExtra("username", et_user_reg.getText().toString().trim());
-                                    i.putExtra("name", et_name_reg.getText().toString().trim());
                                     i.putExtra("email", et_email_reg.getText().toString().trim());
                                     i.putExtra("password", et_password_reg.getText().toString().trim());
                                     startActivity(i);

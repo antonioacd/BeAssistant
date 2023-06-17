@@ -2,31 +2,31 @@ package com.example.beassistant.models;
 
 public class Product {
 
-    private String uuID;
-    private String name;
-    private String img_reference;
+    private String productId;
+    private String productName;
+    private String imgReference;
     private String brand;
     private String category;
     private String type;
     private double mediaRating;
-    private String url;
+    private String shopUrl;
     private Opinion opinion;
 
-    public Product(String uuID, String name, String img_reference, String brand, String category, String type, double mediaRating, String url) {
-        this.uuID = uuID;
-        this.name = name;
-        this.img_reference = img_reference;
+    public Product(String productId, String productName, String imgReference, String brand, String category, String type, double mediaRating, String shopUrl) {
+        this.productId = productId;
+        this.productName = productName;
+        this.imgReference = imgReference;
         this.brand = brand;
         this.category = category;
         this.type = type;
         this.mediaRating = mediaRating;
-        this.url = url;
+        this.shopUrl = shopUrl;
     }
 
-    public Product(String uuID, String name, String img_reference, String brand, String category, String type, double mediaRating, Opinion opinion) {
-        this.uuID = uuID;
-        this.name = name;
-        this.img_reference = img_reference;
+    public Product(String productId, String productName, String imgReference, String brand, String category, String type, double mediaRating, Opinion opinion) {
+        this.productId = productId;
+        this.productName = productName;
+        this.imgReference = imgReference;
         this.brand = brand;
         this.category = category;
         this.type = type;
@@ -34,38 +34,38 @@ public class Product {
         this.opinion = opinion;
     }
 
-    public Product(String uuID, String name, String img_reference) {
-        this.uuID = uuID;
-        this.name = name;
-        this.img_reference = img_reference;
+    public Product(String productId, String productName, String imgReference) {
+        this.productId = productId;
+        this.productName = productName;
+        this.imgReference = imgReference;
     }
 
-    public Product (String uuID){
-        this.uuID = uuID;
+    public Product (String productId){
+        this.productId = productId;
     }
 
-    public String getUuID() {
-        return uuID;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setUuID(String uuID) {
-        this.uuID = uuID;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
-    public String getName() {
-        return name;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    public String getImg_reference() {
-        return img_reference;
+    public String getImgReference() {
+        return imgReference;
     }
 
-    public void setImg_reference(String img_reference) {
-        this.img_reference = img_reference;
+    public void setImgReference(String imgReference) {
+        this.imgReference = imgReference;
     }
 
     public String getBrand() {
@@ -108,20 +108,20 @@ public class Product {
         this.opinion = opinion;
     }
 
-    public String getUrl() {
-        return url;
+    public String getShopUrl() {
+        return shopUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setShopUrl(String shopUrl) {
+        this.shopUrl = shopUrl;
     }
 
     @Override
     public String toString() {
         return "Producto{" +
-                "uuID='" + uuID + '\'' +
-                ", name='" + name + '\'' +
-                ", img_reference='" + img_reference + '\'' +
+                "uuID='" + productId + '\'' +
+                ", name='" + productName + '\'' +
+                ", img_reference='" + imgReference + '\'' +
                 ", brand='" + brand + '\'' +
                 ", category='" + category + '\'' +
                 ", type='" + type + '\'' +

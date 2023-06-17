@@ -4,14 +4,15 @@
 
     <uses-permission android:name="android.permission.CAMERA"
         android:required="true"
-        android:requiredFeature="true"
-        />
+        android:requiredFeature="true" />
 
     <uses-feature android:name="android.hardware.camera"
         android:required="true"
         android:requiredFeature="true"/>
 
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"
+        android:required="true"
+        android:requiredFeature="true"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -47,7 +48,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".controllers.AddOpinionActivity"
+            android:name=".controllers.addOpinion.AddOpinionActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -64,12 +65,12 @@
             android:name=".controllers.logins.RegisterController"
             android:exported="false" />
         <activity
-            android:name=".controllers.MainActivity"
+            android:name=".controllers.main.MainActivity"
             android:exported="false" />
         <activity
             android:name=".controllers.logins.LoginController"
             android:exported="false" />
-        <activity android:name=".controllers.CaptureActivityPortraint"
+        <activity android:name=".controllers.barcode.CaptureActivityPortraint"
             android:screenOrientation="fullSensor"
             android:theme="@style/zxing_CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden"

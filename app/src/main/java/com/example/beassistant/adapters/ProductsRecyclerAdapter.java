@@ -16,9 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.beassistant.R;
 import com.example.beassistant.models.Product;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -78,7 +76,7 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<ProductsRecycl
 
         Product objeto = productList.get(position);
 
-        storageRef.child(objeto.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        storageRef.child(objeto.getImgReference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -86,7 +84,7 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<ProductsRecycl
             }
         });
 
-        holder.txt_name.setText(objeto.getName());
+        holder.txt_name.setText(objeto.getProductName());
         holder.txt_brand.setText(objeto.getBrand());
         holder.txt_type.setText(objeto.getType());
         double ratingRounded = Math.round((objeto.getMediaRating()) * 10.0) / 10.0;

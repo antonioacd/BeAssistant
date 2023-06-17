@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.beassistant.R;
-import com.example.beassistant.Shared;
-import com.example.beassistant.controllers.MainActivity;
+import com.example.beassistant.models.Shared;
+import com.example.beassistant.controllers.main.MainActivity;
 import com.example.beassistant.controllers.logins.LoginController;
 import com.example.beassistant.models.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
