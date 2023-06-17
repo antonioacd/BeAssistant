@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="166dp" />
+        app:layout_constraintGuide_begin="129dp" />
 
     <TextView
         android:id="@+id/txt_username_02"
@@ -110,46 +110,56 @@
         app:layout_constraintGuide_begin="38dp" />
 
     <TextView
-        android:id="@+id/txt_opiniones_02"
+        android:id="@+id/txt_following_02"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:text="Opiniones"
+        android:text="Seguidos"
         android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/guideline10_02"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.058"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintStart_toEndOf="@+id/txt_followers_02"
+        app:layout_constraintTop_toTopOf="@+id/guideline8_02"
+        app:layout_constraintVertical_bias="0.687" />
+
+    <TextView
+        android:id="@+id/txt_num_following_02"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/txt_following_02"
+        app:layout_constraintEnd_toEndOf="@+id/txt_following_02"
+        app:layout_constraintStart_toStartOf="@+id/txt_following_02"
+        app:layout_constraintTop_toTopOf="@+id/guideline8_02"
+        app:layout_constraintVertical_bias="0.928" />
+
+    <TextView
+        android:id="@+id/txt_opiniones_02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Opiniones"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10_02"
+        app:layout_constraintEnd_toStartOf="@+id/txt_followers_02"
+        app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="@+id/guideline11_02"
         app:layout_constraintTop_toBottomOf="@+id/txt_username_02"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.687" />
 
     <TextView
         android:id="@+id/txt_followers_02"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
         android:text="Seguidores"
         android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/guideline10_02"
-        app:layout_constraintEnd_toStartOf="@+id/txt_following_02"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/txt_opiniones_02"
-        app:layout_constraintTop_toTopOf="@+id/guideline8_02"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/txt_following_02"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:text="Seguidos"
-        android:textColor="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/guideline10_02"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.914"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="@+id/guideline11_02"
         app:layout_constraintTop_toTopOf="@+id/guideline8_02"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.687" />
 
     <TextView
         android:id="@+id/txt_num_opinions_02"
@@ -171,24 +181,12 @@
         android:gravity="center"
         android:textColor="#000000"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/txt_opiniones_02"
+        app:layout_constraintBottom_toTopOf="@+id/txt_followers_02"
         app:layout_constraintEnd_toEndOf="@+id/txt_followers_02"
+        app:layout_constraintHorizontal_bias="0.523"
         app:layout_constraintStart_toStartOf="@+id/txt_followers_02"
         app:layout_constraintTop_toTopOf="@+id/guideline8_02"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/txt_num_following_02"
-        android:layout_width="50dp"
-        android:layout_height="30dp"
-        android:gravity="center"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/txt_opiniones_02"
-        app:layout_constraintEnd_toEndOf="@+id/txt_following_02"
-        app:layout_constraintStart_toStartOf="@+id/txt_following_02"
-        app:layout_constraintTop_toTopOf="@+id/guideline8_02"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.95" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline17_02"

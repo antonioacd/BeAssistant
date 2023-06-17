@@ -14,11 +14,14 @@ import android.widget.Button;
 
 import com.example.beassistant.R;
 import com.example.beassistant.controllers.logins.LoginController;
+import com.example.beassistant.controllers.logins.RegisterImageProfileController;
 import com.example.beassistant.controllers.logins.ResetAux;
+import com.example.beassistant.models.Shared;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 
 
@@ -48,6 +51,7 @@ public class SettingsFragment extends Fragment {
         Button btn_change_user = view.findViewById(R.id.btn_change_user);
         Button btn_change_name = view.findViewById(R.id.btn_change_name);
         Button btn_reset_password = view.findViewById(R.id.btn_change_password_settings);
+        Button btn_change_img = view.findViewById(R.id.btn_change_img);
 
         btn_sign_out.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +97,16 @@ public class SettingsFragment extends Fragment {
             public void onClick(View view) {
                 Intent i = new Intent(getContext(), ResetAux.class);
                 i.putExtra("action", "name");
+                startActivity(i);
+            }
+        });
+
+        btn_change_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), RegisterImageProfileController.class);
+                i.putExtra("action", "mod");
+                i.putExtra("email", Shared.myUser.getEmail());
                 startActivity(i);
             }
         });

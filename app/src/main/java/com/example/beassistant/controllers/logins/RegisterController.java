@@ -116,6 +116,7 @@ public class RegisterController extends AppCompatActivity {
                                     Intent i = new Intent(getApplicationContext(), RegisterImageProfileController.class);
                                     i.putExtra("email", et_email_reg.getText().toString().trim());
                                     i.putExtra("password", et_password_reg.getText().toString().trim());
+                                    i.putExtra("action", "reg");
                                     startActivity(i);
                                 }
                             });
@@ -125,6 +126,7 @@ public class RegisterController extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(getApplicationContext(), e.getMessage() , Toast.LENGTH_LONG).show();
+                dialog.dismiss();
             }
         });
     }

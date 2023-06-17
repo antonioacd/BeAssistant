@@ -2,8 +2,12 @@ package com.example.beassistant.controllers.logins;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -27,7 +31,7 @@ import java.io.ByteArrayOutputStream;
 
 public class RegisterImageProfileController extends AppCompatActivity {
 
-    private String img, email, password;
+    private String img, email, password, action;
 
     private Button btn_take;
     private Button btn_register_last;
@@ -41,6 +45,10 @@ public class RegisterImageProfileController extends AppCompatActivity {
 
     FirebaseStorage storage;
     StorageReference storageRef;
+
+    private static final int REQUEST_CAMERA_PERMISSION = 100;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_FROM_GALLERY = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,33 +83,36 @@ public class RegisterImageProfileController extends AppCompatActivity {
     }
 
     private void initViewVariables() {
-        btn_take = (Button) findViewById(R.id.btn_take);
-        btn_register_last = (Button) findViewById(R.id.btn_register_last);
-        btn_getGalleryImg = (Button) findViewById(R.id.btn_getGalleryImg);
-        img_profile_register = (ImageView) findViewById(R.id.img_profile_register);
+        btn_take = findViewById(R.id.btn_take);
+        btn_register_last = findViewById(R.id.btn_register_last);
+        btn_getGalleryImg = findViewById(R.id.btn_getGalleryImg);
+        img_profile_register = findViewById(R.id.img_profile_register);
     }
 
     private void getIntentData() {
         Intent i = getIntent();
         email = i.getStringExtra("email");
         password = i.getStringExtra("password");
+        action = i.getStringExtra("action");
         img = "profileImages/" + email + "_img_profile.jpg";
     }
 
     /**
-     * Funtion that contains a listener of the take photo selector
+     * Function that contains a listener of the take photo selector
      */
     private void buttonTakeListener() {
         btn_take.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openCamera();
+                if (checkCameraPermission()) {
+                    openCamera();
+                }
             }
         });
     }
 
     /**
-     * Funtion that contains a listener of the register button
+     * Function that contains a listener of the register button
      */
     private void buttonRegisterListener() {
         btn_register_last.setOnClickListener(new View.OnClickListener() {
@@ -113,74 +124,96 @@ public class RegisterImageProfileController extends AppCompatActivity {
     }
 
     /**
-     * Funtion that contains a listener of the gallery selector
+     * Function that contains a listener of the gallery selector
      */
     private void buttonGetGalleryImgListener() {
-        // Get the image from gallery
         btn_getGalleryImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Start new gallery intent
-                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                i.setType("image/");
-                startActivityForResult(i.createChooser(i, "Seleccione la Aplicacion"), 10);
+                if (checkReadExternalStoragePermission()) {
+                    openGallery();
+                }
             }
         });
     }
 
     /**
-     * Function to open the camera
+     * Function to check if the camera permission is granted
      */
-    private void openCamera(){
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(intent.resolveActivity(getPackageManager()) != null){
-            startActivityForResult(intent, 1);
+    private boolean checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request the permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CAMERA_PERMISSION);
+            return false;
+        } else {
+            // Permission is granted
+            return true;
         }
     }
 
     /**
-     * Function to get the result of the activity
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * Function to check if the read external storage permission is granted
+     */
+    private boolean checkReadExternalStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request the permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_IMAGE_FROM_GALLERY);
+            return false;
+        } else {
+            // Permission is granted
+            return true;
+        }
+    }
+
+    /**
+     * Function to open the camera
+     */
+    private void openCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    /**
+     * Function to open the gallery
+     */
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Seleccione la Aplicacion"), REQUEST_IMAGE_FROM_GALLERY);
+    }
+
+    /**
+     * Function to handle the result of the activity
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != RESULT_OK){
+        if (resultCode != RESULT_OK) {
             return;
         }
 
-        // If take photo request code
-        if (requestCode == 1) {
-
-            // Get the extras
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            // Handle the captured image from the camera
             Bundle extras = data.getExtras();
-
-            // Get the data
-            Bitmap imgBitmap = (Bitmap) extras.get("data");
-
-            // Set the image in the image view
-            img_profile_register.setImageBitmap(imgBitmap);
-
-            // Create a reference to the profile image
+            if (extras != null) {
+                Bitmap imgBitmap = (Bitmap) extras.get("data");
+                img_profile_register.setImageBitmap(imgBitmap);
+                StorageReference imgRef = storageRef.child(img);
+                uploadImage(imgRef);
+            }
+        } else if (requestCode == REQUEST_IMAGE_FROM_GALLERY) {
+            // Handle the selected image from the gallery
+            Uri imageUri = data.getData();
+            img_profile_register.setImageURI(imageUri);
             StorageReference imgRef = storageRef.child(img);
-
-            uploadImage(imgRef);
-        }
-
-        if (requestCode == 10) {
-
-            // Get the path
-            Uri path = data.getData();
-
-            // Set the image in the image view
-            img_profile_register.setImageURI(path);
-
-            // Create a reference to the image
-            StorageReference imgRef = storageRef.child(img);
-
-            // Get the data from an ImageView as bytes
             uploadImage(imgRef);
         }
     }
@@ -196,10 +229,10 @@ public class RegisterImageProfileController extends AppCompatActivity {
         Bitmap bitmap = ((BitmapDrawable) img_profile_register.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data0 = baos.toByteArray();
+        byte[] data = baos.toByteArray();
 
         // Put the image in the database
-        UploadTask uploadTask = imgRef.putBytes(data0);
+        UploadTask uploadTask = imgRef.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
@@ -212,8 +245,7 @@ public class RegisterImageProfileController extends AppCompatActivity {
         });
     }
 
-    private void modifyImage(){
-
+    private void modifyImage() {
         String id = mAuth.getCurrentUser().getUid();
 
         // Modify the image of the profile
@@ -222,6 +254,12 @@ public class RegisterImageProfileController extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+
+                        if (action.equals("mod")){
+                            Toast.makeText(getApplicationContext(), "Foto de perfil modificada", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
                         finish();
                         Intent i = new Intent(getApplicationContext(), LoginController.class);
                         i.putExtra("email", email);
