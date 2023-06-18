@@ -15,8 +15,8 @@
         android:layout_margin="16dp"
         android:hint="Categoria"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.061"
+        app:layout_constraintEnd_toStartOf="@+id/guideline41"
+        app:layout_constraintHorizontal_bias="0.63"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
@@ -42,7 +42,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.594"
-        app:layout_constraintStart_toEndOf="@+id/textInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/guideline41"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
@@ -103,5 +103,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="150dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline41"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.50121653" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
