@@ -13,15 +13,19 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.beassistant.R;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -56,7 +60,7 @@ public class RegisterImageProfileController extends AppCompatActivity {
         setContentView(R.layout.activity_register_image_profile_controller);
 
         // Init the database variables
-        initDatabaseVariables();
+        initVariables();
 
         // Init the view variables
         initViewVariables();
@@ -74,12 +78,13 @@ public class RegisterImageProfileController extends AppCompatActivity {
         buttonRegisterListener();
     }
 
-    private void initDatabaseVariables() {
+    private void initVariables() {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         storage = FirebaseStorage.getInstance();
         // Create a storage reference from our app
         storageRef = storage.getReference();
+        img = "";
     }
 
     private void initViewVariables() {
@@ -95,6 +100,7 @@ public class RegisterImageProfileController extends AppCompatActivity {
         password = i.getStringExtra("password");
         action = i.getStringExtra("action");
         img = "profileImages/" + email + "_img_profile.jpg";
+        Log.d("imagen: ", img);
     }
 
     /**
@@ -246,8 +252,27 @@ public class RegisterImageProfileController extends AppCompatActivity {
     }
 
     private void modifyImage() {
-        String id = mAuth.getCurrentUser().getUid();
 
+        String id = "";
+
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+
+        if (user != null){
+            id = user.getUid();
+            doChange(id);
+            return;
+        }
+
+        if (acct != null){
+            id = acct.getId();
+            doChange(id);
+            return;
+        }
+    }
+
+    private void doChange(String id) {
         // Modify the image of the profile
         db.collection("users").document(id)
                 .update("imgRef", img)

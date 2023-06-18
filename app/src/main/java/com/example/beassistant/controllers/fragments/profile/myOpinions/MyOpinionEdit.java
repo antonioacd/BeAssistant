@@ -130,22 +130,10 @@ public class MyOpinionEdit extends Fragment {
                 db.collection("opiniones").document(opinionId).update("opinion", txt_opinion.getText().toString().trim());
                 db.collection("opiniones").document(opinionId).update("rating", selected_rating);
 
-                //
                 Toast.makeText(getContext(), "Opinion Modificada", Toast.LENGTH_SHORT).show();
 
-                db.collection("opiniones").document(opinionId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                        if (!task.isSuccessful()){
-                            return;
-                        }
-
-                        DocumentSnapshot doc = task.getResult();
-
-                        getRatingMedia(doc.getString("productId"), doc.getString("productCategory"), doc.getString("productBrand"));
-                    }
-                });
+                // Update the rating media
+                updateRatingMedia();
 
                 Fragment fragment = new ProfileFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
@@ -159,42 +147,58 @@ public class MyOpinionEdit extends Fragment {
         adapterRatingConfiguration();
     }
 
-    private void getRatingMedia(String productId, String category, String brand){
+    private void updateRatingMedia(){
 
-        db.collection("opiniones")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        int cont = 0;
-                        double sumatory = 0;
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            if (document.getString("productId").equals(productId)){
-                                cont++;
-                                Log.d("Sumatorio: ", ""+document.getDouble("rating"));
-                                sumatory += document.getDouble("rating");
-                            }
-                        }
-                        double finalSumatory = sumatory;
-                        int finalCont = cont;
-                        db.collection("categorias/"+category+"/marcas/"+brand+"/productos/")
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        double media = finalSumatory / finalCont;
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            if (document.getString("id").equals(productId)) {
+        db.collection("opiniones").document(opinionId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                                                db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getId()).update("rating", media);
+                if (!task.isSuccessful()){
+                    return;
+                }
 
-                                            }
-                                        }
+                DocumentSnapshot doc = task.getResult();
+
+                String productId = doc.getString("productId");
+                String category = doc.getString("productCategory");
+                String brand = doc.getString("productBrand");
+
+                db.collection("opiniones")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                int cont = 0;
+                                double sumatory = 0;
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if (document.getString("productId").equals(productId)){
+                                        cont++;
+                                        Log.d("Sumatorio: ", ""+document.getDouble("rating"));
+                                        sumatory += document.getDouble("rating");
                                     }
-                                });
-                        Log.d("Sumatorio: ", ""+sumatory);
-                    }
-                });
+                                }
+                                double finalSumatory = sumatory;
+                                int finalCont = cont;
+                                db.collection("categorias/"+category+"/marcas/"+brand+"/productos/")
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                double media = finalSumatory / finalCont;
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    if (document.getString("id").equals(productId)) {
+                                                        db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getId()).update("rating", media);
+                                                    }
+                                                }
+                                            }
+                                        });
+                                Log.d("Sumatorio: ", ""+sumatory);
+                            }
+                        });
+            }
+        });
+
+
     }
 
     private void getDataFromLastFragment(Bundle result){

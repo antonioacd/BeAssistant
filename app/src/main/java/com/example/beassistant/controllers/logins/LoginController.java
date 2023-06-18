@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,7 +40,8 @@ public class LoginController extends AppCompatActivity {
 
     // Declare the variables
     private EditText et_email, et_password;
-    private Button btn_login, btn_register, btn_reset;
+    private TextView btn_register, btn_reset;
+    private Button btn_login;
     private ImageView btn_google;
 
     // Declare the firebase variables
@@ -138,12 +140,23 @@ public class LoginController extends AppCompatActivity {
                    return;
                 }
 
+                firebaseAuth.signInWithEmailAndPassword(user, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        Log.d("Auth:3 ", authResult.toString());
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Auth: 2", e.getMessage());
+                    }
+                });
+
                 firebaseAuth.signInWithEmailAndPassword(user, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            Log.d("Sesion: ", "No iniciada");
-                            Toast.makeText(LoginController.this, "Algo ha fallado, intentelo de nuevo", Toast.LENGTH_SHORT).show();
+                            Log.d("Auth: 1", task.toString());
                             dialog.dismiss();
                             return;
                         }
@@ -153,7 +166,8 @@ public class LoginController extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("Sesion: ", e.getMessage());
+                        Toast.makeText(LoginController.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
                 });
 
@@ -181,8 +195,8 @@ public class LoginController extends AppCompatActivity {
         et_email = (EditText) findViewById(R.id.et_email);
         et_password = (EditText) findViewById(R.id.et_password);
         btn_login = (Button) findViewById(R.id.btn_login);
-        btn_register = (Button) findViewById(R.id.btn_register);
-        btn_reset = (Button) findViewById(R.id.btn_reset);
+        btn_register = (TextView) findViewById(R.id.btn_register);
+        btn_reset = (TextView) findViewById(R.id.btn_reset);
     }
 
     private void initDatabaseVariables() {
@@ -244,7 +258,7 @@ public class LoginController extends AppCompatActivity {
                 onSignInGoogle();
             } catch (ApiException e) {
                 Log.d("Error: ", "Error: " + e.getMessage());
-                Toast.makeText(getApplicationContext(), "Algo fue mal", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "No ha sido posible iniciar sesion", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -282,7 +296,7 @@ public class LoginController extends AppCompatActivity {
 
                         fillGoogleUser(acct);
 
-                        Toast.makeText(getApplicationContext(), "Sesion iniciada", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Sesion iniciada con exito", Toast.LENGTH_LONG).show();
                     }
                 });
     }

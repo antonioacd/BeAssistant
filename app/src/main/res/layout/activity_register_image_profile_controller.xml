@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondoooo"
+    android:background="#D4C1C3"
     tools:context=".controllers.logins.RegisterImageProfileController">
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -12,67 +12,66 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:background="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/btn_take"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.545"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.637"
-        app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-        tools:srcCompat="@drawable/defaultprofile" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_getGalleryImg"
-        android:layout_width="183dp"
-        android:layout_height="55dp"
-        android:background="@drawable/bottom"
-        android:drawableLeft="@drawable/ic_baseline_drive_folder_upload_24"
-        android:text="Seleccionar Foto"
-        android:textColor="#E6B0B3"
-        app:backgroundTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.659"
-        app:layout_constraintStart_toStartOf="@+id/guideline41"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.479" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_take"
-        android:layout_width="133dp"
-        android:layout_height="55dp"
-        android:background="@drawable/bottom"
-        android:drawableLeft="@drawable/ic_baseline_photo_camera_24"
-        android:text="Tomar foto"
-        android:textColor="#E6B0B3"
-        app:backgroundTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline41"
-        app:layout_constraintHorizontal_bias="0.854"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.479" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_register_last"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bottom"
-        android:text="Establecer imagen"
-        android:textColor="#E6B0B3"
-        app:backgroundTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_getGalleryImg"
-        app:layout_constraintVertical_bias="0.151" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.145"
+        app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+        tools:srcCompat="@drawable/defaultprofile" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline41"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_register_last"
+        android:layout_width="340dp"
+        android:layout_height="70dp"
+        android:background="@drawable/bottom"
+        android:text="Establecer imagen de perfil"
+        android:textAllCaps="false"
+        android:textColor="#D4C1C3"
+        android:textSize="20sp"
+        app:backgroundTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_getGalleryImg"
+        app:layout_constraintVertical_bias="0.201" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_take"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.44" />
+        android:layout_height="55dp"
+        android:background="@drawable/bottom"
+        android:drawableLeft="@drawable/ic_baseline_photo_camera_24"
+        android:text="Cámara"
+        android:textAllCaps="false"
+        android:textColor="#D4C1C3"
+        android:textSize="20sp"
+        app:backgroundTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_profile_register"
+        app:layout_constraintVertical_bias="0.147" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_getGalleryImg"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:background="@drawable/bottom"
+        android:drawableLeft="@drawable/ic_baseline_drive_folder_upload_24"
+        android:text="Galeria"
+        android:textAllCaps="false"
+        android:textColor="#D4C1C3"
+        android:textSize="20sp"
+        app:backgroundTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btn_take"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="@+id/btn_take"
+        app:layout_constraintTop_toBottomOf="@+id/btn_take"
+        app:layout_constraintVertical_bias="0.049" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

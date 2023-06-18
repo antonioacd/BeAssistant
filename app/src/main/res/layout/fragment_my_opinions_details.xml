@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/item_rounded"
-    android:backgroundTint="#FFFFFF">
+    android:backgroundTint="#FFFFFF"
+    android:padding="5dp">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/img_user_profile_02_my_opinions_details"
@@ -23,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="86dp" />
+        app:layout_constraintGuide_percent="0.26" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline62_my_opinions_details"
@@ -46,7 +47,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.493" />
+        app:layout_constraintVertical_bias="0.445" />
 
     <TextView
         android:id="@+id/txt_shopBuy_02_my_opinions_details"
@@ -54,29 +55,31 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/borders"
         android:gravity="center"
+        android:padding="7dp"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline28_my_opinions_details"
         app:layout_constraintEnd_toStartOf="@+id/guideline63_my_opinions_details"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline61_my_opinions_details"
         app:layout_constraintTop_toTopOf="@+id/guideline62_my_opinions_details"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.9" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline28_my_opinions_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="149dp" />
+        app:layout_constraintGuide_begin="176dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline63_my_opinions_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="277dp" />
+        app:layout_constraintGuide_percent="0.67639905" />
 
     <TextView
         android:id="@+id/txt_rating_02_my_opinions_details"
@@ -95,15 +98,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/borders"
         android:gravity="center"
+        android:maxLines="1"
+        android:padding="7dp"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline28_my_opinions_details"
         app:layout_constraintEnd_toStartOf="@+id/guideline61_my_opinions_details"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline62_my_opinions_details"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.9" />
 
     <TextView
         android:id="@+id/txt_toneOrColor_02_my_opinions_details"
@@ -111,21 +117,25 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/borders"
         android:gravity="center"
+        android:maxLines="1"
+        android:padding="7dp"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline28_my_opinions_details"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline63_my_opinions_details"
         app:layout_constraintTop_toTopOf="@+id/guideline62_my_opinions_details"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.9" />
 
     <TextView
         android:id="@+id/txt_username_opinion_item_02_my_opinions_details"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:maxLines="5"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline62_my_opinions_details"
@@ -136,70 +146,79 @@
 
     <TextView
         android:id="@+id/txt_opinion_02_my_opinions_details"
-        android:layout_width="360dp"
-        android:layout_height="429dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/borders"
         android:ellipsize="end"
         android:gravity="fill_horizontal"
+        android:inputType="textMultiLine"
+        android:padding="7dp"
         android:textColor="#000000"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btn_delete_my_opinion"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.555"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline28_my_opinions_details"
-        app:layout_constraintVertical_bias="0.291" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7_02_my_opinions_details"
+        app:layout_constraintVertical_bias="0.612" />
 
     <TextView
         android:id="@+id/textView_02_my_opinions_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Lugar de compra:"
+        android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/txt_shopBuy_02_my_opinions_details"
         app:layout_constraintEnd_toStartOf="@+id/guideline63_my_opinions_details"
-        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintHorizontal_bias="0.537"
         app:layout_constraintStart_toStartOf="@+id/guideline61_my_opinions_details"
-        app:layout_constraintTop_toTopOf="@+id/guideline62_my_opinions_details"
-        app:layout_constraintVertical_bias="0.833" />
+        app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
     <TextView
         android:id="@+id/textView5_02_my_opinions_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:text="Tono o Color:"
+        android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/txt_toneOrColor_02_my_opinions_details"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="@+id/guideline63_my_opinions_details"
-        app:layout_constraintTop_toTopOf="@+id/guideline62_my_opinions_details"
-        app:layout_constraintVertical_bias="0.833" />
+        app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
     <TextView
         android:id="@+id/textView6_02_my_opinions_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Precio:"
+        android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/txt_price_02_my_opinions_details"
         app:layout_constraintEnd_toStartOf="@+id/guideline61_my_opinions_details"
-        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintHorizontal_bias="0.513"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline62_my_opinions_details"
-        app:layout_constraintVertical_bias="0.833" />
+        app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
     <TextView
         android:id="@+id/textView7_02_my_opinions_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:text="Opinión:"
+        android:textColor="#000000"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/txt_opinion_02_my_opinions_details"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline28_my_opinions_details"
-        app:layout_constraintVertical_bias="0.714" />
+        app:layout_constraintVertical_bias="0.026" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_delete_my_opinion"
@@ -210,9 +229,10 @@
         app:backgroundTint="#00B7FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline61_my_opinions_details"
-        app:layout_constraintHorizontal_bias="0.866"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_opinion_02_my_opinions_details"
+        app:layout_constraintTop_toTopOf="@+id/guideline28_my_opinions_details"
+        app:layout_constraintVertical_bias="0.968"
         app:srcCompat="@drawable/ic_baseline_delete_24" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -222,11 +242,12 @@
         android:background="#FFFFFF"
         android:clickable="true"
         app:backgroundTint="#D4C1C3"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_delete_my_opinion"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.679"
+        app:layout_constraintHorizontal_bias="0.794"
         app:layout_constraintStart_toStartOf="@+id/guideline63_my_opinions_details"
-        app:layout_constraintTop_toBottomOf="@+id/txt_opinion_02_my_opinions_details"
+        app:layout_constraintTop_toTopOf="@+id/btn_delete_my_opinion"
+        app:layout_constraintVertical_bias="0.968"
         app:srcCompat="@drawable/ic_baseline_edit_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

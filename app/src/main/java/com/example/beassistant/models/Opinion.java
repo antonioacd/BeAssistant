@@ -7,18 +7,20 @@ public class Opinion {
     private String imgUser;
     private String productId;
     private String productCategory;
+    private String productBrand;
     private int rating;
     private double price;
     private String shopBuy;
     private String toneOrColor;
     private String opinion;
 
-    public Opinion(String opinionId, String username, String imgUser, String productId, String productCategory, int rating, double price, String shopBuy, String toneOrColor, String opinion) {
+    public Opinion(String opinionId, String username, String imgUser, String productId, String productCategory, String productBrand, int rating, double price, String shopBuy, String toneOrColor, String opinion) {
         this.opinionId = opinionId;
         this.username = username;
         this.imgUser = imgUser;
         this.productId = productId;
         this.productCategory = productCategory;
+        this.productBrand = productBrand;
         this.rating = rating;
         this.price = price;
         this.shopBuy = shopBuy;
@@ -109,6 +111,14 @@ public class Opinion {
         this.opinion = opinion;
     }
 
+    public String getProductBrand() {
+        return productBrand;
+    }
+
+    public void setProductBrand(String productBrand) {
+        this.productBrand = productBrand;
+    }
+
     @Override
     public String toString() {
         return "Opinion{" +
@@ -117,6 +127,7 @@ public class Opinion {
                 ", imgUser='" + imgUser + '\'' +
                 ", productId='" + productId + '\'' +
                 ", productCategory='" + productCategory + '\'' +
+                ", productBrand='" + productBrand + '\'' +
                 ", rating=" + rating +
                 ", price=" + price +
                 ", shopBuy='" + shopBuy + '\'' +

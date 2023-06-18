@@ -39,9 +39,7 @@ import java.util.Map;
 
 public class AddOpinionActivity extends AppCompatActivity {
 
-    String productId;
-    String category;
-    String brand;
+    String productId, category, brand;
     ImageView img_product;
     TextView txt_product_name;
     TextView txt_product_brand;
@@ -118,6 +116,7 @@ public class AddOpinionActivity extends AppCompatActivity {
         op.setUsername(Shared.myUser.getUsername());
         op.setProductId(productId);
         op.setProductCategory(category);
+        op.setProductBrand(brand);
         op.setImgUser(Shared.myUser.getImg_reference());
         op.setRating(selected_rating);
         op.setPrice(Double.parseDouble(et_price.getText().toString().trim()));
@@ -129,6 +128,7 @@ public class AddOpinionActivity extends AppCompatActivity {
         newOpinion.put("opinionId", op.getOpinionId());
         newOpinion.put("productId", op.getProductId());
         newOpinion.put("productCategory", op.getProductCategory());
+        newOpinion.put("productBrand", op.getProductBrand());
         newOpinion.put("userId", Shared.myUser.getUserId());
         newOpinion.put("username", op.getUsername());
         newOpinion.put("imgUserRef", op.getImgUser());
@@ -149,7 +149,7 @@ public class AddOpinionActivity extends AppCompatActivity {
                     }
                 });
 
-        getRatingMedia();
+        updateRatingMedia();
     }
 
     private void adapterRatingConfiguration(){
@@ -164,7 +164,7 @@ public class AddOpinionActivity extends AppCompatActivity {
         });
     }
 
-    private void getRatingMedia(){
+    private void updateRatingMedia(){
 
         db.collection("opiniones").whereEqualTo("productId", productId)
                 .get()

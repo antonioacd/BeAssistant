@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -48,6 +49,8 @@ public class MyOpinionDetails extends Fragment {
 
     // Get the own user id
     String productId = "";
+    String category = "";
+    String brand = "";
 
     String opinionId = "";
 
@@ -154,6 +157,9 @@ public class MyOpinionDetails extends Fragment {
                                 fragmentTransaction.replace(R.id.frame_layout, fragment);
                                 fragmentTransaction.commit();
 
+                                // Update rating media
+                                updateRatingMedia();
+
                                 dialog.dismiss();
                             }
                         });
@@ -228,5 +234,63 @@ public class MyOpinionDetails extends Fragment {
                         }
                     }
                 });
+    }
+
+    private void updateRatingMedia(){
+
+        Log.d("Modificar: ", productId);
+        db.collectionGroup("productos")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                if (!task.isSuccessful()){
+                    return;
+                }
+
+                Log.d("Modificar: ", "Entra");
+
+                for (QueryDocumentSnapshot doc : task.getResult()) {
+                    if (!doc.getString("id").equals(productId)){
+                        continue;
+                    }
+                    category = doc.getString("category");
+                    brand = doc.getString("brand");
+                }
+
+                db.collection("opiniones").whereEqualTo("productId", productId)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                int cont = 0;
+                                double sumatory = 0;
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    cont++;
+                                    Log.d("Sumatorio: ", ""+document.getDouble("rating"));
+                                    sumatory += document.getDouble("rating");
+                                }
+                                double finalSumatory = sumatory;
+                                int finalCont = cont;
+                                Log.d("Modificar: ", "Pasa: " + category + brand);
+                                db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").whereEqualTo("id", productId)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                double media = finalSumatory / finalCont;
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    Log.d("Modificar: ", "Se modifica: " + category + brand);
+                                                    db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getId()).update("rating", media);
+                                                }
+                                            }
+                                        });
+                                Log.d("Sumatorio: ", ""+sumatory);
+                            }
+                        });
+
+            }
+        });
     }
 }
