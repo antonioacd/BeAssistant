@@ -99,6 +99,9 @@ public class ProfileOthersFragment extends Fragment {
         // Init the variables
         initViewVariables(view);
 
+        // Get the number of opinions
+        getNumberOfOpinions();
+
         // Get the categories
         getCategories();
 
@@ -272,6 +275,31 @@ public class ProfileOthersFragment extends Fragment {
     }
 
     /**
+     * Get the number of opinions
+     */
+    private void getNumberOfOpinions() {
+        db.collection("opiniones").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                // Chek if the task is successful
+                if (!task.isSuccessful()) {
+                    return;
+                }
+
+                int index = 0;
+
+                for (QueryDocumentSnapshot doc : task.getResult()) {
+                    if (doc.getString("userId").equals(userId)){
+                        index++;
+                    }
+                }
+
+                txt_numOpinions.setText(index+"");
+            }
+        });
+    }
+
+    /**
      * Get the categories
      */
     private void getCategories(){
@@ -306,7 +334,9 @@ public class ProfileOthersFragment extends Fragment {
 
     private void getOpinionsFromDatabase(ArrayList<String> categories) {
         // Get the opinions
-        db.collection("opiniones").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("opiniones")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
@@ -314,9 +344,6 @@ public class ProfileOthersFragment extends Fragment {
                 if (!task.isSuccessful()){
                     return;
                 }
-
-                // Declare the index to count the opinions
-                int index = 0;
 
                 // Loop the categories to found the occurrences
                 loopAuxCategories(task, categories);
@@ -451,7 +478,7 @@ public class ProfileOthersFragment extends Fragment {
                                 int index = 0;
 
                                 for (QueryDocumentSnapshot doc : task.getResult()) {
-                                    if (doc.getString("userId").equals(Shared.myUser.getUserId())){
+                                    if (doc.getString("userId").equals(userId)){
                                         index++;
                                     }
                                 }

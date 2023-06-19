@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.20924574" />
+        app:layout_constraintGuide_percent="0.25" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline62"
@@ -54,7 +54,7 @@
         android:layout_marginEnd="16dp"
         android:background="@drawable/borders"
         android:gravity="center"
-        android:maxLines="1"
+        android:maxLines="3"
         android:padding="7dp"
         android:textColor="#000000"
         android:textSize="16sp"
@@ -77,7 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.67639905" />
+        app:layout_constraintGuide_percent="0.72" />
 
     <TextView
         android:id="@+id/txt_rating_02"
@@ -117,7 +117,7 @@
         android:layout_marginEnd="16dp"
         android:background="@drawable/borders"
         android:gravity="center"
-        android:maxLines="1"
+        android:maxLines="2"
         android:padding="7dp"
         android:textColor="#000000"
         android:textSize="16sp"
