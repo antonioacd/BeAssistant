@@ -55,28 +55,31 @@ public class PlayerFragment extends Fragment {
 
     /**
      * Init the view variables
-     * @param view
+     * @param view The root view of the fragment
      */
     private void initViewVariables(@NonNull View view) {
+        // Initialize the YouTubePlayerView and the full screen view container
         youTubePlayerView = view.findViewById(R.id.youtube_player_view);
         fullScreenViewContainer = (FrameLayout) view.findViewById(R.id.fullscreen_view_container);
     }
 
     /**
-     * Function to get the video data
-     * @param videoId
+     * Function to play the video with the specified videoId
+     * @param videoId The ID of the YouTube video
      */
     private void playVideo(String videoId) {
-
-        // Get the lifecycle
+        // Add the YouTubePlayerView to the lifecycle
         getLifecycle().addObserver(youTubePlayerView);
 
+        // Disable automatic initialization to control the initialization manually
         youTubePlayerView.setEnableAutomaticInitialization(false);
 
+        // Set the player options
         IFramePlayerOptions iFramePlayerOptions = new IFramePlayerOptions.Builder()
                 .controls(1)
                 .build();
 
+        // Initialize the YouTubePlayerView with a listener to load the video when ready
         youTubePlayerView.initialize(new AbstractYouTubePlayerListener() {
             @Override
             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
@@ -86,22 +89,24 @@ public class PlayerFragment extends Fragment {
     }
 
     /**
-     * Get the data from last fragment
+     * Get the data from the last fragment or fragment result listener
      */
-    private void getDataFromLastFragment(){
-
+    private void getDataFromLastFragment() {
+        // Check if the videoId is already available
         if (!videoId.isEmpty()) {
+            // Play the video
             playVideo(videoId);
             return;
         }
 
+        // Set a fragment result listener to obtain the videoId from the previous fragment
         getParentFragmentManager().setFragmentResultListener("video", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                // Obtain the video id
+                // Obtain the videoId from the fragment result
                 videoId = result.getString("videoId");
 
-                // Play video
+                // Play the video
                 playVideo(videoId);
             }
         });
@@ -110,6 +115,8 @@ public class PlayerFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        // Release the YouTubePlayerView
         youTubePlayerView.release();
     }
+
 }
