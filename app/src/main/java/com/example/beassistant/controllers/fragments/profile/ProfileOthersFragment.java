@@ -332,6 +332,10 @@ public class ProfileOthersFragment extends Fragment {
         });
     }
 
+    /**
+     * Function to get the opinions from the databse
+     * @param categories
+     */
     private void getOpinionsFromDatabase(ArrayList<String> categories) {
         // Get the opinions
         db.collection("opiniones")
@@ -351,6 +355,11 @@ public class ProfileOthersFragment extends Fragment {
         });
     }
 
+    /**
+     * Function to loop the aux categories
+     * @param task
+     * @param categories
+     */
     private void loopAuxCategories(@NonNull Task<QuerySnapshot> task, ArrayList<String> categories) {
         int index;
         // Loop the aux array list of categories
@@ -369,6 +378,12 @@ public class ProfileOthersFragment extends Fragment {
         }
     }
 
+    /**
+     * Function to get categories and number of categories
+     * @param task
+     * @param index
+     * @param category
+     */
     private void getCategoriesAndNumber(@NonNull Task<QuerySnapshot> task, int index, String category) {
         // Loop the opinions doc
         for (QueryDocumentSnapshot opinionsDoc : task.getResult()) {
@@ -595,5 +610,4 @@ public class ProfileOthersFragment extends Fragment {
                     }
                 });
     }
-
 }

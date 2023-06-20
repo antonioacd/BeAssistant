@@ -49,7 +49,12 @@ public class SimpleProductsRecyclerAdapter extends RecyclerView.Adapter<SimplePr
         notifyDataSetChanged();
     }
 
-    //Creamos la vista de nuestro RecyclerAdapter
+    /**
+     * Create the Holder view
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public RecyclerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -69,7 +74,11 @@ public class SimpleProductsRecyclerAdapter extends RecyclerView.Adapter<SimplePr
         return recyclerHolder;
     }
 
-    //Introducimos los datos en el RecyclerAdapter
+    /**
+     * Set the data in the view
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
 
@@ -86,12 +95,18 @@ public class SimpleProductsRecyclerAdapter extends RecyclerView.Adapter<SimplePr
         holder.txtName.setText(p.getProductName());
     }
 
+    /**
+     * Function to get the item count
+     * @return
+     */
     @Override
     public int getItemCount() {
         return productsList.size();
     }
 
-    //Asignamos los elementos de nustro recycled holder a variables creadas
+    /**
+     * Asign the elements of owr recycler holder to the created variables
+     */
     public class RecyclerHolder extends RecyclerView.ViewHolder {
 
         TextView txtName;
@@ -106,11 +121,12 @@ public class SimpleProductsRecyclerAdapter extends RecyclerView.Adapter<SimplePr
         }
     }
 
+    /**
+     * Sets the on click listener
+     * @param onClickListener
+     */
     public void setOnClickListener(View.OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
 
-    public void setOnLongClickListener(View.OnLongClickListener onLongClickListener) {
-        this.onLongClickListener = onLongClickListener;
-    }
 }

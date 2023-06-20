@@ -69,30 +69,26 @@ public class FollowersFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Generate the instance
-        db = FirebaseFirestore.getInstance();
+        // Init variables
+        initVariables();
 
-        // Init the title
-        txt_title = view.findViewById(R.id.txt_title);
+        // Init view variables
+        initViewVariables(view);
 
         // Set the title
         txt_title.setText("Seguidores");
 
-        // Init the recicler adapter
-        recyclerAdapter = new FollowersRecyclerAdapter(getContext());
+        // Set the recycler view configuration
+        recyclerViewConfiguration();
 
-        // Init the recicler view
-        reciclerView = (RecyclerView) view.findViewById(R.id.rec_view_followers);
+        // Set the recycler adapter listener
+        recyclerAdapterListener();
+    }
 
-        // Create a linear layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-
-        // Set the layout managetr to the recicler view
-        reciclerView.setLayoutManager(layoutManager);
-
-        // Implement the recicler adapter in the recicler view
-        reciclerView.setAdapter(recyclerAdapter);
-
+    /**
+     * Set the recycler adapter
+     */
+    private void recyclerAdapterListener() {
         // Set a listener to the recicler adapter items
         recyclerAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +98,7 @@ public class FollowersFragment extends Fragment {
                 // Get the index
                 index = reciclerView.getChildAdapterPosition(view);
 
+                // Set the selected user id
                 String selectedUserId = recyclerAdapter.followersList.get(index).getUserId();
 
                 Fragment fragment;
@@ -112,9 +109,11 @@ public class FollowersFragment extends Fragment {
                     fragment = new ProfileOthersFragment();
                 }
 
+                // Set the arguments
                 Bundle args = new Bundle();
                 args.putString("id", selectedUserId);
 
+                // Set the fragment
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.setFragmentResult("follower", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -125,6 +124,43 @@ public class FollowersFragment extends Fragment {
                 view.setSelected(true);
             }
         });
+    }
+
+    /**
+     * Function to configure the recycler view
+     */
+    private void recyclerViewConfiguration() {
+        // Init the recycler adapter
+        recyclerAdapter = new FollowersRecyclerAdapter(getContext());
+
+        // Create a linear layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        // Set the layout managetr to the recicler view
+        reciclerView.setLayoutManager(layoutManager);
+
+        // Implement the recicler adapter in the recicler view
+        reciclerView.setAdapter(recyclerAdapter);
+    }
+
+    /**
+     * Function to init the view variables
+     * @param view
+     */
+    private void initViewVariables(@NonNull View view) {
+        // Init the title
+        txt_title = view.findViewById(R.id.txt_title);
+
+        // Init the recicler view
+        reciclerView = (RecyclerView) view.findViewById(R.id.rec_view_followers);
+    }
+
+    /**
+     * Function to init variables
+     */
+    private void initVariables() {
+        // Generate the instance
+        db = FirebaseFirestore.getInstance();
     }
 
     /**
@@ -163,14 +199,14 @@ public class FollowersFragment extends Fragment {
      * @param doc
      */
     private void getDataUsers(QueryDocumentSnapshot doc){
-        Log.d("TAG", "Entra al bucle");
+
         db.collection("users")
                 .document(doc.getId())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        Log.d("TAG", "Entra al on Complete");
+
                         if (!task.isSuccessful()) {
                             return;
                         }

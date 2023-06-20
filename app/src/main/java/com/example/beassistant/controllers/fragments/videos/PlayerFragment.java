@@ -1,6 +1,5 @@
 package com.example.beassistant.controllers.fragments.videos;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,23 +7,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.example.beassistant.R;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.FullscreenListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
-
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
 
 public class PlayerFragment extends Fragment {
 
@@ -54,15 +46,29 @@ public class PlayerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        youTubePlayerView = view.findViewById(R.id.youtube_player_view);
-        fullScreenViewContainer = (FrameLayout) view.findViewById(R.id.fullscreen_view_container);
+        // Init the view variables
+        initViewVariables(view);
 
+        // Get the data from the last fragment
         getDataFromLastFragment();
-
     }
 
-    private void getVideo(String videoId) {
+    /**
+     * Init the view variables
+     * @param view
+     */
+    private void initViewVariables(@NonNull View view) {
+        youTubePlayerView = view.findViewById(R.id.youtube_player_view);
+        fullScreenViewContainer = (FrameLayout) view.findViewById(R.id.fullscreen_view_container);
+    }
 
+    /**
+     * Function to get the video data
+     * @param videoId
+     */
+    private void playVideo(String videoId) {
+
+        // Get the lifecycle
         getLifecycle().addObserver(youTubePlayerView);
 
         youTubePlayerView.setEnableAutomaticInitialization(false);
@@ -85,17 +91,18 @@ public class PlayerFragment extends Fragment {
     private void getDataFromLastFragment(){
 
         if (!videoId.isEmpty()) {
-            getVideo(videoId);
+            playVideo(videoId);
             return;
         }
 
         getParentFragmentManager().setFragmentResultListener("video", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                // Obtain the follower id
+                // Obtain the video id
                 videoId = result.getString("videoId");
-                Log.d("Youtube: ", videoId);
-                getVideo(videoId);
+
+                // Play video
+                playVideo(videoId);
             }
         });
     }

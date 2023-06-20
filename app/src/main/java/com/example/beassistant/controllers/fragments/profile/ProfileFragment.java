@@ -240,6 +240,10 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    /**
+     * Function to get the opinions from database
+     * @param categories
+     */
     private void getOpinionsFromDatabase(ArrayList<String> categories) {
         // Get the opinions
         db.collection("opiniones").whereEqualTo("userId", Shared.myUser.getUserId())
@@ -262,6 +266,11 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    /**
+     * Function to loop the aux categories
+     * @param task
+     * @param categories
+     */
     private void loopAuxCategories(@NonNull Task<QuerySnapshot> task, ArrayList<String> categories) {
         int index;
         // Loop the aux array list of categories
@@ -280,6 +289,12 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    /**
+     * Function to get the categories and number of the categories
+     * @param task
+     * @param index
+     * @param category
+     */
     private void getCategoriesAndNumber(@NonNull Task<QuerySnapshot> task, int index, String category) {
         // Loop the opinions doc
         for (QueryDocumentSnapshot opinionsDoc : task.getResult()) {
@@ -302,7 +317,7 @@ public class ProfileFragment extends Fragment {
     }
 
     /**
-     * Get the foto
+     * Functio to get the foto
      * @param imgRef
      */
     private void cargarFoto(String imgRef){
@@ -322,7 +337,7 @@ public class ProfileFragment extends Fragment {
     }
 
     /**
-     * Get my user
+     * Functio to get my user
      */
     private void getMyUser(){
         // Search the user in the database
@@ -358,12 +373,16 @@ public class ProfileFragment extends Fragment {
 
                                 int index = 0;
 
+                                // Loop the result
                                 for (QueryDocumentSnapshot doc : task.getResult()) {
+                                    // Check the user id
                                     if (doc.getString("userId").equals(Shared.myUser.getUserId())){
+                                        // Increment the index
                                         index++;
                                     }
                                 }
 
+                                // Set the numebr of opinions
                                 txt_numOpinions.setText(index+"");
                             }
                         });

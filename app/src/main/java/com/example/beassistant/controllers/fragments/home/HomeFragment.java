@@ -8,7 +8,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -42,27 +41,30 @@ import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
 
-    FloatingActionButton btn_filter, btn_scan, btn_refresh;
+    private FloatingActionButton btn_filter, btn_scan, btn_refresh;
 
-    ArrayList<String> categories = new ArrayList<String>();
-    AutoCompleteTextView select_category;
-    ArrayAdapter<String> adapterItems;
+    private ArrayList<String> categories = new ArrayList<String>();
 
-    ArrayList<String> brands = new ArrayList<String>();
-    AutoCompleteTextView select_brand;
-    ArrayAdapter<String> adapterItems02;
+    private AutoCompleteTextView select_category;
 
-    String selected_category = "";
-    String selected_brand = "";
+    private ArrayAdapter<String> adapterItems;
+
+    private ArrayList<String> brands = new ArrayList<String>();
+
+    private AutoCompleteTextView select_brand;
+
+    private ArrayAdapter<String> adapterItems02;
+
+    private String selected_category = "";
+
+    private String selected_brand = "";
 
     private AlertDialog dialog;
 
-    // Creamos las variables necesarias para implementar el recyclerView
-    ConstraintLayout constraintLayout;
-    RecyclerView rV;
-    ProductsRecyclerAdapter recAdapter;
+    private RecyclerView rV;
 
-    // Declare the data base object
+    private ProductsRecyclerAdapter recAdapter;
+
     private FirebaseFirestore db;
 
     public HomeFragment() {
@@ -73,13 +75,19 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Init the variables
+        initVariables();
+
+        // Get all products
+        getAllProducts();
+    }
+
+    private void initVariables() {
         // Creamos un objeto del recicler adapter
         recAdapter = new ProductsRecyclerAdapter(getContext());
 
         // Generate the instance
         db = FirebaseFirestore.getInstance();
-
-        getAllProducts();
     }
 
     @Override
@@ -89,21 +97,38 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    private void scancode() {
 
-        // Iniciar el escaneo del código de barras
+    /**
+     * Function to configure the scancode
+     */
+    private void scancodeConfiguration() {
+
+        // Create the integrator
         IntentIntegrator integrator = new IntentIntegrator(getActivity());
+        // Set the format
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-        integrator.setPrompt("Scan a barcode");
-        integrator.setCameraId(0);  // Cámara trasera por defecto
-        integrator.setBeepEnabled(false); // Desactivar el sonido de escaneo
+        // Set the prompt
+        integrator.setPrompt("Escanea un código de barras");
+        // Select the camera
+        integrator.setCameraId(0);
+        // Disabled the beep
+        integrator.setBeepEnabled(false);
+        // Disabled barcode image
         integrator.setBarcodeImageEnabled(true);
+        // Set orientation locked to false
         integrator.setOrientationLocked(false);
+        // Set the capture activity
         integrator.setCaptureActivity(CaptureActivityPortraint.class);
+        // Init the scan
         integrator.initiateScan();
-
     }
 
+    /**
+     * Function to get the barcode activity
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         ((MainActivity) getActivity()).onActivityResult(requestCode, resultCode, data);
@@ -113,42 +138,29 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        btn_filter = (FloatingActionButton) view.findViewById(R.id.btn_filter);
-        btn_scan = (FloatingActionButton) view.findViewById(R.id.btn_scan);
-        btn_refresh = (FloatingActionButton) view.findViewById(R.id.btn_refresh);
+        // Init view variables
+        initViewVariables(view);
 
-        btn_filter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                categories = getCategories();
-            }
-        });
+        // Set the button filter listener
+        buttonFilterListener();
 
-        btn_scan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                scancode();
-            }
-        });
+        // Set the button scan listener
+        buttonScanListener();
 
-        btn_refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getAllProducts();
-                btn_refresh.setVisibility(View.INVISIBLE);
-            }
-        });
+        // Set the button refresh listener
+        buttonRefreshListener();
 
-        //Asignamos a la variable rV el recyclerView
-        rV = (RecyclerView) view.findViewById(R.id.recycler_view_my_opinions);
+        // Set the recycler view configuration
+        recyclerViewConfiguration();
 
-        //Creamos un LinearLayout para establecer el Layout del recyclerView
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        rV.setLayoutManager(layoutManager);
+        // Set the recycler adapter listener
+        recyclerAdapterListener();
+    }
 
-        //Implementamos el recyclerAdapter en el recyclerView
-        rV.setAdapter(recAdapter);
-
+    /**
+     * Function to set the recycler adapter listener
+     */
+    private void recyclerAdapterListener() {
         // Set a listener to the recycler adapter items
         recAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,7 +170,10 @@ public class HomeFragment extends Fragment {
                 // Get the index
                 index = rV.getChildAdapterPosition(view);
 
+                // Create the fragment
                 Fragment fragment = new DetailsProductFragment();
+
+                // Set the arguments
                 Bundle args = new Bundle();
                 args.putString("id", recAdapter.productList.get(index).getProductId());
                 args.putString("name", recAdapter.productList.get(index).getProductName());
@@ -168,6 +183,7 @@ public class HomeFragment extends Fragment {
                 args.putString("imgRef", recAdapter.productList.get(index).getImgReference());
                 args.putString("url", recAdapter.productList.get(index).getShopUrl());
 
+                // Set the listener
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.setFragmentResult("keyProduct", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -181,18 +197,93 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    /**
+     * Set the recycler view configuration
+     */
+    private void recyclerViewConfiguration() {
+        // Create the linear layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        // Set the layout manager
+        rV.setLayoutManager(layoutManager);
+
+        // Set the adapter
+        rV.setAdapter(recAdapter);
+    }
+
+    /**
+     * Function to set the button refresh listener
+     */
+    private void buttonRefreshListener() {
+        // Set the listener
+        btn_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Get all the products
+                getAllProducts();
+                // Set the btn_refresh invisible
+                btn_refresh.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    /**
+     * Function to set the button scan listener
+     */
+    private void buttonScanListener() {
+        // Set the listener
+        btn_scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Set the scancode
+                scancodeConfiguration();
+            }
+        });
+    }
+
+    /**
+     * Function to set the button filter listener
+     */
+    private void buttonFilterListener() {
+        // Set the listener
+        btn_filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the categories
+                categories = getCategories();
+            }
+        });
+    }
+
+    /**
+     * Init the view variables
+     * @param view
+     */
+    private void initViewVariables(@NonNull View view) {
+        btn_filter = (FloatingActionButton) view.findViewById(R.id.btn_filter);
+        btn_scan = (FloatingActionButton) view.findViewById(R.id.btn_scan);
+        btn_refresh = (FloatingActionButton) view.findViewById(R.id.btn_refresh);
+        rV = (RecyclerView) view.findViewById(R.id.recycler_view_my_opinions);
+    }
+
+    /**
+     * Function to get all the products
+     */
     private void getAllProducts(){
 
+        // Clear the recycler adapter product list
         recAdapter.productList.clear();
         recAdapter.notifyDataSetChanged();
 
-        db.collectionGroup("productos").get()
+        // Get the products
+        db.collectionGroup("productos")
+                .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        Log.d("Query:", "Entra");
+
+                        // Loop the documents
                         for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
-                            Log.d("Query:", doc.getString("name"));
 
                             Product product = new Product(
                                     doc.getString("id"),
@@ -204,6 +295,7 @@ public class HomeFragment extends Fragment {
                                     doc.getDouble("rating"),
                                     doc.getString("url")
                             );
+                            // Add the product to the list
                             recAdapter.productList.add(product);
                             recAdapter.notifyDataSetChanged();
                         }
@@ -212,84 +304,80 @@ public class HomeFragment extends Fragment {
                 });
     }
 
+    /**
+     * Function to get the categories
+     * @return
+     */
     private ArrayList getCategories(){
 
+        // Create aux array
         ArrayList<String> auxArray = new ArrayList<>();
 
+        // Get the categories
         db.collection("categorias")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                auxArray.add(document.getId());
-                            }
-                            filter();
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+
+                        // Check the task
+                        if (!task.isSuccessful()) {
+
+                            return;
                         }
+
+                        // Loop the result
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            // Add the document id to the aux array
+                            auxArray.add(document.getId());
+                        }
+
+                        // Open the filter dialogz
+                        openFilterDialog();
                     }
                 });
 
         return auxArray;
     }
 
-    private void filter(){
+    /**
+     * Dialog to open the filter
+     */
+    private void openFilterDialog(){
 
         selected_category = "";
         selected_brand = "";
 
+        // Clear the brands
         brands.clear();
 
-        AlertDialog.Builder ventana = new AlertDialog.Builder(getContext());
+        // Create the window
+        AlertDialog.Builder window = new AlertDialog.Builder(getContext());
 
-        ventana.setTitle("Filtrar");
+        // Set the tittle
+        window.setTitle("Filtrar");
 
+        // Get the view
         View v = getLayoutInflater().inflate(R.layout.filter_layout, null);
 
-        //Select Category
-        select_category = v.findViewById(R.id.select_category);
+        categorySelectorConfiguration(v);
 
-        adapterItems = new ArrayAdapter<String>(getContext(),R.layout.list_item02,categories);
-        select_category.setAdapter(adapterItems);
+        brandSelectorConfiguration(v);
 
-        select_category.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selected_category = parent.getItemAtPosition(position).toString();
-                brands.clear();
-                db.collection("/categorias/" + selected_category + "/marcas")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        Log.d("Result", document.getId());
-                                        brands.add(document.getId());
-                                    }
-                                } else {
-                                    Log.d("Result", "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
-            }
-        });
+        buttonCheckConfiguration(v);
 
-        // Select Brand
-        select_brand = v.findViewById(R.id.select_brand);
+        window.setView(v);
 
-        adapterItems02 = new ArrayAdapter<String>(getContext(),R.layout.list_item02,brands);
-        select_brand.setAdapter(adapterItems02);
+        dialog = window.create();
 
-        select_brand.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selected_brand = parent.getItemAtPosition(position).toString();
-            }
-        });
+        dialog.show();
+    }
 
+    /**
+     * Function to configure the check button
+     * @param v
+     */
+    private void buttonCheckConfiguration(View v) {
         // Floating Button
         FloatingActionButton btn_check = (FloatingActionButton) v.findViewById(R.id.btn_check);
 
@@ -307,41 +395,87 @@ public class HomeFragment extends Fragment {
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
+                        if (!task.isSuccessful()) {
 
-                            recAdapter.productList.clear();
-
-                            for (DocumentSnapshot doc: task.getResult()) {
-
-                                Product product = new Product(
-                                        doc.getString("id"),
-                                        doc.getString("name"),
-                                        doc.getString("imgRef"),
-                                        doc.getString("brand"),
-                                        doc.getString("category"),
-                                        doc.getString("type"),
-                                        doc.getDouble("rating"),
-                                        doc.getString("url")
-                                );
-                                recAdapter.productList.add(product);
-                            }
-
-                            recAdapter.notifyDataSetChanged();
-
-                            btn_refresh.setVisibility(View.VISIBLE);
-                            dialog.dismiss();
-                        } else {
-                            Log.d("Result", "Error getting documents: ", task.getException());
                         }
+                        recAdapter.productList.clear();
+
+                        for (DocumentSnapshot doc: task.getResult()) {
+
+                            Product product = new Product(
+                                    doc.getString("id"),
+                                    doc.getString("name"),
+                                    doc.getString("imgRef"),
+                                    doc.getString("brand"),
+                                    doc.getString("category"),
+                                    doc.getString("type"),
+                                    doc.getDouble("rating"),
+                                    doc.getString("url")
+                            );
+                            recAdapter.productList.add(product);
+                        }
+
+                        recAdapter.notifyDataSetChanged();
+
+                        btn_refresh.setVisibility(View.VISIBLE);
+                        dialog.dismiss();
+
                     }
                 });
             }
         });
+    }
 
-        ventana.setView(v);
+    /**
+     * Function to configure the brand selector
+     * @param v
+     */
+    private void brandSelectorConfiguration(View v) {
+        // Select Brand
+        select_brand = v.findViewById(R.id.select_brand);
 
-        dialog = ventana.create();
+        adapterItems02 = new ArrayAdapter<String>(getContext(),R.layout.list_item02,brands);
+        select_brand.setAdapter(adapterItems02);
 
-        dialog.show();
+        select_brand.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selected_brand = parent.getItemAtPosition(position).toString();
+            }
+        });
+    }
+
+    /**
+     * Function to configure the category selector
+     * @param v
+     */
+    private void categorySelectorConfiguration(View v) {
+        // Select Category
+        select_category = v.findViewById(R.id.select_category);
+
+        adapterItems = new ArrayAdapter<String>(getContext(),R.layout.list_item02,categories);
+        select_category.setAdapter(adapterItems);
+
+        select_category.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selected_category = parent.getItemAtPosition(position).toString();
+                brands.clear();
+                db.collection("/categorias/" + selected_category + "/marcas")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (!task.isSuccessful()) {
+                                    return;
+                                }
+
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    brands.add(document.getId());
+                                }
+                            }
+                        });
+            }
+        });
     }
 }

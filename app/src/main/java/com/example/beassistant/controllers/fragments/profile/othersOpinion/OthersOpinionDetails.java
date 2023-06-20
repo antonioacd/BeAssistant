@@ -29,19 +29,19 @@ import com.google.firebase.storage.StorageReference;
 
 public class OthersOpinionDetails extends Fragment {
 
-    // Declare the data base controller
     private FirebaseFirestore db;
 
-    // Declare the data base storage controller
     private FirebaseStorage storage;
+
     private StorageReference storageRef;
 
-    TextView txt_username, txt_rating, txt_price, txt_shopBuy, txt_toneOrColor, txt_opinion;
-    ImageView img_user_profile;
+    private TextView txt_username, txt_rating, txt_price, txt_shopBuy, txt_toneOrColor, txt_opinion;
 
-    // Get the own user id
-    String productId = "";
-    String userId = "";
+    private ImageView img_user_profile;
+
+    private String productId = "";
+
+    private String userId = "";
 
     public OthersOpinionDetails() {
         // Required empty public constructor
@@ -51,14 +51,8 @@ public class OthersOpinionDetails extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getParentFragmentManager().setFragmentResultListener("keyOthersOpinion", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-
-                // Obtains the followers id
-                getDataFromLastFragment(result);
-            }
-        });
+        // Get data from last fragment
+        getDataFromLastFragment();
 
         // Generate the instance
         db = FirebaseFirestore.getInstance();
@@ -69,6 +63,20 @@ public class OthersOpinionDetails extends Fragment {
         // Create a storage reference from our app
         storageRef = storage.getReference();
 
+    }
+
+    /**
+     * Function to get the data from the last fragment
+     */
+    private void getDataFromLastFragment() {
+        getParentFragmentManager().setFragmentResultListener("keyOthersOpinion", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+
+                // Obtains the followers id
+                getData(result);
+            }
+        });
     }
 
     @Override
@@ -91,7 +99,11 @@ public class OthersOpinionDetails extends Fragment {
         img_user_profile = (ImageView) view.findViewById(R.id.img_user_profile_02_my_opinions_details_02);
     }
 
-    private void getDataFromLastFragment(Bundle result){
+    /**
+     * Function to get tha from a result
+     * @param result
+     */
+    private void getData(Bundle result){
 
         productId = result.getString("id");
         userId = result.getString("userId");

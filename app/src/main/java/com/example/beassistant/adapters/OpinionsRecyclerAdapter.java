@@ -74,7 +74,12 @@ public class OpinionsRecyclerAdapter extends RecyclerView.Adapter<OpinionsRecycl
         notifyDataSetChanged();
     }
 
-    //Creamos la vista de nuestro RecyclerAdapter
+    /**
+     * Create the Holder view
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public RecyclerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -94,7 +99,11 @@ public class OpinionsRecyclerAdapter extends RecyclerView.Adapter<OpinionsRecycl
         return recyclerHolder;
     }
 
-    //Introducimos los datos en el RecyclerAdapter
+    /**
+     * Set the data in the view
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
 
@@ -116,12 +125,18 @@ public class OpinionsRecyclerAdapter extends RecyclerView.Adapter<OpinionsRecycl
         holder.txt_opinion.setText(opinion.getOpinion());
     }
 
+    /**
+     * Function to get the item count
+     * @return
+     */
     @Override
     public int getItemCount() {
         return opinionsList.size();
     }
 
-    //Asignamos los elementos de nustro recycled holder a variables creadas
+    /**
+     * Asign the elements of owr recycler holder to the created variables
+     */
     public class RecyclerHolder extends RecyclerView.ViewHolder {
 
         TextView txt_username, txt_rating, txt_price, txt_shopBuy, txt_toneOrColor, txt_opinion;
@@ -141,11 +156,12 @@ public class OpinionsRecyclerAdapter extends RecyclerView.Adapter<OpinionsRecycl
         }
     }
 
+    /**
+     * Sets the on click listener
+     * @param onClickListener
+     */
     public void setOnClickListener(View.OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
 
-    public void setOnLongClickListener(View.OnLongClickListener onLongClickListener) {
-        this.onLongClickListener = onLongClickListener;
-    }
 }

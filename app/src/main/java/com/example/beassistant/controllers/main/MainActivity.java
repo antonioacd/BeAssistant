@@ -2,7 +2,6 @@ package com.example.beassistant.controllers.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -117,14 +116,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Log.d("Atras:", "Pulsado");
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
             getSupportFragmentManager().beginTransaction().commit();
-            Log.d("Atras:", "Anterior Fragment");
-            Log.d("Atras:", "Cantidad: " + getSupportFragmentManager().getBackStackEntryCount());
         } else {
-            Log.d("Atras:", "Cantidad: " + getSupportFragmentManager().getBackStackEntryCount());
         }
     }
 
@@ -139,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
                 // ...
             } else {
                 String barcode = result.getContents();
-                Log.d("Codigo: ", barcode);
                 getProduct(barcode);
             }
         }
@@ -151,16 +145,12 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        Log.d("Query:", "Entra");
-                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
 
-                            Log.d("Referencia01: ", doc.getId());
+                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
 
                             if (!doc.getId().equals(reference)){
                                 continue;
                             }
-
-                            Log.d("Referencia: ", doc.getId());
 
                             Product product = new Product(
                                     doc.getString("id"),
@@ -173,8 +163,6 @@ public class MainActivity extends AppCompatActivity {
                                     doc.getString("url")
                             );
 
-                            Log.d("Referencia: ", product.toString());
-
                             Fragment fragment = new DetailsProductFragment();
                             Bundle args = new Bundle();
                             args.putString("id", product.getProductId());
@@ -184,8 +172,6 @@ public class MainActivity extends AppCompatActivity {
                             args.putDouble("mediaRating", product.getMediaRating());
                             args.putString("imgRef", product.getImgReference());
                             args.putString("url", product.getShopUrl());
-
-                            Log.d("Args: ", args.toString());
 
                             FragmentManager fragmentManager = getSupportFragmentManager();
                             fragmentManager.setFragmentResult("keyProduct", args);

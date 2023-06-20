@@ -55,7 +55,12 @@ public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideosRecyclerAd
         storageRef = storage.getReference();
     }
 
-    //Creamos la vista de nuestro RecyclerAdapter
+    /**
+     * Create the Holder view
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public RecyclerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -70,7 +75,11 @@ public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideosRecyclerAd
         return recyclerHolder;
     }
 
-    //Introducimos los datos en el RecyclerAdapter
+    /**
+     * Set the data in the view
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
 
@@ -83,13 +92,18 @@ public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideosRecyclerAd
         Picasso.get().load(video.getThumbnail()).into(holder.img_thumb);
     }
 
+    /**
+     * Function to get the item count
+     * @return
+     */
     @Override
     public int getItemCount() {
-        Log.d("Query: ", "Tamaño: " + videosList.size());
         return videosList.size();
     }
 
-    //Asignamos los elementos de nustro recycled holder a variables creadas
+    /**
+     * Asign the elements of owr recycler holder to the created variables
+     */
     public class RecyclerHolder extends RecyclerView.ViewHolder {
 
         ImageView img_thumb;
@@ -105,11 +119,11 @@ public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideosRecyclerAd
         }
     }
 
+    /**
+     * Sets the on click listener
+     * @param onClickListener
+     */
     public void setOnClickListener(View.OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
-    }
-
-    public void setOnLongClickListener(View.OnLongClickListener onLongClickListener) {
-        this.onLongClickListener = onLongClickListener;
     }
 }

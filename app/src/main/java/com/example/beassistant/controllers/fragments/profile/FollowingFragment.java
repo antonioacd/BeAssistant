@@ -88,7 +88,6 @@ public class FollowingFragment extends Fragment {
                 userId = result.getString("id");
 
                 getFollowingWithUserId(userId);
-                Log.d("Followers: ", "Llena");
             }
         });
     }
@@ -103,13 +102,19 @@ public class FollowingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Init view variables
         initViewVariables(view);
 
+        // Set the recycler view configuration
         recyclerViewConfiguration();
 
+        // Set the recycler adapter listener
         recyclerAdapterListener();
     }
 
+    /**
+     * Function to set the recycler adater listener
+     */
     private void recyclerAdapterListener() {
         // Set a listener to the recicler adapter items
         recyclerAdapter.setOnClickListener(new View.OnClickListener() {
@@ -152,7 +157,11 @@ public class FollowingFragment extends Fragment {
         });
     }
 
+    /**
+     * Function to configure the recycler view
+     */
     private void recyclerViewConfiguration(){
+
         // Create a linear layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
@@ -163,6 +172,10 @@ public class FollowingFragment extends Fragment {
         reciclerView.setAdapter(recyclerAdapter);
     }
 
+    /**
+     * Function to init the view variables
+     * @param view
+     */
     private void initViewVariables(@NonNull View view) {
 
         // Init the title
@@ -175,6 +188,9 @@ public class FollowingFragment extends Fragment {
         reciclerView = (RecyclerView) view.findViewById(R.id.rec_view_followers);
     }
 
+    /**
+     * Init the variables
+     */
     private void initVariables() {
         // Generate the instance
         db = FirebaseFirestore.getInstance();
@@ -183,11 +199,15 @@ public class FollowingFragment extends Fragment {
         recyclerAdapter = new FollowersRecyclerAdapter(getContext());
     }
 
+    /**
+     * Function to get the following users
+     * @param userId
+     */
     private void getFollowingWithUserId(String userId) {
 
         // Clear the recycler adapter
         recyclerAdapter.followersList.clear();
-        Log.d("Followers: ", "Limpia");
+
         // Notify data set changed
         recyclerAdapter.notifyDataSetChanged();
 
@@ -216,14 +236,13 @@ public class FollowingFragment extends Fragment {
      * @param doc
      */
     private void getDataUsers(QueryDocumentSnapshot doc){
-        Log.d("TAG", "Entra al bucle");
         db.collection("users")
                 .document(doc.getId())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        Log.d("TAG", "Entra al on Complete");
+
                         if (!task.isSuccessful()) {
                             return;
                         }

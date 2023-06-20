@@ -88,6 +88,9 @@ public class LoadingActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Function to fill shared user
+     */
     protected void fillSharedUser(){
 
         // Get the current user

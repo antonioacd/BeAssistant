@@ -67,7 +67,7 @@ public class AddOpinionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_opinion);
 
         // Init the database variables
-        initDataBaseVariables();
+        initVariables();
 
         // Get the intent values
         getTheIntentValues();
@@ -86,6 +86,9 @@ public class AddOpinionActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Fucntion to the bnt okey listener
+     */
     private void btnOkeyListener(){
         // Set the listener
         btn_okey.setOnClickListener(new View.OnClickListener() {
@@ -108,10 +111,15 @@ public class AddOpinionActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Function to create an opinion
+     */
     private void createOpinion(){
 
+        // Create the empty opinion
         Opinion op = new Opinion();
 
+        // Add the data to the opinion
         op.setOpinionId(java.util.UUID.randomUUID().toString().trim());
         op.setUsername(Shared.myUser.getUsername());
         op.setProductId(productId);
@@ -124,6 +132,7 @@ public class AddOpinionActivity extends AppCompatActivity {
         op.setToneOrColor(et_toneOrColor.getText().toString().trim());
         op.setOpinion(et_opinion.getText().toString().trim());
 
+        // Crete the map
         Map<String, Object> newOpinion = new HashMap<>();
         newOpinion.put("opinionId", op.getOpinionId());
         newOpinion.put("productId", op.getProductId());
@@ -138,24 +147,31 @@ public class AddOpinionActivity extends AppCompatActivity {
         newOpinion.put("opinion", op.getOpinion());
         newOpinion.put("rating", op.getRating());
 
-        /**
-         * Add a new document with a generated ID
-         */
+        // Add the map to the opinions table
         db.collection("opiniones").document(op.getOpinionId())
                 .set(newOpinion).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        // Notify
                         Toast.makeText(getApplicationContext(), "Opinion Añadida", Toast.LENGTH_LONG).show();
                     }
                 });
 
+        // Update the rating
         updateRatingMedia();
     }
 
+    /**
+     * Function to configure the adapter
+     */
     private void adapterRatingConfiguration(){
+        // Create the adapter
         adapterItems = new ArrayAdapter<>(this,R.layout.list_item02, number_ratings);
+
+        // Set the adapter
         select_rating.setAdapter(adapterItems);
 
+        // Set the listener
         select_rating.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -164,8 +180,12 @@ public class AddOpinionActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Function to update the media
+     */
     private void updateRatingMedia(){
 
+        // Get the opinions of the product
         db.collection("opiniones").whereEqualTo("productId", productId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -173,21 +193,32 @@ public class AddOpinionActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         int cont = 0;
                         double sumatory = 0;
+
+                        // Loop the documents
                         for (QueryDocumentSnapshot document : task.getResult()) {
+                            // Get the count of the documents
                             cont++;
-                            Log.d("Sumatorio: ", ""+document.getDouble("rating"));
+
+                            // Add the rating to the sumatory
                             sumatory += document.getDouble("rating");
 
                         }
+
+                        // Set the final sumatory and final count
                         double finalSumatory = sumatory;
                         int finalCont = cont;
+
+                        // Get the product to get the id
                         db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").whereEqualTo("id",productId)
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        // Do the media
                                         double media = finalSumatory / finalCont;
+                                        // Loop the result
                                         for (QueryDocumentSnapshot document : task.getResult()) {
+                                            // Update the product
                                             db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getId()).update("rating", media);
                                         }
                                     }
@@ -196,7 +227,10 @@ public class AddOpinionActivity extends AppCompatActivity {
                 });
     }
 
-    private void initDataBaseVariables(){
+    /**
+     * Function to init the variables
+     */
+    private void initVariables(){
         // Generate the instance
         db = FirebaseFirestore.getInstance();
 
@@ -207,33 +241,39 @@ public class AddOpinionActivity extends AppCompatActivity {
         storageRef = storage.getReference();
     }
 
+    /**
+     * Function to get the intent values
+     */
     private void getTheIntentValues(){
+        // Get the intent
         Intent i = getIntent();
+
+        // Set the data intent
         productId = i.getStringExtra("id");
         category = i.getStringExtra("category");
         brand = i.getStringExtra("brand");
-        Log.d("ProductoDespues: ", productId + " - " + brand);
     }
 
+    /**
+     * Function to init the view variables
+     */
     private void initViewVariables(){
         img_product = findViewById(R.id.img_product_ref);
-
         txt_product_name = findViewById(R.id.txt_product_name);
         txt_product_brand = findViewById(R.id.txt_product_brand);
         txt_product_type = findViewById(R.id.txt_product_type);
         txt_product_media_rating = findViewById(R.id.txt_product_media_rating);
-
         et_shopBuy = findViewById(R.id.et_shopBuy);
         et_price = findViewById(R.id.et_price);
         et_toneOrColor = findViewById(R.id.et_toneOrColor);
         et_opinion = findViewById(R.id.et_opinion);
-
         btn_okey = findViewById(R.id.btn_okey);
-
-        // Select Category
         select_rating = findViewById(R.id.select_rating);
     }
 
+    /**
+     * Function to get the product data
+     */
     private void getProductData(){
         // Get the products of the received category and brand
         db.collection("categorias/"+category+"/marcas/"+brand+"/productos")
@@ -251,8 +291,6 @@ public class AddOpinionActivity extends AppCompatActivity {
                         // Get the document
                         DocumentSnapshot productsDocument = task.getResult();
 
-                        Log.d("Producto: ", productsDocument.toString());
-
                         // Set the image
                         storageRef.child(productsDocument.getString("imgRef")).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                             @Override
@@ -266,7 +304,6 @@ public class AddOpinionActivity extends AppCompatActivity {
                         txt_product_name.setText(productsDocument.getString("name"));
                         txt_product_brand.setText(productsDocument.getString("brand"));
                         txt_product_type.setText(productsDocument.getString("type"));
-
                         txt_product_media_rating.setText(Math.round(productsDocument.getDouble("rating") * 100.0) / 100.0 + " ⭐");
                     }
                 });

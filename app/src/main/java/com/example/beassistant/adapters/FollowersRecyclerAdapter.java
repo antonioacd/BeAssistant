@@ -51,46 +51,6 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
     }
 
     /**
-     * Function to delete a item of the list
-     * @param seleccionado
-     */
-    public void deleteItem(int seleccionado){
-        followersList.remove(seleccionado);
-        this.notifyDataSetChanged();
-
-    }
-
-    /**
-     * Function to delete a item of the list
-     * @param o
-     */
-    public void insertarItem(User o){
-        followersList.add(o);
-        this.notifyDataSetChanged();
-    }
-
-    /**
-     * Function to modify a item of the list
-     * @param seleccionado
-     * @param id
-     * @param name
-     * @param desc
-     */
-    public void modItem(int seleccionado,String id,String name, String desc){
-        this.notifyDataSetChanged();
-    }
-
-    /**
-     * Function to filter the list
-     *
-     * @param filteredList
-     */
-    public void setFilteredList(ArrayList<User> filteredList){
-        followersList = filteredList;
-        notifyDataSetChanged();
-    }
-
-    /**
      * Create the Holder view
      * @param parent
      * @param viewType
@@ -121,7 +81,7 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
     }
 
     /**
-     * Set the data int the view
+     * Set the data in the view
      * @param holder
      * @param position
      */
@@ -186,13 +146,5 @@ public class FollowersRecyclerAdapter extends RecyclerView.Adapter<FollowersRecy
      */
     public void setOnClickListener(View.OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
-    }
-
-    /**
-     * Sets the on long click listener
-     * @param onLongClickListener
-     */
-    public void setOnLongClickListener(View.OnLongClickListener onLongClickListener) {
-        this.onLongClickListener = onLongClickListener;
     }
 }

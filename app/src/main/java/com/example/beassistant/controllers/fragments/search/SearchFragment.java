@@ -55,18 +55,25 @@ public class SearchFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Init variables
+        initVariables();
+
+        // Get the users
+        getUsers();
+
+        // Set the full users list
+        usersFullList = recAdapter.usersList;
+    }
+
+    /**
+     * Init view variables
+     */
+    private void initVariables() {
         // Generate the instance
         db = FirebaseFirestore.getInstance();
 
         // Init the recycler adapter
         recAdapter = new UsersRecyclerAdapter(getContext());
-
-        // Get the users
-        this.getUsers();
-
-        // Set the full users list
-        usersFullList = recAdapter.usersList;
-
     }
 
     @Override
@@ -80,35 +87,24 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Init the recycler view
-        rV = (RecyclerView) view.findViewById(R.id.recyclerViewUsers);
+        // Init the view variables
+        initViewVariables(view);
 
-        // Create a linear layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        // Set the recycler view configuration
+        recyclerViewConfiguration();
 
-        // Set the layout manager to the recycler view
-        rV.setLayoutManager(layoutManager);
+        // Set the search view listener
+        searchViewListener();
 
-        // Set the recycler adapter in the recycler view
-        rV.setAdapter(recAdapter);
+        // Set the recycler adapter listener
+        recyclerAdapterListener();
 
-        // Init the search view
-        searchView = (SearchView) view.findViewById(R.id.searchViewUsers);
+    }
 
-        // Set the listener to the search view
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                filterList(s);
-                return true;
-            }
-        });
-
+    /**
+     * Set the recycler adapter listener
+     */
+    private void recyclerAdapterListener() {
         // Set a listener to the recycler adapter items
         recAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,9 +129,54 @@ public class SearchFragment extends Fragment {
                 view.setSelected(true);
             }
         });
-
     }
 
+    private void searchViewListener() {
+        // Set the listener to the search view
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                filterList(s);
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Set the recycler view configuration
+     */
+    private void recyclerViewConfiguration() {
+        // Create a linear layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        // Set the layout manager to the recycler view
+        rV.setLayoutManager(layoutManager);
+
+        // Set the recycler adapter in the recycler view
+        rV.setAdapter(recAdapter);
+    }
+
+    /**
+     * Function to init the view variables
+     * @param view
+     */
+    private void initViewVariables(@NonNull View view) {
+        // Init the recycler view
+        rV = (RecyclerView) view.findViewById(R.id.recyclerViewUsers);
+
+        // Init the search view
+        searchView = (SearchView) view.findViewById(R.id.searchViewUsers);
+    }
+
+    /**
+     * Function to filter a list
+     * @param newText
+     */
     private void filterList(String newText){
 
         // Create a filtered list

@@ -115,7 +115,6 @@ public class LoginController extends AppCompatActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Sesion: ", "Registrar");
                 Intent i = new Intent(getApplicationContext(), RegisterController.class);
                 startActivity(i);
             }

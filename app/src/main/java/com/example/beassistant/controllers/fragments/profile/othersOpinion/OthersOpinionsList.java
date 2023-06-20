@@ -29,17 +29,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class OthersOpinionsList extends Fragment {
 
-    AlertDialog dialog;
+    private RecyclerView rV;
 
-    // Creamos las variables necesarias para implementar el recyclerView
-    ConstraintLayout constraintLayout;
-    RecyclerView rV;
-    SimpleProductsRecyclerAdapter recAdapter;
+    private SimpleProductsRecyclerAdapter recAdapter;
 
-    // Declare the data base object
     private FirebaseFirestore db;
 
-    String userId = "";
+    private String userId = "";
 
     public OthersOpinionsList() {
         // Required empty public constructor
@@ -49,8 +45,10 @@ public class OthersOpinionsList extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Init variables
         initVariables();
 
+        // Get the data from the last fragment
         getDataFromLastFragment();
     }
 
@@ -78,11 +76,14 @@ public class OthersOpinionsList extends Fragment {
                 // Get the index
                 index = rV.getChildAdapterPosition(v);
 
+                // Create the fragment
                 Fragment fragment = new OthersOpinionDetails();
+                // Set the arguments
                 Bundle args = new Bundle();
                 args.putString("id", recAdapter.productsList.get(index).getProductId());
                 args.putString("userId", userId);
 
+                // Set the fragment
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.setFragmentResult("keyOthersOpinion", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

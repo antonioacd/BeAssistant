@@ -27,7 +27,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -43,16 +42,16 @@ public class MyOpinionDetails extends Fragment {
     private FirebaseStorage storage;
     private StorageReference storageRef;
 
-    TextView txt_username, txt_rating, txt_price, txt_shopBuy, txt_toneOrColor, txt_opinion;
-    ImageView img_user_profile;
-    FloatingActionButton btn_edit, btn_delete, btn_delete_confimation, btn_delete_cancel;
+    private TextView txt_username, txt_rating, txt_price, txt_shopBuy, txt_toneOrColor, txt_opinion;
+    private ImageView img_user_profile;
+    private FloatingActionButton btn_edit, btn_delete, btn_delete_confimation, btn_delete_cancel;
 
     // Get the own user id
-    String productId = "";
-    String category = "";
-    String brand = "";
+    private String productId = "";
+    private String category = "";
+    private String brand = "";
 
-    String opinionId = "";
+    private String opinionId = "";
 
     private AlertDialog dialog;
 
@@ -64,15 +63,18 @@ public class MyOpinionDetails extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getParentFragmentManager().setFragmentResultListener("keyOpinions", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+        // Get data from last fragment
+        getData();
 
-                // Obtains the followers id
-                getDataFromLastFragment(result);
-            }
-        });
+        // Init the variables
+        initVariables();
 
+    }
+
+    /**
+     * Function to init the variables
+     */
+    private void initVariables() {
         // Generate the instance
         db = FirebaseFirestore.getInstance();
 
@@ -81,7 +83,20 @@ public class MyOpinionDetails extends Fragment {
 
         // Create a storage reference from our app
         storageRef = storage.getReference();
+    }
 
+    /**
+     * Function to get the data from last fragment
+     */
+    private void getData() {
+        getParentFragmentManager().setFragmentResultListener("keyOpinions", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+
+                // Obtains the followers id
+                getData(result);
+            }
+        });
     }
 
     @Override
@@ -180,42 +195,49 @@ public class MyOpinionDetails extends Fragment {
         dialog.show();
     }
 
-    private void getDataFromLastFragment(Bundle result){
+    private void getData(Bundle result){
 
+        // Set the product id
         productId = result.getString("id");
 
-        Log.d("Recibe: ", productId);
-
+        // Get the opinion details
         getOpinionDetails(productId);
     }
 
+    /**
+     * Function to get the opinion details
+     * @param productId
+     */
     private void getOpinionDetails(String productId) {
 
+        // Get the opinions
         db.collection("opiniones")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
+                        // Check the task
                         if (!task.isSuccessful()) {
                             return;
                         }
 
+                        // Loop the result
                         for (QueryDocumentSnapshot opinionsDoc : task.getResult()){
 
+                            // Check the user id
                             if (!opinionsDoc.getString("userId").equals(Shared.myUser.getUserId())) {
-                                Log.d("OpinionMia: ", "Entraa");
                                 continue;
                             }
 
+                            // Check the product id
                             if (!opinionsDoc.getString("productId").equals(productId)){
-                                Log.d("OpinionMia: ", "entra");
                                 continue;
                             }
 
-                            Log.d("OpinionMia: ", opinionsDoc.toString());
-
+                            // Set the opinion id
                             opinionId = opinionsDoc.getId();
 
+                            // Set the image
                             storageRef.child(Shared.myUser.getImg_reference()).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
@@ -224,6 +246,7 @@ public class MyOpinionDetails extends Fragment {
                                 }
                             });
 
+                            // Set the data
                             txt_username.setText(Shared.myUser.getUsername());
                             txt_rating.setText(opinionsDoc.getDouble("rating") + " ⭐");
                             txt_price.setText(opinionsDoc.getDouble("price") + "€");
@@ -236,61 +259,83 @@ public class MyOpinionDetails extends Fragment {
                 });
     }
 
+    /**
+     * Function to update the rating media
+     */
     private void updateRatingMedia(){
 
-        Log.d("Modificar: ", productId);
+        // Get the products
         db.collectionGroup("productos")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
+                // Check the task
                 if (!task.isSuccessful()){
                     return;
                 }
 
-                Log.d("Modificar: ", "Entra");
+                // Loop the result
+                for (QueryDocumentSnapshot productsDoc : task.getResult()) {
 
-                for (QueryDocumentSnapshot doc : task.getResult()) {
-                    if (!doc.getString("id").equals(productId)){
+                    // Check the id
+                    if (!productsDoc.getString("id").equals(productId)){
                         continue;
                     }
-                    category = doc.getString("category");
-                    brand = doc.getString("brand");
+                    // Set the category and brand
+                    category = productsDoc.getString("category");
+                    brand = productsDoc.getString("brand");
                 }
 
-                db.collection("opiniones").whereEqualTo("productId", productId)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                int cont = 0;
-                                double sumatory = 0;
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    cont++;
-                                    Log.d("Sumatorio: ", ""+document.getDouble("rating"));
-                                    sumatory += document.getDouble("rating");
-                                }
-                                double finalSumatory = sumatory;
-                                int finalCont = cont;
-                                Log.d("Modificar: ", "Pasa: " + category + brand);
-                                db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").whereEqualTo("id", productId)
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                double media = finalSumatory / finalCont;
-                                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                                    Log.d("Modificar: ", "Se modifica: " + category + brand);
-                                                    db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getId()).update("rating", media);
-                                                }
-                                            }
-                                        });
-                                Log.d("Sumatorio: ", ""+sumatory);
-                            }
-                        });
-
+                // Update the media
+                getMedia();
             }
         });
+    }
+
+    /**
+     * Function to get the media
+     */
+    private void getMedia() {
+        // Get all the opinions of the product
+        db.collection("opiniones").whereEqualTo("productId", productId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        // Create the variables
+                        int cont = 0;
+                        double sumatory = 0;
+
+                        // Loop the result
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            cont++;
+                            sumatory += document.getDouble("rating");
+                        }
+
+                        // Create the variables
+                        double finalSumatory = sumatory;
+                        int finalCont = cont;
+
+                        // Get the product to get the id
+                        db.collection("categorias/"+category+"/marcas/"+brand+"/productos/")
+                                .whereEqualTo("id", productId)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        double media = finalSumatory / finalCont;
+
+                                        // Loop the result
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            // Update the media
+                                            db.collection("categorias/"+category+"/marcas/"+brand+"/productos/").document(document.getId()).update("rating", media);
+                                        }
+                                    }
+                                });
+                    }
+                });
     }
 }

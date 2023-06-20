@@ -52,8 +52,6 @@ public class ResetAux extends AppCompatActivity {
         Intent i = getIntent();
         action = i.getStringExtra("action");
 
-        Log.d("Action:", action);
-
         switch (action){
             case "password":
                 til_aux.setHint("Email");

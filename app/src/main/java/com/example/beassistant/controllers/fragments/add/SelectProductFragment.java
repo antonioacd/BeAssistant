@@ -41,20 +41,23 @@ public class SelectProductFragment extends Fragment {
 
     private SearchView searchView;
 
-    ArrayList<Product> fullList;
-    ArrayList<String> categories, brands = new ArrayList<String>();
-    AutoCompleteTextView select_category, select_brand;
-    ArrayAdapter<String> adapterItems, adapterItems02;
+    private ArrayList<Product> fullList;
 
-    String selected_category, selected_brand;
+    private ArrayList<String> categories, brands = new ArrayList<String>();
 
-    FloatingActionButton btn_refresh;
+    private AutoCompleteTextView select_category, select_brand;
 
-    // Declare the data base object
+    private ArrayAdapter<String> adapterItems, adapterItems02;
+
+    private String selected_category, selected_brand;
+
+    private FloatingActionButton btn_refresh;
+
     private FirebaseFirestore db;
 
-    SimpleProductsRecyclerAdapter recAdapter;
-    RecyclerView rV;
+    private SimpleProductsRecyclerAdapter recAdapter;
+    
+    private RecyclerView rV;
 
     public SelectProductFragment() {
         // Required empty public constructor
@@ -64,19 +67,25 @@ public class SelectProductFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initDatabaseVariables();
-
+        // Init the variables
         initVariables();
     }
 
-    private void initDatabaseVariables() {
-        // Generate the instance
-        db = FirebaseFirestore.getInstance();
-    }
-
+    /**
+     * Function to init the variables
+     */
     private void initVariables() {
+
+        // Generate the instance of database
+        db = FirebaseFirestore.getInstance();
+
+        // Set the recycler adapter
         recAdapter = new SimpleProductsRecyclerAdapter(getContext());
+
+        // Set the categories
         categories = getCategories();
+
+        // Set the selected category and selected brand
         this.selected_category = "";
         this.selected_brand = "";
     }
@@ -92,23 +101,34 @@ public class SelectProductFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Configure the recycler view
         recyclerViewConfiguration(view);
 
+        // Init the view variables
         initViewVariables(view);
 
+        // Get the products
         getAllProducts();
 
+        // Listener and configuration of category selector
         categorySelectorConfigurationAndListener();
 
+        // Listener and configuration of brand selector
         brandSelectorConfigurationAndListener();
 
+        // Listener of button refresh
         buttonRefreshListener();
 
+        // Listener of recycler adapter
         recyclerAdapterListener();
 
+        // Listener of search view
         searchViewListener();
     }
 
+    /**
+     * Listener of button refresh
+     */
     private void buttonRefreshListener() {
         btn_refresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,19 +139,27 @@ public class SelectProductFragment extends Fragment {
         });
     }
 
+    /**
+     * Function to get all the products
+     */
     private void getAllProducts(){
 
+        // Init the variables to empty
         selected_category = "";
         selected_brand = "";
 
+        // Clear the recycler adapter list
         recAdapter.productsList.clear();
         recAdapter.notifyDataSetChanged();
 
-        db.collectionGroup("productos").get()
+        // Get the products from the database
+        db.collectionGroup("productos")
+                .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        Log.d("Query:", "Entra");
+
+                        // Loop the documents
                         for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
 
                             // Generate a product
@@ -145,6 +173,8 @@ public class SelectProductFragment extends Fragment {
                                     doc.getDouble("rating"),
                                     doc.getString("url")
                             );
+
+                            // Add the product to the list
                             recAdapter.productsList.add(product);
                             recAdapter.notifyDataSetChanged();
                         }
@@ -154,7 +184,11 @@ public class SelectProductFragment extends Fragment {
                 });
     }
 
+    /**
+     * Listener of the search view
+     */
     private void searchViewListener() {
+        // Set the listener
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -163,13 +197,18 @@ public class SelectProductFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
+                // Filter the list with the string
                 filterList(s);
                 return true;
             }
         });
     }
 
+    /**
+     * Listener of the recycler adapter
+     */
     private void recyclerAdapterListener() {
+        // Set the adapter
         recAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -178,47 +217,68 @@ public class SelectProductFragment extends Fragment {
         });
     }
 
+    /**
+     * Function to check if you have make an opinion
+     * @param view
+     */
     private void checkIfYouOpined(View view) {
-        db.collection("opiniones").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        // Get the opinions
+        db.collection("opiniones")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                // Check the task
                 if (!task.isSuccessful()){
                     return;
                 }
 
                 int indice = 0;
-                //Capturamos el indice del elemento seleccionado
+                // Get the index
                 indice = rV.getChildAdapterPosition(view);
 
+                // Get the product id
                 String productId = recAdapter.productsList.get(indice).getProductId();
 
+                // Loop the result
                 for (DocumentSnapshot doc : task.getResult()) {
 
+                    // Check the product id
                     if (!doc.getString("productId").equals(productId)){
                         continue;
                     }
 
+                    // Check the user id
                     if(!doc.getString("userId").equals(Shared.myUser.getUserId())){
                         continue;
                     }
 
+                    // Notify
                     Toast.makeText(getContext(), "Ya has opinado de este producto", Toast.LENGTH_LONG).show();
                     return;
                 }
 
+                // Create a new intent
                 Intent i = new Intent(getContext(), AddOpinionActivity.class);
+
+                // Put the extra info to the intent
                 i.putExtra("id", recAdapter.productsList.get(indice).getProductId());
                 i.putExtra("category", recAdapter.productsList.get(indice).getCategory());
                 i.putExtra("brand", recAdapter.productsList.get(indice).getBrand());
-                Log.d("ProductoAntes: ", recAdapter.productsList.get(indice).toString());
+
+                // Start the intent
                 startActivity(i);
 
-                //Indicamos que se ha seleccionado un elemento de la vista
+                // Set the view
                 view.setSelected(true);
             }
         });
     }
 
+    /**
+     * Funtion thah contains the configuration and listener of brand selector
+     */
     private void brandSelectorConfigurationAndListener() {
         adapterItems02 = new ArrayAdapter<String>(getContext(), R.layout.list_item02, brands);
         select_brand.setAdapter(adapterItems02);
@@ -249,7 +309,7 @@ public class SelectProductFragment extends Fragment {
                                     fullList = recAdapter.productsList;
                                     btn_refresh.setVisibility(View.VISIBLE);
                                 } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
+
                                 }
                             }
                         });
@@ -257,6 +317,11 @@ public class SelectProductFragment extends Fragment {
         });
     }
 
+    /**
+     * Funtion to get a product with a document
+     * @param doc
+     * @return
+     */
     private Product getProductWithDocument(QueryDocumentSnapshot doc) {
 
         // Generate a product
@@ -273,6 +338,9 @@ public class SelectProductFragment extends Fragment {
         return product;
     }
 
+    /**
+     * Funtion thah contains the configuration and listener of category selector
+     */
     private void categorySelectorConfigurationAndListener() {
 
         adapterItems = new ArrayAdapter<String>(getContext(), R.layout.list_item02, categories);
@@ -303,6 +371,10 @@ public class SelectProductFragment extends Fragment {
         });
     }
 
+    /**
+     * Function to init the view variables
+     * @param view
+     */
     private void initViewVariables(@NonNull View view) {
         searchView = (SearchView) view.findViewById(R.id.searchView);
 
@@ -315,57 +387,90 @@ public class SelectProductFragment extends Fragment {
         btn_refresh = (FloatingActionButton) view.findViewById(R.id.btn_refresh_02);
     }
 
+    /**
+     * Function to set the recycler view configuration
+     * @param view
+     */
     private void recyclerViewConfiguration(@NonNull View view) {
-        // Asignamos a la variable rV el recyclerView
+        // Set the recycler view
         rV = (RecyclerView) view.findViewById(R.id.recyclerView);
 
-        // Creamos un LinearLayout para establecer el Layout del recyclerView
+        // Create the layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        // Set the layout manager
         rV.setLayoutManager(layoutManager);
 
-        // Implementamos el recyclerAdapter en el recyclerView
+        // set the adapter
         rV.setAdapter(recAdapter);
     }
 
+    /**
+     * Function to filter the list
+     * @param newText
+     */
     private void filterList(String newText) {
 
+        // Create a new aux list
         ArrayList<Product> filteredList = new ArrayList<>();
 
+        // Loop the product list
         for (Product p : recAdapter.productsList) {
+
+            // Check if the name of the product contains the text
             if (!p.getProductName().toLowerCase().contains(newText.toLowerCase())) {
                 continue;
             }
 
+            // Add the product to the filtered list
             filteredList.add(p);
         }
 
+        // Check if search bar is empty
         if (newText.equals("")) {
+
+            // Set the filtered list
             recAdapter.setFilteredList(fullList);
             return;
         }
 
+        // Check if filtered list is empty
         if (!filteredList.isEmpty()) {
+
+            // Set the filtered list
             recAdapter.setFilteredList(filteredList);
             return;
         }
 
+        // Notify
         Toast.makeText(getContext(), "No se han encontrado resultados", Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Function to get the categories
+     * @return
+     */
     private ArrayList getCategories() {
 
+        // Create the aux array
         ArrayList<String> auxArray = new ArrayList<>();
 
+        // Get the categories from the database
         db.collection("categorias")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        // Check te task
                         if (!task.isSuccessful()) {
                             return;
                         }
 
+                        // Loop the results
                         for (QueryDocumentSnapshot document : task.getResult()) {
+
+                            // Add the id to the aux array
                             auxArray.add(document.getId());
                         }
                     }

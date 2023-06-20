@@ -9,22 +9,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.beassistant.R;
-import com.example.beassistant.models.Opinion;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -37,9 +33,8 @@ public class DetailsOpinionFragment extends Fragment {
     private FirebaseStorage storage;
     private StorageReference storageRef;
 
-    TextView txt_username, txt_rating, txt_price, txt_shopBuy, txt_toneOrColor, txt_opinion;
-    ImageView img_user_profile;
-
+    private TextView txt_username, txt_rating, txt_price, txt_shopBuy, txt_toneOrColor, txt_opinion;
+    private ImageView img_user_profile;
 
     public DetailsOpinionFragment() {
         // Required empty public constructor
@@ -49,15 +44,17 @@ public class DetailsOpinionFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getParentFragmentManager().setFragmentResultListener("keyOpinion", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+        // Get the data from last fragment
+        getDataFromLastFragment();
 
-                // Obtains the followers id
-                getData(result);
-            }
-        });
+        // Init the variables
+        initVariables();
+    }
 
+    /**
+     * Function to init the variables
+     */
+    private void initVariables() {
         // Generate the instance
         db = FirebaseFirestore.getInstance();
 
@@ -66,6 +63,20 @@ public class DetailsOpinionFragment extends Fragment {
 
         // Create a storage reference from our app
         storageRef = storage.getReference();
+    }
+
+    /**
+     * Functio to get the data from last fragment
+     */
+    private void getDataFromLastFragment() {
+        getParentFragmentManager().setFragmentResultListener("keyOpinion", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+
+                // Obtains the followers id
+                getOpinionDetails(result);
+            }
+        });
     }
 
     @Override
@@ -79,6 +90,15 @@ public class DetailsOpinionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Init the view variables
+        initViewVariables(view);
+    }
+
+    /**
+     * Function to init the view variables
+     * @param view
+     */
+    private void initViewVariables(@NonNull View view) {
         txt_username = (TextView) view.findViewById(R.id.txt_username_opinion_item_02);
         txt_rating = (TextView) view.findViewById(R.id.txt_rating_02);
         txt_price = (TextView) view.findViewById(R.id.txt_price_02);
@@ -88,11 +108,16 @@ public class DetailsOpinionFragment extends Fragment {
         img_user_profile = (ImageView) view.findViewById(R.id.img_user_profile_02);
     }
 
-    private void getData(Bundle result){
+    /**
+     * Function to get the opinion details
+     * @param result
+     */
+    private void getOpinionDetails(Bundle result){
 
         // Get the own user ids
         String opinionId = result.getString("id");
 
+        // Get the opinions
         db.collection("opiniones")
                 .document(opinionId)
                 .get()
@@ -100,24 +125,32 @@ public class DetailsOpinionFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
+                        // Check the task
                         if (!task.isSuccessful()) {
                             return;
                         }
 
-                        DocumentSnapshot doc = task.getResult();
+                        // Get the doc
+                        DocumentSnapshot opinionsDoc = task.getResult();
 
+                        // Get the user, to get the username and image
                         db.collection("users")
-                                .document(doc.getString("userId"))
+                                .document(opinionsDoc.getString("userId"))
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                        // Check the task
                                         if (!task.isSuccessful()) {
                                             return;
                                         }
-                                        DocumentSnapshot document = task.getResult();
 
-                                        storageRef.child(document.getString("imgRef")).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                        // Get the doc
+                                        DocumentSnapshot usersDoc = task.getResult();
+
+                                        // Set the profile image
+                                        storageRef.child(usersDoc.getString("imgRef")).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                             @Override
                                             public void onSuccess(byte[] bytes) {
                                                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -125,12 +158,13 @@ public class DetailsOpinionFragment extends Fragment {
                                             }
                                         });
 
-                                        txt_username.setText(document.getString("username"));
-                                        txt_rating.setText(String.valueOf(doc.getDouble("rating")) + " ⭐");
-                                        txt_price.setText(String.valueOf(doc.getDouble("price")) + "€");
-                                        txt_shopBuy.setText(doc.getString("shopBuy"));
-                                        txt_toneOrColor.setText(doc.getString("toneOrColor"));
-                                        txt_opinion.setText(doc.getString("opinion"));
+                                        // Set the details
+                                        txt_username.setText(usersDoc.getString("username"));
+                                        txt_rating.setText(String.valueOf(opinionsDoc.getDouble("rating")) + " ⭐");
+                                        txt_price.setText(String.valueOf(opinionsDoc.getDouble("price")) + "€");
+                                        txt_shopBuy.setText(opinionsDoc.getString("shopBuy"));
+                                        txt_toneOrColor.setText(opinionsDoc.getString("toneOrColor"));
+                                        txt_opinion.setText(opinionsDoc.getString("opinion"));
 
                                     }
                                 });

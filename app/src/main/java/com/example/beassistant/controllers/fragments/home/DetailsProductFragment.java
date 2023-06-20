@@ -38,25 +38,25 @@ import com.google.firebase.storage.StorageReference;
 
 public class DetailsProductFragment extends Fragment {
 
-    TextView txt_name, txt_brand, txt_type, txt_mediaRating;
-    ImageView img_product;
+    private TextView txt_name, txt_brand, txt_type, txt_mediaRating;
 
-    // Declare the data base controller
+    private ImageView img_product;
+
     private FirebaseFirestore db;
 
-    // Declare the data base storage controller
     private FirebaseStorage storage;
+
     private StorageReference storageRef;
 
-    // The recicler adapter
     private OpinionsRecyclerAdapter recAdapter;
 
-    // The recicler view
     private RecyclerView rV;
 
     private String productId = "", name = "", brand = "", type = "", imgRef = "", url="";
+
     private Double mediaRating;
-    Button btn_ver_videos, btn_comprar;
+
+    private Button btn_see_videos, btn_buy;
 
     private Boolean isFirstResume = true;
 
@@ -68,6 +68,17 @@ public class DetailsProductFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Init variables
+        initVariables();
+
+        // Get data from las fragment
+        getDataFromLastFragment();
+    }
+
+    /**
+     * Function to init the variables
+     */
+    private void initVariables() {
         // Generate the instance
         db = FirebaseFirestore.getInstance();
 
@@ -79,23 +90,23 @@ public class DetailsProductFragment extends Fragment {
 
         // Init the recycler adapter
         recAdapter = new OpinionsRecyclerAdapter(getContext());
-
-        getDataFromLastFragment();
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+        // Check if it is the first resume
         if (isFirstResume){
+            // Set to false
             isFirstResume = false;
             return;
         }
 
-        Log.d("Args:", "Resume:" + name + brand + type + imgRef + mediaRating);
-
+        // Get the opinions
         getOpinions(productId);
+
+        // Fill the product data
         fillProductData(name, brand, type, imgRef, mediaRating);
     }
 
@@ -110,55 +121,64 @@ public class DetailsProductFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        img_product = view.findViewById(R.id.img_product_ref3);
-        txt_name = view.findViewById(R.id.txt_product_name3);
-        txt_brand = view.findViewById(R.id.txt_product_brand3);
-        txt_mediaRating = view.findViewById(R.id.txt_product_media_rating3);
-        txt_type = view.findViewById(R.id.txt_product_type3);
-        btn_comprar = (Button) view.findViewById(R.id.btn_comprar);
-        btn_ver_videos = (Button) view.findViewById(R.id.btn_ver_videos);
+        // Init the view variables
+        initViewVariables(view);
 
-        // Init the recycler view
-        rV = (RecyclerView) view.findViewById(R.id.recycler_view_opinions);
+        // Set the recycler view configuration
+        recyclerViewConfiguration();
 
-        // Create a linear layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        // Set the recycler adapter listener
+        recyclerAdapterListener();
 
-        // Set the layout manager to the recycler view
-        rV.setLayoutManager(layoutManager);
+        // Set the buy button listener
+        buyButtonListener();
 
-        // Set the recycler adapter in the recycler view
-        rV.setAdapter(recAdapter);
+        // Set the see videos button listener
+        seeVideosButtonListener();
 
-        recAdapter.setOnClickListener(new View.OnClickListener() {
+    }
+
+    /**
+     * Fuction to set the see videos button listener
+     */
+    private void seeVideosButtonListener() {
+        // Set the listener
+        btn_see_videos.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                int index = 0;
+            public void onClick(View view) {
+                // Crete the fragment
+                Fragment fragment = new VideosFragment();
 
-                // Get the index
-                index = rV.getChildAdapterPosition(v);
-
-                Fragment fragment = new DetailsOpinionFragment();
+                // Set the arguments
                 Bundle args = new Bundle();
-                args.putString("id", recAdapter.opinionsList.get(index).getOpinionId());
+                args.putString("productName", name);
 
+                // Set the fragment
                 FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.setFragmentResult("keyOpinion", args);
+                fragmentManager.setFragmentResult("videosFragment", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame_layout, fragment);
-                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
+    }
 
-        btn_comprar.setOnClickListener(new View.OnClickListener() {
+    /**
+     * Function to set the buy button listener
+     */
+    private void buyButtonListener() {
+        // Set the listener
+        btn_buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                // Create a fragment
                 Fragment fragment = new WebFragment();
+                // Set the arguments
                 Bundle args = new Bundle();
                 args.putString("url", url);
 
+                // Set the fragment
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.setFragmentResult("shopFragment", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -167,28 +187,74 @@ public class DetailsProductFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
+    }
 
-        btn_ver_videos.setOnClickListener(new View.OnClickListener() {
+    /**
+     * Function to set the recycler adapter listener
+     */
+    private void recyclerAdapterListener() {
+        // Set the listener
+        recAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Fragment fragment = new VideosFragment();
-                Bundle args = new Bundle();
-                args.putString("productName", name);
+            public void onClick(View v) {
+                int index = 0;
 
+                // Get the index
+                index = rV.getChildAdapterPosition(v);
+
+                // Create a fragment
+                Fragment fragment = new DetailsOpinionFragment();
+                // Add the arguments
+                Bundle args = new Bundle();
+                args.putString("id", recAdapter.opinionsList.get(index).getOpinionId());
+
+                // Set the fragment
                 FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.setFragmentResult("videosFragment", args);
+                fragmentManager.setFragmentResult("keyOpinion", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
-
     }
 
+    /**
+     * Function to set the recycler view configuration
+     */
+    private void recyclerViewConfiguration() {
+        // Create a linear layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        // Set the layout manager to the recycler view
+        rV.setLayoutManager(layoutManager);
+
+        // Set the recycler adapter in the recycler view
+        rV.setAdapter(recAdapter);
+    }
+
+    /**
+     * Function to init the view variables
+     * @param view
+     */
+    private void initViewVariables(@NonNull View view) {
+        img_product = view.findViewById(R.id.img_product_ref3);
+        txt_name = view.findViewById(R.id.txt_product_name3);
+        txt_brand = view.findViewById(R.id.txt_product_brand3);
+        txt_mediaRating = view.findViewById(R.id.txt_product_media_rating3);
+        txt_type = view.findViewById(R.id.txt_product_type3);
+        btn_buy = (Button) view.findViewById(R.id.btn_comprar);
+        btn_see_videos = (Button) view.findViewById(R.id.btn_ver_videos);
+        rV = (RecyclerView) view.findViewById(R.id.recycler_view_opinions);
+    }
+
+    /**
+     * Function to get the data from the last fragment
+     */
     private void getDataFromLastFragment() {
 
         if (!productId.isEmpty()) {
-            Log.d("Args:", "isEmpty" + name + brand + type + imgRef + mediaRating);
+
             getOpinions(productId);
             fillProductData(name, brand, type, imgRef, mediaRating);
             return;
@@ -198,6 +264,7 @@ public class DetailsProductFragment extends Fragment {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
 
+                // Set the data
                 productId = result.getString("id");
                 name = result.getString("name");
                 brand = result.getString("brand");
@@ -206,19 +273,27 @@ public class DetailsProductFragment extends Fragment {
                 mediaRating = result.getDouble("mediaRating");
                 url = result.getString("url");
 
+                // Get the opinions of the product
                 getOpinions(productId);
+
+                // Fill the product data
                 fillProductData(name, brand, type, imgRef, mediaRating);
             }
 
         });
     }
 
+    /**
+     * Function to get the opinions
+     * @param productId
+     */
     private void getOpinions(String productId) {
 
+        // Clear the recycler adapter list
         recAdapter.opinionsList.clear();
         recAdapter.notifyDataSetChanged();
 
-        // Get the own user id
+        // Get opinions of the product
         db.collection("opiniones")
                 .whereEqualTo("productId",productId)
                 .get()
@@ -232,6 +307,7 @@ public class DetailsProductFragment extends Fragment {
                         // Get the number of opinions
                         int count = task.getResult().size();
 
+                        // Check if the product contains opinions
                         if (count == 0){
                             Toast.makeText(getContext(), "El producto seleccionado aún no dispone de opiniones", Toast.LENGTH_SHORT).show();
                             return;
@@ -239,8 +315,11 @@ public class DetailsProductFragment extends Fragment {
 
                         // Loop the opinions
                         for (DocumentSnapshot opinionsDoc : task.getResult()) {
+
+                            // Create the opinion
                             Opinion op = new Opinion();
 
+                            // Add the values to the opinion
                             op.setOpinionId(opinionsDoc.getId());
                             op.setUsername(opinionsDoc.getString("username"));
                             op.setImgUser(opinionsDoc.getString("imgUserRef"));
@@ -250,21 +329,25 @@ public class DetailsProductFragment extends Fragment {
                             op.setToneOrColor(opinionsDoc.getString("toneOrColor"));
                             op.setOpinion(opinionsDoc.getString("opinion"));
 
-                            Log.d("Opiniones: ", op.toString());
-
+                            // Add the opinion to the opinion list
                             recAdapter.opinionsList.add(op);
                             recAdapter.notifyDataSetChanged();
                         }
                     }
                 });
-
-
     }
 
+    /**
+     * Function to fill the product values
+     * @param name
+     * @param brand
+     * @param type
+     * @param imgRef
+     * @param mediaRating
+     */
     private void fillProductData(String name, String brand, String type, String imgRef, Double mediaRating) {
 
-        Log.d("Args:", name + brand + type + imgRef + mediaRating);
-
+        // Set the image
         storageRef.child(imgRef).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
@@ -273,6 +356,7 @@ public class DetailsProductFragment extends Fragment {
             }
         });
 
+        // Set the values
         txt_name.setText(name);
         txt_brand.setText(brand);
         txt_type.setText(type);

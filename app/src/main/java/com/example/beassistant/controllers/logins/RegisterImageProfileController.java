@@ -100,7 +100,6 @@ public class RegisterImageProfileController extends AppCompatActivity {
         password = i.getStringExtra("password");
         action = i.getStringExtra("action");
         img = "profileImages/" + email + "_img_profile.jpg";
-        Log.d("imagen: ", img);
     }
 
     /**

@@ -29,14 +29,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class MyOpinionsList extends Fragment {
 
-    AlertDialog dialog;
+    private RecyclerView rV;
 
-    // Creamos las variables necesarias para implementar el recyclerView
-    ConstraintLayout constraintLayout;
-    RecyclerView rV;
-    SimpleProductsRecyclerAdapter recAdapter;
+    private SimpleProductsRecyclerAdapter recAdapter;
 
-    // Declare the data base object
     private FirebaseFirestore db;
 
     public MyOpinionsList() {
@@ -47,8 +43,10 @@ public class MyOpinionsList extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Init the variables
         initVariables();
 
+        // Get data from last fragment
         getDataFromLastFragment();
     }
 
@@ -66,6 +64,7 @@ public class MyOpinionsList extends Fragment {
         // Init the variables
         initViewVariables(view);
 
+        // Set the recycler adapter
         setReciclerAdapter();
 
         recAdapter.setOnClickListener(new View.OnClickListener() {
@@ -76,10 +75,14 @@ public class MyOpinionsList extends Fragment {
                 // Get the index
                 index = rV.getChildAdapterPosition(v);
 
+                // Create the fragment
                 Fragment fragment = new MyOpinionDetails();
+
+                // Set the arguments
                 Bundle args = new Bundle();
                 args.putString("id", recAdapter.productsList.get(index).getProductId());
 
+                // Set the fragment
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.setFragmentResult("keyOpinions", args);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -117,6 +120,8 @@ public class MyOpinionsList extends Fragment {
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        // Check the task
                         if (!task.isSuccessful()){
                             return;
                         }
@@ -142,7 +147,7 @@ public class MyOpinionsList extends Fragment {
                                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                             // Loop all the products
                                             for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
-                                                // Check if the
+                                                // Check the productId
                                                 if (doc.getId().equals(document.getString("productId"))){
                                                     Product product = new Product(
                                                             doc.getString("id"),
